@@ -19,7 +19,7 @@ def save_text():
 @app.route('/save-user-name', methods=['POST'])
 def save_user_name():
     data = request.get_json()  
-    folder_name = data.get('text', '')  # Nombre de la carpeta basado en la variable `text`
+    folder_name = data.get('text', '') 
 
     if folder_name:
         folder_path = os.path.join('src/users_input', folder_name)

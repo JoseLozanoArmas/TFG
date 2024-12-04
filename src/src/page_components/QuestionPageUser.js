@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import './QuestionPageUser.css';
 
 export const QuestionPageUser = () => {
+  const navigate = useNavigate();
   const [code, saveCode] = useState('');
   const [inputCode, setInputCode] = useState('');
+
+  const UploadFile = () => {
+    console.log("pendiente")
+  }
+
+  const GoToUser = () => {
+    navigate('/'); 
+  };
 
   const sendTextToServer = async () => {
     if (!code.trim()) {
@@ -39,10 +49,25 @@ export const QuestionPageUser = () => {
       <div className="title-box">
         <h1>Título</h1>
       </div>
-      <div className="input-box2"> 
-        <textarea className='code_input' value={code} onChange={(e) => saveCode(e.target.value)} placeholder="Escribe algo aquí..." ></textarea>
+        <textarea className="code_input"
+          value={code}
+          onChange={(e) => saveCode(e.target.value)}
+          placeholder="Introduce tu código"
+        ></textarea>
+      <div className="button-container-first-line">
+        <button className="button_submit" onClick={UploadFile}>
+          Subir archivo
+        </button>
+        <button className="button_submit" onClick={sendTextToServer}>
+          Enviar Código
+        </button>
       </div>
-        <button className='button_submit' onClick={sendTextToServer}>Enviar Texto al Servidor</button>
+      <div className="button-container-second-line" onClick={GoToUser}>
+        <button className="button_submit">
+          Hecho
+        </button>
+      </div>
     </div>
   );
+  
 };
