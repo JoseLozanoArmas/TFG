@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import './App.css';
 import { QuestionPageUser } from './page_components/QuestionPageUser';
+import { UserPageAdmin } from './page_components/UserPageAdmin';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -10,8 +11,12 @@ const Home = () => {
     navigate('/question_user'); 
   };
 
-  const [user_name, setTexto] = useState('');
-  const [variableGuardada, setVariableGuardada] = useState('');
+  const GoToAdminPageUser = () => {
+    navigate('/admin_page_user'); 
+  }
+
+  const [user_name, saveUserName] = useState('');
+ 
 
   const SaveUser = async () => {
     if (!user_name.trim()) { 
@@ -32,10 +37,7 @@ const Home = () => {
   
       if (response.ok) {
         alert(data.message); 
-
-        setVariableGuardada(user_name);
         GoToQuestionPageUser();
-
       } else {
         alert(`Error: ${data.message}`);
       }
@@ -50,8 +52,10 @@ const Home = () => {
       <header className="App-header">
         <img src={require('./img/user_img.png')} alt="User" className="user-image" />
         <div className="input-box">
-          <textarea value={user_name} onChange={(e) => setTexto(e.target.value)} placeholder="Inserte nombre de usuario..."></textarea>
-          <button onClick={SaveUser}>Guardar Texto</button>
+          {"Login"}
+          <textarea value={user_name} onChange={(e) => saveUserName(e.target.value)} placeholder="Inserte nombre de usuario..."></textarea>
+          <button onClick={SaveUser}>Iniciar</button>
+          <button className="admin_button" onClick={GoToAdminPageUser}>¿Entrar cómo administrador?</button>
         </div>
       </header>
     </div>
@@ -64,6 +68,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/question_user" element={<QuestionPageUser />} />
+        <Route path="/admin_page_user" element={<UserPageAdmin />} />
       </Routes>
     </Router>
   );

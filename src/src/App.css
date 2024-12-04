@@ -56,8 +56,9 @@
 textarea {
   width: 100%; 
   max-width: 300px; 
-  height: 100px;
-  margin-bottom: 20px;
+  height: 40px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   padding: 10px;
   font-size: 16px;
   border: 2px solid #ffffff;
@@ -77,6 +78,18 @@ button {
   border-radius: 5px; 
   cursor: pointer;
   font-size: 16px; 
+  margin-top: 10px;
+}
+
+.admin_button {
+  padding: 10px 20px; 
+  background-color: #61dafb81; 
+  color: #000; 
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer;
+  font-size: 16px; 
+  margin-top: 10px;
 }
 
 button:hover {
