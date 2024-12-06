@@ -8,7 +8,7 @@ export const UserPageAdmin = () => {
     const navigate = useNavigate();
 
     const GoToUser = () => {
-        navigate('/'); 
+      navigate('/block_general_admin_page'); 
     };
 
     const [user_name, setTexto] = useState('');

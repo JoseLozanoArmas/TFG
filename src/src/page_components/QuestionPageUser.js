@@ -6,10 +6,35 @@ export const QuestionPageUser = () => {
   const navigate = useNavigate();
   const [code, saveCode] = useState('');
   const [inputCode, setInputCode] = useState('');
+  const [file, setFile] = useState(null);
 
-  const UploadFile = () => {
-    console.log("pendiente")
-  }
+  const UploadFile = async () => {
+    if (!file) {
+      alert('Por favor selecciona un archivo para subir.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/upload-file', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message); // Mensaje del servidor
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error);
+    }
+  };
 
   const GoToUser = () => {
     navigate('/'); 
@@ -43,11 +68,12 @@ export const QuestionPageUser = () => {
     }
   };
   
+  var tittle = "Titulo"
 
   return (
     <div className="App2">
       <div className="title-box">
-        <h1>Título</h1>
+        <h1>{tittle}</h1>
       </div>
         <textarea className="code_input"
           value={code}
@@ -55,6 +81,7 @@ export const QuestionPageUser = () => {
           placeholder="Introduce tu código"
         ></textarea>
       <div className="button-container-first-line">
+        <input type="file" onChange={(e) => setFile(e.target.files[0])} className="file-input"/>
         <button className="button_submit" onClick={UploadFile}>
           Subir archivo
         </button>
