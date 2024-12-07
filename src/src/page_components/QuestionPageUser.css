@@ -69,17 +69,17 @@
 }
 
 .description {
-  width: 100%; /* Ocupa todo el ancho de la pantalla */
-  border: 2px solid #ffffff; /* Borde blanco */
-  padding: 20px; /* Espaciado interno uniforme */
-  background-color: rgba(0, 0, 0, 0.7); /* Fondo negro semi-transparente */
-  color: #ffffff; /* Texto blanco */
-  box-sizing: border-box; /* Incluir bordes y padding en el ancho */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Sombra */
-  margin-bottom: 20px; /* Espaciado inferior */
-  min-height: 300px; /* Aumenta la altura mínima del recuadro */
-  text-align: left; /* Texto alineado a la izquierda */
-  display: flex; /* Usa Flexbox para manejar alineación */
-  align-items: flex-start; /* Alinea el contenido al inicio (arriba) */
-  justify-content: flex-start; /* Mantiene el contenido hacia la izquierda */
+  width: 100%; 
+  border: 2px solid #ffffff; 
+  padding: 20px; 
+  background-color: rgba(0, 0, 0, 0.7); 
+  color: #ffffff; 
+  box-sizing: border-box; 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); 
+  margin-bottom: 20px; 
+  min-height: 300px; 
+  text-align: left; 
+  display: flex; 
+  align-items: flex-start; 
+  justify-content: flex-start; 
 }
