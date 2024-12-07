@@ -1,4 +1,4 @@
-.tittle_block_page {
+.tittle_block_general_page {
   width: 100%; 
   border: 2px solid #ffffff; 
   padding: 20px; 
@@ -16,19 +16,18 @@
   margin-left: 20px;
 }
   
-  
 .image-button {
-    background: none; 
-    border: none; 
-    padding: 0; 
-    cursor: pointer; 
-    position: absolute; 
-    transition: transform 0.3s ease; 
-  }
+  background: none; 
+  border: none; 
+  padding: 0; 
+  cursor: pointer; 
+  position: absolute; 
+  transition: transform 0.3s ease; 
+}
   
 .user-image {
-    max-width: 100%;
-    height: auto;
-  }
+  max-width: 100%;
+  height: auto;
+}
   
   

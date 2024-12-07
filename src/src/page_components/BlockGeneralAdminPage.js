@@ -46,13 +46,13 @@ export const BlockGeneralAdminPage = () => {
   };
 
   const handleBotonPaginaClick = () => {
-    navigate('/question_user'); 
+    navigate('/block_internal_admin_page'); 
   };
 
   return (
     <div className="App3">
-      <div className="tittle_block_page">
-        <h1>PRUEBA</h1>
+      <div className="tittle_block_general_page">
+        <h1>Bloque de preguntas</h1>
       </div>
 
       {buttons.map((button) => (
@@ -72,7 +72,7 @@ export const BlockGeneralAdminPage = () => {
             src={require(
               button.type === 'boton_mas'
                 ? '../img/icon_plus.png'
-                : '../img/prueba.png'
+                : '../img/logo_ull.png'
             )}
             alt={button.type}
             className="user-image"

@@ -1,0 +1,30 @@
+.tittle_block_internal_admin_page {
+  width: 100%; 
+  border: 2px solid #ffffff; 
+  padding: 20px; 
+  background-color: rgba(0, 0, 0, 0.792); 
+  color: #ffffff; 
+  text-align: left; 
+  box-sizing: border-box; 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); 
+  position: relative; 
+  margin-bottom: 20px; 
+}
+
+.App_block_internal_page {
+  display: flex;
+  flex-direction: column; /* Asegura que los elementos estén en columna */
+  align-items: center; /* Centra los elementos horizontalmente */
+}
+
+.button_logo_internal_page {
+  display: flex;
+  justify-content: center; /* Centra el contenido dentro del botón */
+  align-items: center;
+  margin: 0 auto; /* Asegura que el botón esté centrado dentro del contenedor */
+}
+
+.button_logo_internal_page img {
+  height: 80px; /* Ajusta la altura deseada */
+  width: auto; /* Mantiene la proporción de la imagen */
+}

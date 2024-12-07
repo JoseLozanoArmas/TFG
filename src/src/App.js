@@ -4,6 +4,7 @@ import './App.css';
 import { QuestionPageUser } from './page_components/QuestionPageUser';
 import { UserPageAdmin } from './page_components/UserPageAdmin';
 import { BlockGeneralAdminPage } from './page_components/BlockGeneralAdminPage';
+import { BlockInternalAdminPage } from './page_components/BlockInternalAdminPage';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -71,6 +72,7 @@ function App() {
         <Route path="/question_user" element={<QuestionPageUser />} />
         <Route path="/admin_page_user" element={<UserPageAdmin />} />
         <Route path="/block_general_admin_page" element={<BlockGeneralAdminPage />} />
+        <Route path="/block_internal_admin_page" element={<BlockInternalAdminPage/>} />
       </Routes>
     </Router>
   );
