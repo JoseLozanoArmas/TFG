@@ -25,7 +25,7 @@ def save_user_name():
     folder_name = data.get('text', '') 
 
     if folder_name:
-        folder_path = os.path.join('src/users_input', folder_name)
+        folder_path = os.path.join('users_input', folder_name)
         os.makedirs(folder_path, exist_ok=True)
         return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
     else:
