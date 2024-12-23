@@ -13,18 +13,69 @@
 
 .App_block_internal_page {
   display: flex;
-  flex-direction: column; /* Asegura que los elementos estén en columna */
-  align-items: center; /* Centra los elementos horizontalmente */
+  flex-direction: column; 
+  align-items: center; 
 }
 
 .button_logo_internal_page {
   display: flex;
-  justify-content: center; /* Centra el contenido dentro del botón */
+  justify-content: center; 
   align-items: center;
-  margin: 0 auto; /* Asegura que el botón esté centrado dentro del contenedor */
+  margin: 0 auto; 
+  margin-bottom: 20px;
 }
 
 .button_logo_internal_page img {
-  height: 80px; /* Ajusta la altura deseada */
-  width: auto; /* Mantiene la proporción de la imagen */
+  height: 80px; 
+  width: auto; 
+}
+
+.button_question {
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  width: 95%; 
+  height: 60px; 
+  padding: 0; 
+  background-color: #007bff73; 
+  border: none; 
+  color: white; 
+  box-sizing: border-box; 
+}
+
+.button_question img {
+  height: 55px; 
+  width: auto; 
+}
+
+.button_new_question {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+  height: 60px;
+  padding: 0;
+  background-color: #28a745; 
+  border: none;
+  color: white;
+  margin-bottom: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); 
+}
+
+.button_remove_last {
+  position: fixed; 
+  bottom: 20px; 
+  right: 20px; 
+  background-color: #dc3545; 
+  color: white;
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); 
+  transition: background-color 0.3s; 
+}
+
+.button_remove_last:hover {
+  background-color: #c82333; 
 }

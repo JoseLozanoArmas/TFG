@@ -30,4 +30,20 @@
   height: auto;
 }
   
-  
+.button_remove_last {
+  position: fixed; 
+  bottom: 20px; 
+  right: 20px; 
+  background-color: #dc3545; 
+  color: white; 
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); 
+  transition: background-color 0.3s; 
+}
+
+.button_remove_last:hover {
+  background-color: #c82333; 
+}
