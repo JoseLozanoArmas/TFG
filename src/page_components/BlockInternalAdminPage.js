@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './BlockInternalAdminPage.css';
 import logo from '../img/logo_ull.png';
 import icon from '../img/icon_plus.png';
 
 export const BlockInternalAdminPage = () => {
+  const navigate = useNavigate();
   const [currentLogo, setCurrentLogo] = useState(logo);
   const [buttons, setButtons] = useState([]);
 
@@ -15,6 +17,10 @@ export const BlockInternalAdminPage = () => {
     }
   };
 
+  const MoveToQuestionPageAdmin = () => {
+    navigate('/question_admin');
+  };
+
   const triggerFileInput = () => {
     document.getElementById("file-input").click();
   };
@@ -22,7 +28,7 @@ export const BlockInternalAdminPage = () => {
   const addNewButton = () => {
     if (buttons.length < 8) {
       const newButton = (
-        <button key={buttons.length} className="button_new_question">
+        <button key={buttons.length} className="button_new_question" onClick={MoveToQuestionPageAdmin}>
           Botón {buttons.length + 1}
         </button>
       );

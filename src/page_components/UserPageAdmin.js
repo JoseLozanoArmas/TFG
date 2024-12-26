@@ -7,8 +7,12 @@ export const UserPageAdmin = () => {
   const PASSWORD = "1234";
   const navigate = useNavigate();
 
-  const GoToUser = () => {
+  const GoToGeneralAdminPage = () => {
     navigate('/block_general_admin_page'); 
+  };
+
+  const GoToUserPage = () => {
+    navigate('/');
   };
 
   const [user_name, setTexto] = useState('');
@@ -32,12 +36,12 @@ export const UserPageAdmin = () => {
 
     if ((user_name === USER_NAME) && (user_password === PASSWORD)) {
       alert('Contraseña aceptada');
-      GoToUser();
+      GoToGeneralAdminPage();
     } else {
         alert('Usuario o contraseña incorrectos');
         return;
-      }
-    };
+    }
+  };
 
     return (
       <div className="App">
@@ -48,6 +52,7 @@ export const UserPageAdmin = () => {
               <textarea className="textarea_user_page_admin_username" value={user_name} onChange={(e) => setTexto(e.target.value)} placeholder="Inserte nombre de usuario..."></textarea>
               <input type="password" className='textarea_user_page_admin_password' value={user_password} onChange={(e) => setPassword(e.target.value)} placeholder="Inserte contraseña..."/>
               <button onClick={SaveUser}>Iniciar</button>
+              <button class="admin_button" onClick={GoToUserPage}>¿Entrar cómo usuario?</button>
             </div>
         </header>
     </div>
