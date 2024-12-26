@@ -54,3 +54,59 @@
   text-align: left; 
   box-sizing: border-box; 
 }
+
+.puntuation_question_page_admin {
+  display: flex;
+  align-items: center; /* Alinear elementos verticalmente */
+  gap: 10px; /* Espaciado entre los elementos (opcional) */
+  justify-content: space-between; /* Distribuir espacio si es necesario */
+  width: 95%; /* Ajusta el ancho del contenedor */
+  padding: 20px; /* Espaciado interno */
+  background-color: rgba(0, 0, 0, 0.792); /* Fondo similar al resto */
+  border: 2px solid #ffffff; /* Borde para uniformidad */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Sombra */
+  margin-bottom: 20px; /* Espaciado inferior */
+  box-sizing: border-box;
+}
+
+.button_submit_test {
+  width: 200px; /* Ajusta tamaño del botón */
+  height: 40px;
+  background-color: #ffffff; /* Fondo del botón */
+  border: none; /* Sin bordes */
+  cursor: pointer;
+  color: black
+}
+
+.file_name_display {
+  font-size: 14px;
+  color: white;
+}
+
+
+.label_puntuation_admin {
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.puntuation_input_admin {
+  width: 80px; /* Ajusta ancho del input */
+  border: 1px solid #ffffff;
+  background: transparent;
+  color: #ffffff;
+  font-size: 16px;
+  padding: 5px;
+  text-align: center;
+  outline: none;
+  border-radius: 4px; /* Esquinas redondeadas */
+}
+
+.button_save_question_page_admin{
+  background-color: rgba(0, 0, 0, 0.792); 
+  color: #ffffff;
+  font-size: 20px;
+}
+
+
+
+
