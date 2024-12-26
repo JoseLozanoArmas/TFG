@@ -1,0 +1,16 @@
+.control_panel_page {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-around; /* Cambiado aquí */
+    color: white;
+    padding: 20px; 
+  }
+  
+
+.button_control_panel {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}

@@ -7,8 +7,8 @@ export const UserPageAdmin = () => {
   const PASSWORD = "1234";
   const navigate = useNavigate();
 
-  const GoToGeneralAdminPage = () => {
-    navigate('/block_general_admin_page'); 
+  const GoToControlPanel = () => {
+    navigate('/control_panel'); 
   };
 
   const GoToUserPage = () => {
@@ -36,7 +36,7 @@ export const UserPageAdmin = () => {
 
     if ((user_name === USER_NAME) && (user_password === PASSWORD)) {
       alert('Contraseña aceptada');
-      GoToGeneralAdminPage();
+      GoToControlPanel();
     } else {
         alert('Usuario o contraseña incorrectos');
         return;
