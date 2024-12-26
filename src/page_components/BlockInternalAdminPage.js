@@ -29,7 +29,7 @@ export const BlockInternalAdminPage = () => {
     if (buttons.length < 8) {
       const newButton = (
         <button key={buttons.length} className="button_new_question" onClick={MoveToQuestionPageAdmin}>
-          Botón {buttons.length + 1}
+          Pregunta {buttons.length + 1}
         </button>
       );
       setButtons([...buttons, newButton]);
