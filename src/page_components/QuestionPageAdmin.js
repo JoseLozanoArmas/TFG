@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import './QuestionPageAdmin.css';
 
 export const QuestionPageAdmin = () => {
-  const [title, setTitle] = useState(); 
-  const [description, setDescription] = useState();
+  const [title, setTitle] = useState(""); 
+  const [description, setDescription] = useState("");
   const [first_puntuation, setFirstPuntuation] = useState(0);
   const [second_puntuation, setSecondPuntuation] = useState(0);
   const [third_puntuation, setThirdPuntuation] = useState(0);
@@ -42,6 +42,51 @@ export const QuestionPageAdmin = () => {
     document.getElementById(id).click();
   };
 
+  const checkAllInformation = () => {
+    if (!title.trim()) { 
+      alert("Por favor introduzca un titulo a la pregunta");
+      return;
+    }
+
+    if (!description.trim()) { 
+      alert("Por favor introduzca una descripción a la pregunta");
+      return;
+    }
+
+    if (first_puntuation <= 0) {
+      alert("Por favor introduzca una puntuación mayor a 0 a la primera prueba");
+      return;
+    }
+
+    if (uploadedFiles.file1 == null) {
+      alert("No se ha subido la prueba 1");
+      return;
+    }
+
+    if (second_puntuation <= 0) {
+      alert("Por favor introduzca una puntuación mayor a 0 a la primera prueba");
+      return;
+    }
+
+    if (uploadedFiles.file2 == null) {
+      alert("No se ha subido la prueba 2");
+      return;
+    }
+
+    if (third_puntuation <= 0) {
+      alert("Por favor introduzca una puntuación mayor a 0 a la primera prueba");
+      return;
+    }
+
+    if (uploadedFiles.file3 == null) {
+      alert("No se ha subido la prueba 3");
+      return;
+    }
+
+    // añadir la condición para volver al bloque de preguntas
+    alert("pendiente mover a la pagina de bloque")
+  };
+
   return (
     <div className="App_question_page_admin">
       <div className="tittle_question_page_admin">
@@ -71,7 +116,7 @@ export const QuestionPageAdmin = () => {
         <div className="label_puntuation_admin">Añada una puntuación al final de la pregunta:</div>
         <input type="text" value={third_puntuation} onChange={handleThirdPuntuationChange} className="puntuation_input_admin"/>
       </div>
-      <button className="button_save_question_page_admin">Confirmar</button>
+      <button className="button_save_question_page_admin" onClick={checkAllInformation}>Confirmar</button>
     </div>
   );
 };
