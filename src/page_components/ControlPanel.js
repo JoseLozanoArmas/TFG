@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ControlPanel.css';
 
@@ -10,13 +10,24 @@ export const ControlPanel = () => {
   };
 
   const MoveToRanking = () => {
-    alert("pendiente")
+    alert("pendiente");
   };
 
   return (
     <div className="control_panel_page">
-      <button className="button_control_panel" onClick={MoveToRanking}>Ranking</button>
-      <button className="button_control_panel" onClick={MoveToBlockGeneralAdminPage}>Preguntas</button>
+      <div className="button_container">
+        <span className="button_label">Ranking</span>
+        <button className="button_control_panel" onClick={MoveToRanking}>
+          <img src={require("../img/prize.png")} className="button_icon" alt="Ranking" />
+        </button>
+      </div>
+
+      <div className="button_container">
+        <span className="button_label">Bloque de preguntas</span>
+        <button className="button_control_panel" onClick={MoveToBlockGeneralAdminPage}>
+          <img src={require("../img/prueba.png")} className="button_icon" alt="Preguntas" />
+        </button>
+      </div>
     </div>
   );
-}
+};
