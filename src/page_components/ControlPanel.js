@@ -10,7 +10,7 @@ export const ControlPanel = () => {
   };
 
   const MoveToRanking = () => {
-    alert("pendiente");
+    navigate('/ranking');
   };
 
   return (

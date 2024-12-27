@@ -7,6 +7,7 @@ import { BlockGeneralAdminPage } from './page_components/BlockGeneralAdminPage';
 import { BlockInternalAdminPage } from './page_components/BlockInternalAdminPage';
 import { QuestionPageAdmin } from './page_components/QuestionPageAdmin';
 import { ControlPanel } from './page_components/ControlPanel';
+import { RankingPageAdmin } from './page_components/RankingPageAdmin';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -77,6 +78,7 @@ function App() {
         <Route path="/block_internal_admin_page" element={<BlockInternalAdminPage/>} />
         <Route path="/question_admin" element={<QuestionPageAdmin/>}/>
         <Route path="/control_panel" element={<ControlPanel/>}/>
+        <Route path="/ranking" element={<RankingPageAdmin/>}/>
       </Routes>
     </Router>
   );
