@@ -1,6 +1,8 @@
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import shutil
+
 
 app = Flask(__name__)
 CORS(app)
@@ -46,6 +48,22 @@ def upload_file():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(file_path)  # Guardamos el archivo en el directorio de subida
         return jsonify({'message': f'Archivo {file.filename} subido con éxito'}), 200
+    
+@app.route('/reset-users', methods=['POST'])
+def reset_users():
+    folder_path = 'users_input'
+    try:
+        # Elimina todos los archivos y subcarpetas en la carpeta especificada
+        for filename in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, filename)
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)  # Eliminar archivo o enlace
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)  # Eliminar carpeta
+        return jsonify({'message': 'Contenido de la carpeta eliminado con éxito'}), 200
+    except Exception as e:
+        return jsonify({'message': f'Error al eliminar contenido: {str(e)}'}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)

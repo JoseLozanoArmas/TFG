@@ -13,7 +13,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const GoToQuestionPageUser = () => {
-    navigate('/question_user'); 
+    navigate('/block_general_admin_page'); 
   };
 
   const GoToAdminPageUser = () => {
@@ -21,7 +21,6 @@ const Home = () => {
   }
 
   const [user_name, saveUserName] = useState('');
- 
 
   const SaveUser = async () => {
     if (!user_name.trim()) { 
@@ -75,7 +74,7 @@ function App() {
         <Route path="/question_user" element={<QuestionPageUser />} />
         <Route path="/admin_page_user" element={<UserPageAdmin />} />
         <Route path="/block_general_admin_page" element={<BlockGeneralAdminPage />} />
-        <Route path="/block_internal_admin_page" element={<BlockInternalAdminPage/>} />
+        <Route path="/block_internal_admin_page/:id" element={<BlockInternalAdminPage/>} />
         <Route path="/question_admin" element={<QuestionPageAdmin/>}/>
         <Route path="/control_panel" element={<ControlPanel/>}/>
         <Route path="/ranking" element={<RankingPageAdmin/>}/>
