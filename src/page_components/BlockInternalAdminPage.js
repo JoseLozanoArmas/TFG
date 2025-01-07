@@ -40,6 +40,13 @@ export const BlockInternalAdminPage = () => {
     document.getElementById("file-input").click();
   };
 
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const userRole = localStorage.getItem('user_role');
+    setIsAdmin(userRole === 'admin');
+  }, []);
+
   const addNewButton = () => {
     if (buttons.length < 8) {
       const newButton = {
@@ -73,12 +80,12 @@ export const BlockInternalAdminPage = () => {
           {button.label}
         </button>
       ))}
-      {buttons.length < 8 && (
+      {buttons.length < 8 && isAdmin && (
         <button className="button_question" onClick={addNewButton}>
           <img src={icon} alt="Icono de pregunta" />
         </button>
       )}
-      {buttons.length >= 0 && (
+      {buttons.length >= 0 && isAdmin && (
         <button className="button_remove_last" onClick={removeLastButton}>
           Deshacer última pregunta
         </button>

@@ -83,8 +83,7 @@ export const QuestionPageAdmin = () => {
       return;
     }
 
-    // añadir la condición para volver al bloque de preguntas
-    alert("pendiente mover a la pagina de bloque")
+    alert("añadir la condición para que cuando se pulse el boton de confirmar te mande a la pagina de las preguntas")
   };
 
   return (

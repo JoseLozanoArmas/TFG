@@ -40,7 +40,8 @@ const Home = () => {
       const data = await response.json();
   
       if (response.ok) {
-        alert(data.message); 
+        alert(data.message);
+        localStorage.setItem("user_role", "user"); 
         GoToQuestionPageUser();
       } else {
         alert(`Error: ${data.message}`);

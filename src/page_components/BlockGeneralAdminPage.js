@@ -27,6 +27,13 @@ export const BlockGeneralAdminPage = () => {
     }
   });
 
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const userRole = localStorage.getItem('user_role');
+    setIsAdmin(userRole === 'admin');
+  }, []);
+
   useEffect(() => {
     localStorage.setItem('buttons', JSON.stringify(buttons));
     localStorage.setItem('botonMasHistory', JSON.stringify(botonMasHistory));
@@ -82,18 +89,20 @@ export const BlockGeneralAdminPage = () => {
         <h1>Bloque de preguntas</h1>
       </div>
       {buttons.map((button) => (
-        <button key={button.id} onClick={() => {
+        (button.type === 'boton_mas' && isAdmin) || button.type !== 'boton_mas' ? (
+          <button key={button.id} onClick={() => {
             if (button.type === 'boton_mas') {
               handleBotonMasClick(button.id);
             } else {
               handleBotonPaginaClick(button.id);
             }
           }
-          } className="image-button" style={{transform: `translate(${button.positionX}px, ${button.positionY}px)`}}>
-          <img src={require(button.type === 'boton_mas' ? '../img/icon_plus.png' : '../img/logo_ull.png')} className="user-image"/>
+        } className="image-button" style={{transform: `translate(${button.positionX}px, ${button.positionY}px)`}}>
+        <img src={require(button.type === 'boton_mas' ? '../img/icon_plus.png' : '../img/logo_ull.png')} className="user-image"/>
         </button>
+        ) : null
       ))}
-      {buttons.length > 1 && (
+      {buttons.length > 1 && isAdmin && (
         <button className="button_remove_last" onClick={removeLastButton}>
           Deshacer último bloque
         </button>

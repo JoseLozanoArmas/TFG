@@ -36,6 +36,7 @@ export const UserPageAdmin = () => {
 
     if ((user_name === USER_NAME) && (user_password === PASSWORD)) {
       alert('Contraseña aceptada');
+      localStorage.setItem("user_role","admin");
       GoToControlPanel();
     } else {
         alert('Usuario o contraseña incorrectos');
