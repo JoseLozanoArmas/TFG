@@ -12,6 +12,7 @@
 }
 
 .App_question_page_admin {
+  margin-top: 15px;
   display: flex;
   flex-direction: column; 
   align-items: center; 
@@ -57,23 +58,23 @@
 
 .puntuation_question_page_admin {
   display: flex;
-  align-items: center; /* Alinear elementos verticalmente */
-  gap: 10px; /* Espaciado entre los elementos (opcional) */
-  justify-content: space-between; /* Distribuir espacio si es necesario */
-  width: 95%; /* Ajusta el ancho del contenedor */
-  padding: 20px; /* Espaciado interno */
-  background-color: rgba(0, 0, 0, 0.792); /* Fondo similar al resto */
-  border: 2px solid #ffffff; /* Borde para uniformidad */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Sombra */
-  margin-bottom: 20px; /* Espaciado inferior */
+  align-items: center; 
+  gap: 10px; 
+  justify-content: space-between; 
+  width: 95%; 
+  padding: 20px; 
+  background-color: rgba(0, 0, 0, 0.792); 
+  border: 2px solid #ffffff; 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); 
+  margin-bottom: 20px; 
   box-sizing: border-box;
 }
 
 .button_submit_test {
-  width: 200px; /* Ajusta tamaño del botón */
+  width: 200px; 
   height: 40px;
-  background-color: #ffffff; /* Fondo del botón */
-  border: none; /* Sin bordes */
+  background-color: #ffffff; 
+  border: none; 
   cursor: pointer;
   color: black
 }
@@ -90,7 +91,7 @@
 }
 
 .puntuation_input_admin {
-  width: 80px; /* Ajusta ancho del input */
+  width: 80px; 
   border: 1px solid #ffffff;
   background: transparent;
   color: #ffffff;
@@ -98,7 +99,7 @@
   padding: 5px;
   text-align: center;
   outline: none;
-  border-radius: 4px; /* Esquinas redondeadas */
+  border-radius: 4px; 
 }
 
 .button_save_question_page_admin{
@@ -107,6 +108,31 @@
   font-size: 20px;
 }
 
+.App_question_page_user {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+}
 
+.button_submit_code {
+  width: 200px; 
+  height: 40px;
+  background-color: #ffffff; 
+  border: none; 
+  cursor: pointer;
+  color: black
+}
 
-
+.user_submit_code {
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  width: 95%; 
+  padding: 20px; 
+  background-color: rgba(0, 0, 0, 0.792); 
+  border: 2px solid #ffffff; 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); 
+  margin-bottom: 20px; 
+  box-sizing: border-box;
+}

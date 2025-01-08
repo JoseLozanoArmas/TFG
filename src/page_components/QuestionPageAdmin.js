@@ -2,14 +2,29 @@ import React, { useState, useEffect } from 'react';
 import './QuestionPageAdmin.css';
 
 export const QuestionPageAdmin = () => {
-  const [title, setTitle] = useState(""); 
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState(() => {
+    const savedTittle = localStorage.getItem("title");
+    if (savedTittle) {
+      return JSON.parse(savedTittle);
+    } else {
+      return [];
+    }
+  }); 
+  const [description, setDescription] = useState(() => {
+    const savedDescription = localStorage.getItem("description");
+    if (savedDescription) {
+      return JSON.parse(savedDescription);
+    } else {
+      return [];
+    }
+  });
   const [first_puntuation, setFirstPuntuation] = useState(0);
   const [second_puntuation, setSecondPuntuation] = useState(0);
   const [third_puntuation, setThirdPuntuation] = useState(0);
-  const [uploadedFiles, setUploadedFiles] = useState({ file1: null, file2: null, file3: null });
+  const [uploadedFiles, setUploadedFiles] = useState({ file1: null, file2: null, file3: null, fileUser: null});
   const make_invisible = { display: "none" }
-  const content_of_button = "Suba una prueba"
+  const content_of_button_admin = "Suba una prueba";
+  const content_of_button_user = "Suba su código";
 
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -17,6 +32,11 @@ export const QuestionPageAdmin = () => {
     const userRole = localStorage.getItem('user_role');
     setIsAdmin(userRole === 'admin');
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("title", JSON.stringify(title));
+    localStorage.setItem("description", JSON.stringify(description));
+  })
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value); 
@@ -48,6 +68,10 @@ export const QuestionPageAdmin = () => {
   const triggerFileInput = (id) => {
     document.getElementById(id).click();
   };
+
+  const triggerFileInputUser = (id) => {
+    document.getElementById(id).click();
+  }
 
   const checkAllInformation = () => {
     if (!title.trim()) { 
@@ -92,37 +116,55 @@ export const QuestionPageAdmin = () => {
 
     alert("añadir la condición para que cuando se pulse el boton de confirmar te mande a la pagina de las preguntas")
   };
-
-  return (
-    <div className="App_question_page_admin">
-      <div className="tittle_question_page_admin">
-        <input type="text" value={title} onChange={handleTitleChange} className="title_input_admin" placeholder="Escriba el título aquí"/>
+  
+  if (isAdmin) {
+    return (
+      <div className="App_question_page_admin">
+        <div className="tittle_question_page_admin">
+          <input type="text" value={title} onChange={handleTitleChange} className="title_input_admin" placeholder="Escriba el título aquí"/>
+        </div>
+        <div className="description_question_page_admin">
+          <input type="text" value={description} onChange={handleDescriptionChange} className="description_input_admin" placeholder="Escriba la descripción aquí"/>
+        </div>
+        <div className="puntuation_question_page_admin">
+          <button className="button_submit_test" onClick={() => triggerFileInput('fileInput1')}>{content_of_button_admin}</button>
+          <input id="fileInput1" type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, 'file1')} />
+          {uploadedFiles.file1 && <span className="file_name_display">{uploadedFiles.file1}</span>}
+          <div className="label_puntuation_admin">Añada una puntuación al final de la pregunta:</div>
+          <input type="text" value={first_puntuation} onChange={handleFirstPuntuationChange} className="puntuation_input_admin"/>
+        </div>
+        <div className="puntuation_question_page_admin">
+          <button className="button_submit_test" onClick={() => triggerFileInput('fileInput2')}>{content_of_button_admin}</button>
+          <input id="fileInput2" type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, 'file2')} />
+          {uploadedFiles.file2 && <span className="file_name_display">{uploadedFiles.file2}</span>}
+          <div className="label_puntuation_admin">Añada una puntuación al final de la pregunta:</div>
+          <input type="text" value={second_puntuation} onChange={handleSecondPuntuationChange} className="puntuation_input_admin"/>
+        </div>
+        <div className="puntuation_question_page_admin">
+          <button className="button_submit_test" onClick={() => triggerFileInput('fileInput3')}>{content_of_button_admin}</button>
+          <input id="fileInput3" type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, 'file3')} />
+          {uploadedFiles.file3 && <span className="file_name_display">{uploadedFiles.file3}</span>}
+          <div className="label_puntuation_admin">Añada una puntuación al final de la pregunta:</div>
+          <input type="text" value={third_puntuation} onChange={handleThirdPuntuationChange} className="puntuation_input_admin"/>
+        </div>
+        <button className="button_save_question_page_admin" onClick={checkAllInformation}>Confirmar</button>
       </div>
-      <div className="description_question_page_admin">
-        <input type="text" value={description} onChange={handleDescriptionChange} className="description_input_admin" placeholder="Escriba la descripción aquí"/>
+    );
+  } else {
+    return (
+      <div className="App_question_page_user">
+        <div className="tittle_question_page_admin">
+          <input type="text" value={title} className="title_input_admin" readOnly/>
+        </div>
+        <div className="description_question_page_admin">
+          <input type="text" value={description} className="description_input_admin" readOnly/>
+        </div>
+        <div className="user_submit_code">
+          <button className="button_submit_code" onClick={() => triggerFileInputUser('fileInputUser')}>{content_of_button_user}</button>
+          <input id="fileInputUser" type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, 'fileUser')} />
+          {uploadedFiles.fileUser && <span className="file_name_display">{uploadedFiles.fileUser}</span>}
+        </div>
       </div>
-      <div className="puntuation_question_page_admin">
-        <button className="button_submit_test" onClick={() => triggerFileInput('fileInput1')}>{content_of_button}</button>
-        <input id="fileInput1" type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, 'file1')} />
-        {uploadedFiles.file1 && <span className="file_name_display">{uploadedFiles.file1}</span>}
-        <div className="label_puntuation_admin">Añada una puntuación al final de la pregunta:</div>
-        <input type="text" value={first_puntuation} onChange={handleFirstPuntuationChange} className="puntuation_input_admin"/>
-      </div>
-      <div className="puntuation_question_page_admin">
-        <button className="button_submit_test" onClick={() => triggerFileInput('fileInput2')}>{content_of_button}</button>
-        <input id="fileInput2" type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, 'file2')} />
-        {uploadedFiles.file2 && <span className="file_name_display">{uploadedFiles.file2}</span>}
-        <div className="label_puntuation_admin">Añada una puntuación al final de la pregunta:</div>
-        <input type="text" value={second_puntuation} onChange={handleSecondPuntuationChange} className="puntuation_input_admin"/>
-      </div>
-      <div className="puntuation_question_page_admin">
-        <button className="button_submit_test" onClick={() => triggerFileInput('fileInput3')}>{content_of_button}</button>
-        <input id="fileInput3" type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, 'file3')} />
-        {uploadedFiles.file3 && <span className="file_name_display">{uploadedFiles.file3}</span>}
-        <div className="label_puntuation_admin">Añada una puntuación al final de la pregunta:</div>
-        <input type="text" value={third_puntuation} onChange={handleThirdPuntuationChange} className="puntuation_input_admin"/>
-      </div>
-      <button className="button_save_question_page_admin" onClick={checkAllInformation}>Confirmar</button>
-    </div>
-  );
+    )
+  }
 };
