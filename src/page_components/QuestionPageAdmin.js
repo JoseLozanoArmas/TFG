@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './QuestionPageAdmin.css';
 
 export const QuestionPageAdmin = () => {
@@ -10,6 +10,13 @@ export const QuestionPageAdmin = () => {
   const [uploadedFiles, setUploadedFiles] = useState({ file1: null, file2: null, file3: null });
   const make_invisible = { display: "none" }
   const content_of_button = "Suba una prueba"
+
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const userRole = localStorage.getItem('user_role');
+    setIsAdmin(userRole === 'admin');
+  }, []);
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value); 
