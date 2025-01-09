@@ -35,4 +35,4 @@ file_path_c_plus = "is_pair.cc"
 file_path_c = "is_pair.c"
 file_path_ruby = "is_pair.rb"
 file_path_ejecutable = "a.out"
-ejecute_code(file_path_c_plus)
+ejecute_code(file_path_python)
