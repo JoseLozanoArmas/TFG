@@ -60,7 +60,7 @@ def reset_users():
                 os.unlink(file_path)  # Eliminar archivo o enlace
             elif os.path.isdir(file_path):
                 shutil.rmtree(file_path)  # Eliminar carpeta
-        return jsonify({'message': 'Contenido de la carpeta eliminado con éxito'}), 200
+        return jsonify({'message': 'Usuarios eliminados con éxito'}), 200
     except Exception as e:
         return jsonify({'message': f'Error al eliminar contenido: {str(e)}'}), 500
 

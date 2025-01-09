@@ -13,6 +13,10 @@ export const ControlPanel = () => {
     navigate('/ranking');
   };
 
+  const MoveToSettings = () => {
+    navigate('/settings')
+  };
+
   return (
     <div className="control_panel_page">
       <div className="button_container">
@@ -24,8 +28,8 @@ export const ControlPanel = () => {
 
       <div className="button_container">
         <span className="button_label">Configuración</span>
-        <button className="button_control_panel" onClick={MoveToRanking}>
-          <img src={require("../img/prize.png")} className="button_icon" alt="Configuración" />
+        <button className="button_control_panel" onClick={MoveToSettings}>
+          <img src={require("../img/configuracion.png")} className="button_icon" alt="Configuración" />
         </button>
       </div>
 
