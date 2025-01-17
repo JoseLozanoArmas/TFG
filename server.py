@@ -36,10 +36,12 @@ def save_user_name():
 @app.route('/create-block-folder-user', methods=["POST"]) # Creación de carpetas para los bloques de preguntas de los usuarios
 def create_block_folder_user():
     data = request.get_json()  
-    user_name = data.get('text', '') 
+    user_name = data.get('text', '')
+    block_name = data.get('block_name', '')
+    block_name = "block_" + block_name
     if user_name:
         route = 'users_input/' + user_name + "/"
-        folder_path = os.path.join(route, "block")
+        folder_path = os.path.join(route, block_name)
         os.makedirs(folder_path, exist_ok=True)
         return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
     else:

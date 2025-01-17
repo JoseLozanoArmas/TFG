@@ -63,13 +63,18 @@ export const BlockGeneralAdminPage = () => {
 
   const handleBotonPaginaClick = async (id) => {
     if (isAdmin == false) {
+      let save_name = buttons[buttons.length - 1].id - 1
+      save_name = String(save_name)
       try { // Llamamos al método que crea la carpeta del bloque del usuario
         const response = await fetch('http://127.0.0.1:5000/create-block-folder-user', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ text: userName }),
+          body: JSON.stringify({ 
+            text: userName,
+            block_name: save_name, 
+          }),
         });
     
         const data = await response.json();
@@ -83,8 +88,6 @@ export const BlockGeneralAdminPage = () => {
         alert('Error al conectar con el servidor.');
         console.error(error);
       }
-    } else {
-      alert("Meter la condición para crear una carpeta para los bloques de los Admins");
     }
     navigate(`/block_internal_admin_page/${id}`);
   };
