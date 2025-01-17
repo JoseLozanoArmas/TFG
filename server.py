@@ -58,6 +58,20 @@ def create_block_folder_admin():
         return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
+    
+@app.route('/delete-last-block-folder-admin', methods=["POST"])
+def delete_last_block_folder_admin():
+    data = request.get_json()  
+    block_name = data.get('text', '') 
+    block_dir = "block_" + block_name
+    if block_name:
+        route = 'data/'
+        folder_path = os.path.join(route, block_dir)
+        if os.path.isdir(folder_path):
+            shutil.rmtree(folder_path)  # Eliminar carpeta
+        return jsonify({'message': f'Carpeta eliminada con éxito en {folder_path}'}), 200
+    else:
+        return jsonify({'message': 'Texto vacío, no se puede eliminar carpeta'}), 400
 
 
 @app.route('/upload-file', methods=['POST'])

@@ -139,25 +139,41 @@ export const BlockGeneralAdminPage = () => {
     navigate(`/block_internal_admin_page/${id}`);
   };
 
-  const removeLastButton = () => {
-    setButtons((prevButtons) => {
-      if (prevButtons.length >= 1) {
-        setBotonMasHistory((prevHistory) => {
-          const lastPosition = prevHistory[prevHistory.length - 1];
-          setButtons((updatedButtons) =>
-            updatedButtons.map((button) => {
-              if (button.type === 'boton_mas') {
-                return [{ ...button, ...lastPosition }];
-              } else {
-                return button;
-              }
-            })
-          );
-          return prevHistory.slice(0, -1); 
-        });
+  const removeLastButton = async () => {
+    let save_name = buttons[buttons.length - 1].id - 1
+    save_name = String(save_name)
+    try {
+      const response = await fetch('http://127.0.0.1:5000/delete-last-block-folder-admin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: save_name
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.message}`);
+        return; 
       }
-      return prevButtons.slice(0, -1); 
-    });
+      setBotonMasHistory((prevHistory) => {
+        if (prevHistory.length === 0) { return prevHistory; }
+        const lastPosition = prevHistory[prevHistory.length - 1];
+        setButtons((prevButtons) =>
+          prevButtons.map((button) =>
+            button.type === 'boton_mas' ? { ...button, ...lastPosition } : button
+          )
+        );
+        return prevHistory.slice(0, -1);
+      });
+      setButtons((prevButtons) => prevButtons.slice(0, -1));
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error);
+    }
   };
 
   return (
