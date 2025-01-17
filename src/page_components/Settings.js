@@ -1,34 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Settings.css';
 
 export const Settings = () => {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  const resetUsers = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/reset-users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        alert(data.message); // Muestra un mensaje de éxito
-      } else {
-        const errorData = await response.json();
-        alert(`Error: ${errorData.message}`); // Muestra un mensaje de error
-      }
-    } catch (error) {
-      alert(`Error de conexión: ${error.message}`); // Manejo de errores de conexión
-    }
+  useEffect(() => {
+    const userRole = localStorage.getItem('user_role');
+    setIsAdmin(userRole === 'admin');
+  }, []);
+
+  const MoveToDeleteOptions = () => {
+    navigate('/delete_options');
   };
-  
+
+  const MoveToUsers = () => {
+    alert("pendiente")
+    // navigate('/users');
+  };
+
   return (
-    <div className="settings_page_admin">
-      <button className="button_reset_ranking" onClick={resetUsers}>Reset</button>
+    <div className="settings_page">
+      <div className="button_container">
+        <span className="button_label">Usuarios</span>
+          <button className="button_settings" onClick={MoveToUsers}>
+            <img src={require("../img/usuarios.png")} className="button_icon" alt="Users" />
+          </button>
+      </div>
+      <div className="button_container">
+        <span className="button_label">Opciones de borrado</span>
+          <button className="button_settings" onClick={MoveToDeleteOptions}>
+            <img src={require("../img/configuracion.png")} className="button_icon" alt="Delete options" />
+          </button>
+      </div>
     </div>
   );
-}
+};

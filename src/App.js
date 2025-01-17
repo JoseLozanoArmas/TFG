@@ -8,6 +8,7 @@ import { BlockInternalAdminPage } from './page_components/BlockInternalAdminPage
 import { QuestionPageAdmin } from './page_components/QuestionPageAdmin';
 import { ControlPanel } from './page_components/ControlPanel';
 import { RankingPageAdmin } from './page_components/RankingPageAdmin';
+import { DeleteOptions } from './page_components/DeleteOptions';
 import { Settings } from './page_components/Settings';
 
 const Home = () => {
@@ -82,6 +83,7 @@ function App() {
         <Route path="/control_panel" element={<ControlPanel/>}/>
         <Route path="/ranking" element={<RankingPageAdmin/>}/>
         <Route path="/settings" element={<Settings/>}/>
+        <Route path="/delete_options" element={<DeleteOptions/>}/>
       </Routes>
     </Router>
   );
