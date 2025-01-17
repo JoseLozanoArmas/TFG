@@ -29,7 +29,7 @@ const Home = () => {
       return;
     }
 
-    try {
+    try { // Crear la carpeta del usuario
       const response = await fetch('http://127.0.0.1:5000/save-user-name', {
         method: 'POST',
         headers: {
@@ -43,6 +43,7 @@ const Home = () => {
       if (response.ok) {
         alert(data.message);
         localStorage.setItem("user_role", "user"); 
+        localStorage.setItem("name_user", user_name);
         GoToQuestionPageUser();
       } else {
         alert(`Error: ${data.message}`);

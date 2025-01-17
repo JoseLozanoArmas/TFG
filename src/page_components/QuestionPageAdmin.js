@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import './QuestionPageAdmin.css';
+import icon from '../img/icon_plus.png';
 
 export const QuestionPageAdmin = () => {
+  const { id } = useParams();
   const [title, setTitle] = useState(() => {
     const savedTittle = localStorage.getItem("title");
     if (savedTittle) {
@@ -25,6 +28,15 @@ export const QuestionPageAdmin = () => {
   const make_invisible = { display: "none" }
   const content_of_button_admin = "Suba una prueba";
   const content_of_button_user = "Suba su código";
+
+  const [buttons, setButtons] = useState(() => {
+    const savedButtons = localStorage.getItem(`button_${id}`);
+    if (savedButtons) {
+      return JSON.parse(savedButtons);
+    } else {
+      return [];
+    }
+  });
 
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -72,6 +84,14 @@ export const QuestionPageAdmin = () => {
   const triggerFileInputUser = (id) => {
     document.getElementById(id).click();
   }
+
+  const addNewButton = () => {
+    const newButton = {
+      id: buttons.length + 1,
+      label: `Pregunta ${buttons.length + 1}`
+    };
+    setButtons((prevButtons) => [...prevButtons, newButton]);
+  };
 
   const checkAllInformation = () => {
     if (!title.trim()) { 
@@ -133,6 +153,28 @@ export const QuestionPageAdmin = () => {
           <div className="label_puntuation_admin">Añada una puntuación al final de la pregunta:</div>
           <input type="text" value={first_puntuation} onChange={handleFirstPuntuationChange} className="puntuation_input_admin"/>
         </div>
+        <button className="button_question" onClick={addNewButton}>
+          <img src={icon} alt="Icono de pregunta" />
+        </button>
+        <button className="button_save_question_page_admin" onClick={checkAllInformation}>Confirmar</button>
+      </div>
+    );
+    /*
+    return (
+      <div className="App_question_page_admin">
+        <div className="tittle_question_page_admin">
+          <input type="text" value={title} onChange={handleTitleChange} className="title_input_admin" placeholder="Escriba el título aquí"/>
+        </div>
+        <div className="description_question_page_admin">
+          <input type="text" value={description} onChange={handleDescriptionChange} className="description_input_admin" placeholder="Escriba la descripción aquí"/>
+        </div>
+        <div className="puntuation_question_page_admin">
+          <button className="button_submit_test" onClick={() => triggerFileInput('fileInput1')}>{content_of_button_admin}</button>
+          <input id="fileInput1" type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, 'file1')} />
+          {uploadedFiles.file1 && <span className="file_name_display">{uploadedFiles.file1}</span>}
+          <div className="label_puntuation_admin">Añada una puntuación al final de la pregunta:</div>
+          <input type="text" value={first_puntuation} onChange={handleFirstPuntuationChange} className="puntuation_input_admin"/>
+        </div>
         <div className="puntuation_question_page_admin">
           <button className="button_submit_test" onClick={() => triggerFileInput('fileInput2')}>{content_of_button_admin}</button>
           <input id="fileInput2" type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, 'file2')} />
@@ -150,6 +192,7 @@ export const QuestionPageAdmin = () => {
         <button className="button_save_question_page_admin" onClick={checkAllInformation}>Confirmar</button>
       </div>
     );
+    */
   } else {
     return (
       <div className="App_question_page_user">

@@ -3,7 +3,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import shutil
 
-
 app = Flask(__name__)
 CORS(app)
 
@@ -33,6 +32,31 @@ def save_user_name():
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
     
+
+@app.route('/create-block-folder-user', methods=["POST"]) # Creación de carpetas para los bloques de preguntas de los usuarios
+def create_block_folder_user():
+    data = request.get_json()  
+    user_name = data.get('text', '') 
+    if user_name:
+        route = 'users_input/' + user_name + "/"
+        folder_path = os.path.join(route, "block")
+        os.makedirs(folder_path, exist_ok=True)
+        return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
+    else:
+        return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
+    
+@app.route('/create-block-folder-admin', methods=["POST"]) # Creación de carpetas para los bloques de preguntas de los admins
+def create_block_folder_admin():
+    data = request.get_json()  
+    block_name = data.get('text', '') 
+    if block_name:
+        route = 'data/'
+        folder_path = os.path.join(route, "block")
+        os.makedirs(folder_path, exist_ok=True)
+        return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
+    else:
+        return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
+
 
 @app.route('/upload-file', methods=['POST'])
 def upload_file():

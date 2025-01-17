@@ -61,6 +61,19 @@
   font-size: 16px; 
 }
 
+.button_question {
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  width: 95%; 
+  height: 60px; 
+  padding: 0; 
+  background-color: #007bff73; 
+  border: none; 
+  color: white; 
+  box-sizing: border-box; 
+}
+
   
 .output-box {
   margin-top: 20px; 

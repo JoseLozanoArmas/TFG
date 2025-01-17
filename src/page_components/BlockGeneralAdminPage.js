@@ -28,10 +28,13 @@ export const BlockGeneralAdminPage = () => {
   });
 
   const [isAdmin, setIsAdmin] = useState(false);
+  const [userName, setName] = useState("");
 
   useEffect(() => {
     const userRole = localStorage.getItem('user_role');
     setIsAdmin(userRole === 'admin');
+    const getName = localStorage.getItem("name_user");
+    setName(getName);
   }, []);
 
   useEffect(() => {
@@ -58,7 +61,31 @@ export const BlockGeneralAdminPage = () => {
     });
   };
 
-  const handleBotonPaginaClick = (id) => {
+  const handleBotonPaginaClick = async (id) => {
+    if (isAdmin == false) {
+      try { // Llamamos al método que crea la carpeta del bloque del usuario
+        const response = await fetch('http://127.0.0.1:5000/create-block-folder-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text: userName }),
+        });
+    
+        const data = await response.json();
+    
+        if (response.ok) {
+          alert(data.message);
+        } else {
+          alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        alert('Error al conectar con el servidor.');
+        console.error(error);
+      }
+    } else {
+      alert("Meter la condición para crear una carpeta para los bloques de los Admins");
+    }
     navigate(`/block_internal_admin_page/${id}`);
   };
 
