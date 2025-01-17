@@ -25,10 +25,54 @@ export const DeleteOptions = () => {
       alert(`Error de conexión: ${error.message}`); // Manejo de errores de conexión
     }
   };
+
+  const resetBlocksData = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/reset-blocks-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.message); 
+      } else {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.message}`); 
+      }
+    } catch (error) {
+      alert(`Error de conexión: ${error.message}`); 
+    }
+  };
+  
+  const resetUsersRegisteredData = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/reset-users-registered-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.message); 
+      } else {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.message}`); 
+      }
+    } catch (error) {
+      alert(`Error de conexión: ${error.message}`); 
+    }
+  };
   
   return (
     <div className="delete_options_page_admin">
-      <button className="button_reset_ranking" onClick={resetUsers}>Reset</button>
+      <button className="button_reset_student_information" onClick={resetUsers}>Reset Students Information</button>
+      <button className="button_reset_student_information" onClick={resetBlocksData}>Reset Blocks Information</button>
+      <button className="button_reset_student_information" onClick={resetUsersRegisteredData}>Reset Users Registered Information</button>
     </div>
   );
 }

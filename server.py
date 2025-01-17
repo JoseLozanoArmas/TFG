@@ -59,6 +59,8 @@ def create_block_folder_admin():
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
     
+
+    
 @app.route('/delete-last-block-folder-admin', methods=["POST"])
 def delete_last_block_folder_admin():
     data = request.get_json()  
@@ -103,7 +105,34 @@ def reset_users():
         return jsonify({'message': 'Usuarios eliminados con éxito'}), 200
     except Exception as e:
         return jsonify({'message': f'Error al eliminar contenido: {str(e)}'}), 500
+    
+@app.route('/reset-blocks-data', methods=['POST'])
+def reset_blocks_data():
+    folder_path = 'data/blocks'
+    try:
+        for filename in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, filename)
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)  # Eliminar archivo o enlace
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)  # Eliminar carpeta
+        return jsonify({'message': 'Información de bloques eliminada con éxito'}), 200
+    except Exception as e:
+        return jsonify({'message': f'Error al eliminar contenido: {str(e)}'}), 500
 
+@app.route('/reset-users-registered-data', methods=['POST'])
+def reset_users_registered_data():
+    folder_path = 'data/users_registered'
+    try:
+        for filename in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, filename)
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)  # Eliminar archivo o enlace
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)  # Eliminar carpeta
+        return jsonify({'message': 'Información de usuarios registrados eliminada con éxito'}), 200
+    except Exception as e:
+        return jsonify({'message': f'Error al eliminar contenido: {str(e)}'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

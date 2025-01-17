@@ -7,3 +7,12 @@
   color: white;
   padding: 20px;
 }
+
+.button_reset_student_information {
+  background-color: #dc3545; 
+  color: white;
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 5px; 
+  cursor: pointer; 
+}
