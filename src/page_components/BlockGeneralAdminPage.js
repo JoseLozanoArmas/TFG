@@ -42,23 +42,70 @@ export const BlockGeneralAdminPage = () => {
     localStorage.setItem('botonMasHistory', JSON.stringify(botonMasHistory));
   }, [buttons, botonMasHistory]);
 
-  const handleBotonMasClick = (id) => {
-    setButtons((prevButtons) => {
-      const updatedButtons = prevButtons.map((button) => {
-        if (button.id === id) {
-          setBotonMasHistory((prevHistory) => [...prevHistory, { positionX: button.positionX, positionY: button.positionY },]);
-          const newPositionX = button.positionX + 200;
-          if (newPositionX >= maxPageWidth) {
-            return {...button, positionX: 0, positionY: button.positionY + buttonHeight,};
-          }
-          return { ...button, positionX: newPositionX };
-        }
-        return button;
+  const handleBotonMasClick = async (id) => {
+    const clickedButton = buttons.find((button) => button.id === id);
+    if (!clickedButton) {
+      console.error('Botón no encontrado.');
+      return;
+    }
+    const newPositionX = clickedButton.positionX + 200;
+    let positionX = 0;
+    if (newPositionX >= maxPageWidth) {
+      positionX = 0;
+    } else {
+      positionX = newPositionX;
+    }
+
+    let positionY = 0;
+    if (newPositionX >= maxPageWidth) {
+      positionY = clickedButton.positionY + buttonHeight;
+    } else {
+      positionY = clickedButton.positionY;
+    }
+
+    const updatedButton = { ...clickedButton, positionX, positionY,};
+  
+    // Registra el historial
+    setBotonMasHistory((prevHistory) => [
+      ...prevHistory,
+      { positionX: clickedButton.positionX, positionY: clickedButton.positionY },
+    ]);
+  
+    // Agrega el nuevo botón
+    const newButton = {
+      id: buttons.length + 1,
+      positionX: clickedButton.positionX,
+      positionY: clickedButton.positionY,
+      type: 'boton_pagina',
+    };
+  
+    // Actualiza el estado de los botones
+    setButtons((prevButtons) => [
+      ...prevButtons.map((button) => (button.id === id ? updatedButton : button)),
+      newButton,
+    ]);
+  
+    // Crea el bloque en el servidor
+    const newBlock = `block_${newButton.id - 1}`;
+    try {
+      const response = await fetch('http://127.0.0.1:5000/create-block-folder-admin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: newBlock }),
       });
-      const clickedButton = prevButtons.find((button) => button.id === id);
-      const newButton = { id: prevButtons.length + 1, positionX: clickedButton.positionX, positionY: clickedButton.positionY, type: 'boton_pagina',};
-      return [...updatedButtons, newButton];
-    });
+  
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error);
+    }
   };
 
   const handleBotonPaginaClick = async (id) => {
@@ -66,7 +113,7 @@ export const BlockGeneralAdminPage = () => {
       let save_name = buttons[buttons.length - 1].id - 1
       save_name = String(save_name)
       try { // Llamamos al método que crea la carpeta del bloque del usuario
-        const response = await fetch('http://127.0.0.1:5000/create-block-folder-user', {
+        const response = await fetch('http://127.0.0.1:5000/create-block-folder-admin', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

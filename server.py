@@ -53,7 +53,7 @@ def create_block_folder_admin():
     block_name = data.get('text', '') 
     if block_name:
         route = 'data/'
-        folder_path = os.path.join(route, "block")
+        folder_path = os.path.join(route, block_name)
         os.makedirs(folder_path, exist_ok=True)
         return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
     else:
