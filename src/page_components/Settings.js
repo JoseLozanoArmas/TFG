@@ -16,8 +16,7 @@ export const Settings = () => {
   };
 
   const MoveToUsers = () => {
-    alert("pendiente")
-    // navigate('/users');
+    navigate('/general_users');
   };
 
   return (
