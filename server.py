@@ -52,7 +52,7 @@ def create_block_folder_admin():
     data = request.get_json()  
     block_name = data.get('text', '') 
     if block_name:
-        route = 'data/'
+        route = 'data/blocks/'
         folder_path = os.path.join(route, block_name)
         os.makedirs(folder_path, exist_ok=True)
         return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
@@ -65,7 +65,7 @@ def delete_last_block_folder_admin():
     block_name = data.get('text', '') 
     block_dir = "block_" + block_name
     if block_name:
-        route = 'data/'
+        route = 'data/blocks/'
         folder_path = os.path.join(route, block_dir)
         if os.path.isdir(folder_path):
             shutil.rmtree(folder_path)  # Eliminar carpeta

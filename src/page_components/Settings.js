@@ -24,15 +24,15 @@ export const Settings = () => {
     <div className="settings_page">
       <div className="button_container">
         <span className="button_label">Usuarios</span>
-          <button className="button_settings" onClick={MoveToUsers}>
-            <img src={require("../img/usuarios.png")} className="button_icon" alt="Users" />
-          </button>
+        <button className="button_settings" onClick={MoveToUsers}>
+          <img src={require("../img/usuarios.png")} className="button_icon" alt="Users" />
+        </button>
       </div>
       <div className="button_container">
         <span className="button_label">Opciones de borrado</span>
-          <button className="button_settings" onClick={MoveToDeleteOptions}>
-            <img src={require("../img/configuracion.png")} className="button_icon" alt="Delete options" />
-          </button>
+        <button className="button_settings" onClick={MoveToDeleteOptions}>
+          <img src={require("../img/configuracion.png")} className="button_icon" alt="Delete options" />
+        </button>
       </div>
     </div>
   );
