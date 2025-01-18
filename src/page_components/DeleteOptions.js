@@ -70,9 +70,19 @@ export const DeleteOptions = () => {
   
   return (
     <div className="delete_options_page_admin">
-      <button className="button_reset_student_information" onClick={resetUsers}>Reset Students Information</button>
-      <button className="button_reset_student_information" onClick={resetBlocksData}>Reset Blocks Information</button>
-      <button className="button_reset_student_information" onClick={resetUsersRegisteredData}>Reset Users Registered Information</button>
-    </div>
+      <div className="tittle_delete_page">
+        <h1>Opciones de borrado</h1>
+      </div>
+    <button className="button_reset_student_information" onClick={resetUsers}>
+      Borrar toda la información de los estudiantes
+    </button>
+    <button className="button_reset_student_information" onClick={resetBlocksData}>
+      Borrar toda la información de los bloques de preguntas
+    </button>
+  <button className="button_reset_student_information" onClick={resetUsersRegisteredData}>
+    Borrar todos los usuarios registrados
+  </button>
+</div>
+
   );
 }

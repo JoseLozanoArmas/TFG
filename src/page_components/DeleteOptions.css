@@ -2,17 +2,26 @@
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: space-around;
+  flex-direction: column; /* Mantiene los elementos en columna */
+  align-items: center; /* Centra horizontalmente los botones */
   color: white;
   padding: 20px;
 }
 
+.tittle_delete_page {
+  width: 100%; /* Asegura que el título ocupe todo el ancho */
+  text-align: center; /* Centra el texto del título */
+  margin-bottom: 20px; /* Agrega espacio entre el título y los botones */
+}
+
 .button_reset_student_information {
-  background-color: #dc3545; 
+  background-color: #dc3545;
   color: white;
-  border: none; 
-  padding: 10px 20px; 
-  border-radius: 5px; 
-  cursor: pointer; 
+  border: none;
+  padding: 30px; /* Aumenta el relleno para que los botones sean más grandes */
+  border-radius: 5px;
+  font-size: 20px;
+  cursor: pointer;
+  margin: 20px 0; /* Espaciado entre los botones */
+  width: 100%; 
 }
