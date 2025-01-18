@@ -1,0 +1,70 @@
+.tittle_creation_user_page {
+  width: 100%; 
+  border: 2px black; 
+  padding: 20px; 
+  background-color: rgba(0, 0, 0, 0.792); 
+  color: #ffffff; 
+  text-align: left; 
+  box-sizing: border-box; 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); 
+  position: relative; 
+  margin-bottom: 20px; 
+}
+
+.App_creation_user_page {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  background: gray;
+}
+
+.button_image_user {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  margin: 0 auto; 
+  margin-bottom: 20px;
+}
+
+.input_format {
+  width: 95%; 
+  border: 2px solid #ffffff; 
+  padding: 20px; 
+  background-color: rgba(0, 0, 0, 0.792); 
+  color: #ffffff; 
+  text-align: left; 
+  box-sizing: border-box; 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); 
+  position: relative; 
+  margin-bottom: 20px; 
+}
+
+.title_input_admin {
+  width: 100%; 
+  border: none; 
+  background: transparent; 
+  color: #ffffff; 
+  font-size: 32px; 
+  outline: none; 
+  font-weight: bold; 
+  text-align: left; 
+  box-sizing: border-box; 
+}
+
+.title_select_admin {
+  width: 100%; 
+  border: none; 
+  background: transparent; 
+  color: black; 
+  font-size: 32px; 
+  outline: none; 
+  font-weight: bold; 
+  text-align: left; 
+  box-sizing: border-box; 
+}
+
+.button_save_info_user{
+  background-color: rgba(0, 0, 0, 0.792); 
+  color: #ffffff;
+  font-size: 20px;
+}

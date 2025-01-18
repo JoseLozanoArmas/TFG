@@ -11,6 +11,7 @@ import { RankingPageAdmin } from './page_components/RankingPageAdmin';
 import { DeleteOptions } from './page_components/DeleteOptions';
 import { Settings } from './page_components/Settings';
 import { GeneralUserPage } from './page_components/GeneralUserPage';
+import { InternalUserPage } from './page_components/InternalUserPage';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -86,6 +87,7 @@ function App() {
         <Route path="/settings" element={<Settings/>}/>
         <Route path="/delete_options" element={<DeleteOptions/>}/>
         <Route path="/general_users" element={<GeneralUserPage/>}/>
+        <Route path="/creation_user" element={<InternalUserPage/>}/>
       </Routes>
     </Router>
   );

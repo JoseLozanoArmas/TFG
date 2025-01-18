@@ -91,7 +91,7 @@ export const GeneralUserPage = () => {
   };
 
   const handleButtonUserClick = async (id) => {
-    alert("pendiente")
+    navigate("/creation_user")
   }
 
   return (

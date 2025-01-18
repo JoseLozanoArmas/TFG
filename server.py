@@ -134,5 +134,16 @@ def reset_users_registered_data():
     except Exception as e:
         return jsonify({'message': f'Error al eliminar contenido: {str(e)}'}), 500
 
+@app.route('/add-new-user', methods=['POST'])
+def add_new_user():
+    data = request.get_json()  
+    text = data.get('text', '')  
+    if text:
+        with open('data/users_registered/info_users.csv', 'a') as file: # Si le pongo la opción 'w' sobreescribe con 'a' añado
+            file.write(text + '\n')
+        return jsonify({'message': 'Usuario registrado con éxito'}), 200
+    else:
+        return jsonify({'message': 'Texto vacío'}), 400
+
 if __name__ == '__main__':
     app.run(debug=True)
