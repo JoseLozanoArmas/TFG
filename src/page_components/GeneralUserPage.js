@@ -77,17 +77,30 @@ export const GeneralUserPage = () => {
 
   const removeLastUser = async () => {    
     setUserHistory((prevHistory) => {
-        if (prevHistory.length === 0) { return prevHistory; }
-        const lastPosition = prevHistory[prevHistory.length - 1];
-        setUsers((prevButtons) =>
-          prevButtons.map((user) =>
-            user.type === 'button_plus' ? { ...user, ...lastPosition } : user
-          )
-        );
-        return prevHistory.slice(0, -1);
+      if (prevHistory.length === 0) { return prevHistory; }
+      const lastPosition = prevHistory[prevHistory.length - 1];
+      setUsers((prevButtons) => prevButtons.map((user) => user.type === 'button_plus' ? { ...user, ...lastPosition } : user));
+      return prevHistory.slice(0, -1);
+    });
+    setUsers((prevButtons) => prevButtons.slice(0, -1));
+    try {
+      const response = await fetch('http://127.0.0.1:5000/remove-last-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
-      setUsers((prevButtons) => prevButtons.slice(0, -1));
-    
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.message}`);
+        return; 
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error);
+    }
   };
 
   const handleButtonUserClick = async (id) => {

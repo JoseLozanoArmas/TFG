@@ -145,5 +145,18 @@ def add_new_user():
     else:
         return jsonify({'message': 'Texto vacío'}), 400
 
+@app.route('/remove-last-user', methods=['POST'])
+def remove_last_user():
+    file_path = 'data/users_registered/info_users.csv'    
+    with open(file_path, 'r') as file: # Leer todas las líneas del archivo
+        lines = file.readlines()
+    if len(lines) <= 1: # Verificar que haya más de una línea
+        # print("No se puede eliminar al administrador por defecto")
+        return
+    with open(file_path, 'w') as file: # Escribir las líneas excepto la última de vuelta al archivo
+        file.writelines(lines[:-1])  # Todas las líneas excepto la última
+    return jsonify({'message': 'Usuario eliminado con éxito'}), 200
+
+
 if __name__ == '__main__':
     app.run(debug=True)
