@@ -113,7 +113,7 @@ export const BlockGeneralAdminPage = () => {
       let save_name = buttons[buttons.length - 1].id - 1
       save_name = String(save_name)
       try { // Llamamos al método que crea la carpeta del bloque del usuario
-        const response = await fetch('http://127.0.0.1:5000/create-block-folder-admin', {
+        const response = await fetch('http://127.0.0.1:5000/create-block-folder-user', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

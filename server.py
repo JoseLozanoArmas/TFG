@@ -76,7 +76,7 @@ def delete_last_block_folder_admin():
         return jsonify({'message': 'Texto vacío, no se puede eliminar carpeta'}), 400
 
 
-@app.route('/upload-file', methods=['POST'])
+@app.route('/upload-file-user', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
         return jsonify({'message': 'No se envió ningún archivo'}), 400
@@ -87,8 +87,9 @@ def upload_file():
         return jsonify({'message': 'El archivo no tiene nombre'}), 400
 
     if file:
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        file.save(file_path)  # Guardamos el archivo en el directorio de subida
+        folder_path = "borrar" # Carpeta del usuario
+        file_path = os.path.join(folder_path, file.filename)
+        file.save(file_path) 
         return jsonify({'message': f'Archivo {file.filename} subido con éxito'}), 200
     
 @app.route('/reset-users', methods=['POST'])
