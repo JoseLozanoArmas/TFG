@@ -30,9 +30,9 @@ def ejecute_code(route):
         print(f"El archivo en la ruta '{route}' no existe.") # MODIFICAR ESTO PARA QUE MANDE UN ERROR Y NO UN PRINT
                 
 
-file_path_python = "is_pair.py"
-file_path_c_plus = "is_pair.cc"
-file_path_c = "is_pair.c"
-file_path_ruby = "is_pair.rb"
+file_path_python = "factorial.py"
+file_path_c_plus = "factorial.cc"
+file_path_c = "factorial.c"
+file_path_ruby = "factorial.rb"
 file_path_ejecutable = "a.out"
-ejecute_code(file_path_python)
+ejecute_code(file_path_ejecutable)
