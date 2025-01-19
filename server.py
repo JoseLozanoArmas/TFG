@@ -87,9 +87,10 @@ def upload_file():
         return jsonify({'message': 'El archivo no tiene nombre'}), 400
 
     if file:
-        folder_path = "borrar" # Carpeta del usuario
+        folder_path = "borrar" # Carpeta del usuario (CAMBIAR RUTA)
+        os.makedirs(folder_path, exist_ok=True)  # Crea el directorio si no existe
         file_path = os.path.join(folder_path, file.filename)
-        file.save(file_path) 
+        file.save(file_path)
         return jsonify({'message': f'Archivo {file.filename} subido con éxito'}), 200
     
 @app.route('/reset-users', methods=['POST'])

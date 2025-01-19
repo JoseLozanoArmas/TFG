@@ -138,6 +138,34 @@ export const QuestionPageAdmin = () => {
 
     alert("añadir la condición para que cuando se pulse el boton de confirmar te mande a la pagina de las preguntas")
   };
+
+  const SendFileUser = async () => {
+    if (uploadedFiles.fileUser === null) {
+      alert("Error. No se ha subido ninguna entrada")
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', document.getElementById('fileInputUser').files[0]); //REVISAR ESTO
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/upload-file-user', {
+        method: 'POST',
+        body: formData,
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+        // METER LA CONDICIÓN PARA VOLVER A LA PÁGINA ANTERIOR
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error);
+    }
+  }
   
   if ((isAdmin === true) || (isMonitor === true)) {
     return (
@@ -161,40 +189,6 @@ export const QuestionPageAdmin = () => {
         <button className="button_save_question_page_admin" onClick={checkAllInformation}>Confirmar</button>
       </div>
     );
-    /*
-    return (
-      <div className="App_question_page_admin">
-        <div className="tittle_question_page_admin">
-          <input type="text" value={title} onChange={handleTitleChange} className="title_input_admin" placeholder="Escriba el título aquí"/>
-        </div>
-        <div className="description_question_page_admin">
-          <input type="text" value={description} onChange={handleDescriptionChange} className="description_input_admin" placeholder="Escriba la descripción aquí"/>
-        </div>
-        <div className="puntuation_question_page_admin">
-          <button className="button_submit_test" onClick={() => triggerFileInput('fileInput1')}>{content_of_button_admin}</button>
-          <input id="fileInput1" type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, 'file1')} />
-          {uploadedFiles.file1 && <span className="file_name_display">{uploadedFiles.file1}</span>}
-          <div className="label_puntuation_admin">Añada una puntuación al final de la pregunta:</div>
-          <input type="text" value={first_puntuation} onChange={handleFirstPuntuationChange} className="puntuation_input_admin"/>
-        </div>
-        <div className="puntuation_question_page_admin">
-          <button className="button_submit_test" onClick={() => triggerFileInput('fileInput2')}>{content_of_button_admin}</button>
-          <input id="fileInput2" type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, 'file2')} />
-          {uploadedFiles.file2 && <span className="file_name_display">{uploadedFiles.file2}</span>}
-          <div className="label_puntuation_admin">Añada una puntuación al final de la pregunta:</div>
-          <input type="text" value={second_puntuation} onChange={handleSecondPuntuationChange} className="puntuation_input_admin"/>
-        </div>
-        <div className="puntuation_question_page_admin">
-          <button className="button_submit_test" onClick={() => triggerFileInput('fileInput3')}>{content_of_button_admin}</button>
-          <input id="fileInput3" type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, 'file3')} />
-          {uploadedFiles.file3 && <span className="file_name_display">{uploadedFiles.file3}</span>}
-          <div className="label_puntuation_admin">Añada una puntuación al final de la pregunta:</div>
-          <input type="text" value={third_puntuation} onChange={handleThirdPuntuationChange} className="puntuation_input_admin"/>
-        </div>
-        <button className="button_save_question_page_admin" onClick={checkAllInformation}>Confirmar</button>
-      </div>
-    );
-    */
   } else {
     return (
       <div className="App_question_page_user">
@@ -208,6 +202,9 @@ export const QuestionPageAdmin = () => {
           <button className="button_submit_code" onClick={() => triggerFileInputUser('fileInputUser')}>{content_of_button_user}</button>
           <input id="fileInputUser" type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, 'fileUser')} />
           {uploadedFiles.fileUser && <span className="file_name_display">{uploadedFiles.fileUser}</span>}
+        </div>
+        <div className="user_submit_code">
+          <button className="button_submit_code" onClick={SendFileUser}>Confirmar</button>
         </div>
       </div>
     )
