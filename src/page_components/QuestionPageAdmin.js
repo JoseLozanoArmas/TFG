@@ -39,10 +39,12 @@ export const QuestionPageAdmin = () => {
   });
 
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isMonitor, setIsMonitor] = useState(false);
 
   useEffect(() => {
-    const userRole = localStorage.getItem('user_role');
-    setIsAdmin(userRole === 'admin');
+    const userRole = localStorage.getItem("user_role");
+    setIsAdmin(userRole === "admin");
+    setIsMonitor(userRole === "monitor")
   }, []);
 
   useEffect(() => {
@@ -137,7 +139,7 @@ export const QuestionPageAdmin = () => {
     alert("añadir la condición para que cuando se pulse el boton de confirmar te mande a la pagina de las preguntas")
   };
   
-  if (isAdmin) {
+  if ((isAdmin === true) || (isMonitor === true)) {
     return (
       <div className="App_question_page_admin">
         <div className="tittle_question_page_admin">

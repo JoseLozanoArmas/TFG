@@ -28,11 +28,13 @@ export const BlockGeneralAdminPage = () => {
   });
 
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isMonitor, setIsMonitor] = useState(false);
   const [userName, setName] = useState("");
 
   useEffect(() => {
-    const userRole = localStorage.getItem('user_role');
-    setIsAdmin(userRole === 'admin');
+    const userRole = localStorage.getItem("user_role");
+    setIsAdmin(userRole === "admin");
+    setIsMonitor(userRole === "monitor")
     const getName = localStorage.getItem("name_user");
     setName(getName);
   }, []);
@@ -182,7 +184,7 @@ export const BlockGeneralAdminPage = () => {
         <h1>Bloque de preguntas</h1>
       </div>
       {buttons.map((button) => (
-        (button.type === 'boton_mas' && isAdmin) || button.type !== 'boton_mas' ? (
+        (button.type === 'boton_mas' && ((isAdmin === true) || (isMonitor === true))) || button.type !== 'boton_mas' ? (
           <button key={button.id} onClick={() => {
             if (button.type === 'boton_mas') {
               handleBotonMasClick(button.id);
@@ -195,7 +197,7 @@ export const BlockGeneralAdminPage = () => {
         </button>
         ) : null
       ))}
-      {buttons.length > 1 && isAdmin && (
+      {buttons.length > 1 && ((isAdmin === true) || (isMonitor === true)) && (
         <button className="button_remove_last" onClick={removeLastButton}>
           Deshacer último bloque
         </button>

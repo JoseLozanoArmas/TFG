@@ -34,6 +34,8 @@ export const UserPageAdmin = () => {
       return;  
     }
 
+    // localStorage.setItem("user_role","monitor"); MODIFICAR LA LOGICA PARA QUE SE PUEDA EXAMINAR LOS USUARIOS REGISTRADOS
+
     if ((user_name === USER_NAME) && (user_password === PASSWORD)) {
       alert('Contraseña aceptada');
       localStorage.setItem("user_role","admin");

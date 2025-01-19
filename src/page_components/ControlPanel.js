@@ -5,10 +5,12 @@ import './ControlPanel.css';
 export const ControlPanel = () => {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isMonitor, setIsMonitor] = useState(false);
 
   useEffect(() => {
-    const userRole = localStorage.getItem('user_role');
-    setIsAdmin(userRole === 'admin');
+    const userRole = localStorage.getItem("user_role");
+    setIsAdmin(userRole === "admin");
+    setIsMonitor(userRole === "monitor");
   }, []);
 
   const MoveToBlockGeneralAdminPage = () => {
@@ -23,7 +25,7 @@ export const ControlPanel = () => {
     navigate('/settings')
   };
 
-  if (isAdmin) {
+  if (isAdmin === true) {
     return (
       <div className="control_panel_page">
         <div className="button_container">

@@ -41,10 +41,12 @@ export const BlockInternalAdminPage = () => {
   };
 
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isMonitor, setIsMonitor] = useState(false);
 
   useEffect(() => {
-    const userRole = localStorage.getItem('user_role');
-    setIsAdmin(userRole === 'admin');
+    const userRole = localStorage.getItem("user_role");
+    setIsAdmin(userRole === "admin");
+    setIsMonitor(userRole === "monitor");
   }, []);
 
   const addNewButton = () => {
@@ -80,12 +82,12 @@ export const BlockInternalAdminPage = () => {
           {button.label}
         </button>
       ))}
-      {buttons.length < 8 && isAdmin && (
+      {buttons.length < 8 && ((isAdmin === true) || (isMonitor === true)) && (
         <button className="button_question" onClick={addNewButton}>
           <img src={icon} alt="Icono de pregunta" />
         </button>
       )}
-      {buttons.length >= 0 && isAdmin && (
+      {buttons.length >= 0 && ((isAdmin === true) || (isMonitor === true)) && (
         <button className="button_remove_last" onClick={removeLastButton}>
           Deshacer última pregunta
         </button>
