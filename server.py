@@ -85,9 +85,12 @@ def upload_file():
 
     if file.filename == '':
         return jsonify({'message': 'El archivo no tiene nombre'}), 400
+    
+    user_name = request.form.get('userNameData', '') 
+
 
     if file:
-        folder_path = "borrar" # Carpeta del usuario (CAMBIAR RUTA)
+        folder_path = "users_input/" + user_name + "/" + "borrar" # Carpeta del usuario (CAMBIAR RUTA)
         os.makedirs(folder_path, exist_ok=True)  # Crea el directorio si no existe
         file_path = os.path.join(folder_path, file.filename)
         file.save(file_path)

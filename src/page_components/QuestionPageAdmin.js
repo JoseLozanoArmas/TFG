@@ -40,11 +40,14 @@ export const QuestionPageAdmin = () => {
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [isMonitor, setIsMonitor] = useState(false);
+  const [userName, setName] = useState("");
 
   useEffect(() => {
     const userRole = localStorage.getItem("user_role");
     setIsAdmin(userRole === "admin");
     setIsMonitor(userRole === "monitor")
+    const getName = localStorage.getItem("name_user");
+    setName(getName);
   }, []);
 
   useEffect(() => {
@@ -145,13 +148,16 @@ export const QuestionPageAdmin = () => {
       return;
     }
 
+    const fileInput = document.getElementById('fileInputUser').files[0];
     const formData = new FormData();
-    formData.append('file', document.getElementById('fileInputUser').files[0]); //REVISAR ESTO
+    formData.append('file', fileInput); // Agregar archivo
+    formData.append('userNameData', userName); // Agregar nombre de usuario
 
     try {
       const response = await fetch('http://127.0.0.1:5000/upload-file-user', {
         method: 'POST',
         body: formData,
+        userNameData: JSON.stringify({ text: userName }),
       });
   
       const data = await response.json();
