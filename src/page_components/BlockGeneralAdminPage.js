@@ -73,7 +73,7 @@ export const BlockGeneralAdminPage = () => {
       { positionX: clickedButton.positionX, positionY: clickedButton.positionY },
     ]);
 
-    let block_name = "block_" + `${buttons.length}`;
+    let block_name = `block_${buttons.length}`;
   
     // Agrega el nuevo botón
     const newButton = {
