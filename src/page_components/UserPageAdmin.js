@@ -5,6 +5,8 @@ import './UserPageAdmin.css';
 export const UserPageAdmin = () => {
   const USER_NAME = "admin";
   const PASSWORD = "1234";
+  const USER_NAME_MONITOR = "monitor";
+  const PASSWORD_MONITOR = "1234";
   const navigate = useNavigate();
 
   const GoToControlPanel = () => {
@@ -39,6 +41,10 @@ export const UserPageAdmin = () => {
     if ((user_name === USER_NAME) && (user_password === PASSWORD)) {
       alert('Contraseña aceptada');
       localStorage.setItem("user_role","admin");
+      GoToControlPanel();
+    } else if((user_name === USER_NAME_MONITOR) && (user_password === PASSWORD_MONITOR)) {
+      alert('Contraseña aceptada');
+      localStorage.setItem("user_role","monitor");
       GoToControlPanel();
     } else {
         alert('Usuario o contraseña incorrectos');

@@ -114,7 +114,7 @@ export const BlockGeneralAdminPage = () => {
   };
 
   const handleBotonPaginaClick = async (id) => {
-    if (isAdmin == false) {
+    if ((isAdmin === false) && (isMonitor === false)) {
       let save_name = buttons[buttons.length - 1].id - 1
       save_name = String(save_name)
       try { // Llamamos al método que crea la carpeta del bloque del usuario
