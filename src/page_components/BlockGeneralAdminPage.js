@@ -14,7 +14,7 @@ export const BlockGeneralAdminPage = () => {
     if (savedButtons) {
       return JSON.parse(savedButtons);
     } else {
-      return [{ id: 1, positionX: 0, positionY: 0, type: 'boton_mas' }];
+      return [{ id: 1, positionX: 0, positionY: 0, type: "boton_mas", block_name: "default"}];
     }
   });
 
@@ -72,13 +72,16 @@ export const BlockGeneralAdminPage = () => {
       ...prevHistory,
       { positionX: clickedButton.positionX, positionY: clickedButton.positionY },
     ]);
+
+    let block_name = "block_" + `${buttons.length}`;
   
     // Agrega el nuevo botón
     const newButton = {
       id: buttons.length + 1,
       positionX: clickedButton.positionX,
       positionY: clickedButton.positionY,
-      type: 'boton_pagina',
+      type: "boton_pagina",
+      block_name: block_name,
     };
   
     // Actualiza el estado de los botones
@@ -138,7 +141,7 @@ export const BlockGeneralAdminPage = () => {
         console.error(error);
       }
     }
-    navigate(`/block_internal_admin_page/${id}`);
+    navigate(`/block_internal_admin_page/${buttons[buttons.length - 1].block_name}`);
   };
 
   const removeLastButton = async () => {
