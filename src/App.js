@@ -81,7 +81,7 @@ function App() {
         <Route path="/admin_page_user" element={<UserPageAdmin />} />
         <Route path="/block_general_admin_page" element={<BlockGeneralAdminPage />} />
         <Route path="/block_internal_admin_page/:id" element={<BlockInternalAdminPage/>} />
-        <Route path="/question_admin" element={<QuestionPageAdmin/>}/>
+        <Route path="/:id" element={<QuestionPageAdmin/>}/>
         <Route path="/control_panel" element={<ControlPanel/>}/>
         <Route path="/ranking" element={<RankingPageAdmin/>}/>
         <Route path="/settings" element={<Settings/>}/>

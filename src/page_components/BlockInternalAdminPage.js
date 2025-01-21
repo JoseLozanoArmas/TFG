@@ -32,8 +32,8 @@ export const BlockInternalAdminPage = () => {
     }
   };
 
-  const MoveToQuestionPageAdmin = () => {
-    navigate('/question_admin');
+  const MoveToQuestionPageAdmin = async (id) => {
+    navigate(`/${id}`);
   };
 
   const triggerFileInput = () => {
@@ -53,7 +53,8 @@ export const BlockInternalAdminPage = () => {
     if (buttons.length < 8) {
       const newButton = {
         id: buttons.length + 1,
-        label: `Pregunta ${buttons.length + 1}`
+        label: `Pregunta ${buttons.length + 1}`,
+        name: `question_${buttons.length + 1}`
       };
       setButtons((prevButtons) => [...prevButtons, newButton]);
     }
@@ -77,8 +78,8 @@ export const BlockInternalAdminPage = () => {
       <button className="button_logo_internal_page" onClick={triggerFileInput}>
         <img src={currentLogo} alt="Logo" />
       </button>
-      {buttons.map((button) => (
-        <button key={button.id} className="button_new_question" onClick={MoveToQuestionPageAdmin}>
+      {buttons.map((button) => ( 
+        <button key={button.id} className="button_new_question" onClick={() => {MoveToQuestionPageAdmin(button.name);}}>
           {button.label}
         </button>
       ))}
