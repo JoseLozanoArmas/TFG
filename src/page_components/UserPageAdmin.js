@@ -9,6 +9,10 @@ export const UserPageAdmin = () => {
   const PASSWORD_MONITOR = "1234";
   const navigate = useNavigate();
 
+  const [user_name, setTexto] = useState('');
+  const [user_password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
   const GoToControlPanel = () => {
     navigate('/control_panel'); 
   };
@@ -17,16 +21,14 @@ export const UserPageAdmin = () => {
     navigate('/');
   };
 
-  const [user_name, setTexto] = useState('');
-  const [user_password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   const SaveUser = async () => {
     if (!user_name.trim()) { 
+
+
       alert('Por favor introduzca un nombre de usuario.');
       return;
     }
