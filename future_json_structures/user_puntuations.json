@@ -1,0 +1,12 @@
+[
+    {
+        "username": "u1",
+        "puntuation": 100,
+        "time": 1.22
+    },
+    {
+        "username": "u2",
+        "puntuation": 100,
+        "time": 2.22
+    }
+]
