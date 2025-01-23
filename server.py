@@ -59,6 +59,20 @@ def create_block_folder_admin():
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
     
+@app.route('/create-question-block-folder-admin', methods=["POST"]) # Creación de carpetas para las preguntas de los bloques de los admins
+def create_question_block_folder_admin():
+    data = request.get_json()  
+    block_name = data.get('text', '')
+    question_name = data.get('question_name', '')
+    if block_name and question_name:
+        route = 'data/blocks/'
+        direcction_to_question = block_name + "/" + question_name
+        folder_path = os.path.join(route, direcction_to_question)
+        os.makedirs(folder_path, exist_ok=True)
+        return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
+    else:
+        return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
+    
 
     
 @app.route('/delete-last-block-folder-admin', methods=["POST"])

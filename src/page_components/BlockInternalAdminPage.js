@@ -42,14 +42,17 @@ export const BlockInternalAdminPage = () => {
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [isMonitor, setIsMonitor] = useState(false);
+  const [currentBlockName, setCurrentBlockName] = useState("");
 
   useEffect(() => {
     const userRole = localStorage.getItem("user_role");
     setIsAdmin(userRole === "admin");
     setIsMonitor(userRole === "monitor");
+    const getName = localStorage.getItem("current_block_name");
+    setCurrentBlockName(getName);
   }, []);
 
-  const addNewButton = () => {
+  const addNewButton = async () => {
     if (buttons.length < 8) {
       const newButton = {
         id: buttons.length + 1,
@@ -57,6 +60,28 @@ export const BlockInternalAdminPage = () => {
         name: `question_${buttons.length + 1}`
       };
       setButtons((prevButtons) => [...prevButtons, newButton]);
+      try {
+        const response = await fetch('http://127.0.0.1:5000/create-question-block-folder-admin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            text: currentBlockName,
+            question_name: newButton.name, 
+          }),
+        });
+    
+        const data = await response.json();
+        if (response.ok) {
+          alert(data.message);
+        } else {
+          alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        alert('Error al conectar con el servidor.');
+        console.error(error);
+      }
     }
   };
 

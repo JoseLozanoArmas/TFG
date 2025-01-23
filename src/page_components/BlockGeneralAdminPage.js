@@ -74,6 +74,10 @@ export const BlockGeneralAdminPage = () => {
     ]);
 
     let block_name = `block_${buttons.length}`;
+
+  
+    localStorage.setItem('current_block_name', block_name);
+     
   
     // Agrega el nuevo botón
     const newButton = {
