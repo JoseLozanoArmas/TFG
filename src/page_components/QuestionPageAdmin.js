@@ -21,10 +21,9 @@ export const QuestionPageAdmin = () => {
       return [];
     }
   });
-  const [first_puntuation, setFirstPuntuation] = useState(0);
-  const [second_puntuation, setSecondPuntuation] = useState(0);
-  const [third_puntuation, setThirdPuntuation] = useState(0);
-  const [uploadedFiles, setUploadedFiles] = useState({ file1: null, file2: null, file3: null, fileUser: null});
+  const [uploadedFiles, setUploadedFiles] = useState({});
+  const [block_name, setBlockName] = useState("");
+  const [question_name, setQuestionName] = useState("");
   const make_invisible = { display: "none" }
   const content_of_button_admin = "Suba una prueba";
   const content_of_button_user = "Suba su código";
@@ -48,6 +47,10 @@ export const QuestionPageAdmin = () => {
     setIsMonitor(userRole === "monitor")
     const getName = localStorage.getItem("name_user");
     setName(getName);
+    const getBlockName = localStorage.getItem("current_block_name")
+    setBlockName(getBlockName);
+    const getQuestionName = localStorage.getItem("current_question_name")
+    setQuestionName(getQuestionName)
   }, []);
 
   useEffect(() => {
@@ -63,40 +66,45 @@ export const QuestionPageAdmin = () => {
     setDescription(event.target.value);
   };
 
-  const handleFirstPuntuationChange = (event) => {
-    setFirstPuntuation(event.target.value);
-  }
-
-  const handleSecondPuntuationChange = (event) => {
-    setSecondPuntuation(event.target.value);
-  }
-
-  const handleThirdPuntuationChange = (event) => {
-    setThirdPuntuation(event.target.value);
+  const handlePuntuationChange = (event, key) => {
+    const value = event.target.value;
+    setButtons((prevButtons) =>
+      prevButtons.map((button) =>
+        button.id === key ? { ...button, puntuation: value } : button
+      )
+    );
   }
 
   const handleFileUpload = (event, key) => {
     const file = event.target.files[0];
-    if (file) {
-      setUploadedFiles((prev) => ({ ...prev, [key]: file.name }));
-    }
-  };
-
-  const triggerFileInput = (id) => {
-    document.getElementById(id).click();
+    setButtons((prevButtons) =>
+      prevButtons.map((button) =>
+        button.id === key ? { ...button, file: file?.name || null} : button
+      )
+    );
   };
 
   const triggerFileInputUser = (id) => {
     document.getElementById(id).click();
   }
 
-  const addNewButton = () => {
+  const addNewButton = async () => {
     const newButton = {
       id: buttons.length + 1,
-      label: `Pregunta ${buttons.length + 1}`
+      name: `prueba_${buttons.length + 1}`,
+      file: null,
+      puntuation: 0
     };
     setButtons((prevButtons) => [...prevButtons, newButton]);
   };
+
+  const removeCurrentButton = async (id) => {
+    setButtons((prevButtons) => prevButtons.filter((button) => button.id !== id));
+  }
+
+  const removeAll = async (id) => {
+    setButtons((prevButtons) => []);
+  }
 
   const checkAllInformation = () => {
     if (!title.trim()) { 
@@ -109,35 +117,13 @@ export const QuestionPageAdmin = () => {
       return;
     }
 
-    if (first_puntuation <= 0) {
-      alert("Por favor introduzca una puntuación mayor a 0 a la primera prueba");
-      return;
-    }
+    // Comprobamos que todos los botones tengan puntuación y pruebas añadidas
+    {buttons.map((button) => 
+      (button.file === null ? alert(`En la prueba ${button.id} no se introdujo ningún fichero de prueba`) : null) ||
+      (button.puntuation <= 0 ? alert(`En la prueba ${button.id} no se introdujo una puntuación mayor a 0`) : null)
+    )}
 
-    if (uploadedFiles.file1 == null) {
-      alert("No se ha subido la prueba 1");
-      return;
-    }
 
-    if (second_puntuation <= 0) {
-      alert("Por favor introduzca una puntuación mayor a 0 a la primera prueba");
-      return;
-    }
-
-    if (uploadedFiles.file2 == null) {
-      alert("No se ha subido la prueba 2");
-      return;
-    }
-
-    if (third_puntuation <= 0) {
-      alert("Por favor introduzca una puntuación mayor a 0 a la primera prueba");
-      return;
-    }
-
-    if (uploadedFiles.file3 == null) {
-      alert("No se ha subido la prueba 3");
-      return;
-    }
 
     alert("añadir la condición para que cuando se pulse el boton de confirmar te mande a la pagina de las preguntas")
   };
@@ -182,17 +168,24 @@ export const QuestionPageAdmin = () => {
         <div className="description_question_page_admin">
           <input type="text" value={description} onChange={handleDescriptionChange} className="description_input_admin" placeholder="Escriba la descripción aquí"/>
         </div>
-        <div className="puntuation_question_page_admin">
-          <button className="button_submit_test" onClick={() => triggerFileInput('fileInput1')}>{content_of_button_admin}</button>
-          <input id="fileInput1" type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, 'file1')} />
-          {uploadedFiles.file1 && <span className="file_name_display">{uploadedFiles.file1}</span>}
+        {buttons.map((button) => (
+        <div key={button.id} className="puntuation_question_page_admin">
+          <button className="button_submit_test" onClick={() => document.getElementById(`fileInput_${button.id}`).click()}>{content_of_button_admin}</button>
+          <input id={`fileInput_${button.id}`} type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, button.id)} />
+          {button.file && <span className="file_name_display">{button.file}</span>}
           <div className="label_puntuation_admin">Añada una puntuación al final de la pregunta:</div>
-          <input type="text" value={first_puntuation} onChange={handleFirstPuntuationChange} className="puntuation_input_admin"/>
+          <input type="number" value={button.puntuation} onChange={(e) => handlePuntuationChange(e, button.id)} className="puntuation_input_admin"/>
+          <button className="button_delete_test" onClick={() => removeCurrentButton(button.id)}>
+            Eliminar prueba
+          </button>
         </div>
+        ))}
         <button className="button_question" onClick={addNewButton}>
           <img src={icon} alt="Icono de pregunta" />
         </button>
-        <button className="button_save_question_page_admin" onClick={checkAllInformation}>Confirmar</button>
+        {buttons.length >= 1 && (
+          <button className="button_save_question_page_admin" onClick={checkAllInformation}>Confirmar</button>
+        )}
       </div>
     );
   } else {

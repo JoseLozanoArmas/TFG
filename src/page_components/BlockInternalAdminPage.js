@@ -59,6 +59,9 @@ export const BlockInternalAdminPage = () => {
         label: `Pregunta ${buttons.length + 1}`,
         name: `question_${buttons.length + 1}`
       };
+
+      localStorage.setItem("current_question_name", newButton.name);
+
       setButtons((prevButtons) => [...prevButtons, newButton]);
       try {
         const response = await fetch('http://127.0.0.1:5000/create-question-block-folder-admin', {

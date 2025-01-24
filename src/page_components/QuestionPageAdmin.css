@@ -79,6 +79,15 @@
   color: black
 }
 
+.button_delete_test {
+  width: 200px; 
+  height: 40px;
+  background-color: red; 
+  border: none; 
+  cursor: pointer;
+  color: white;
+}
+
 .file_name_display {
   font-size: 14px;
   color: white;
