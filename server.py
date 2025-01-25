@@ -7,10 +7,18 @@ app = Flask(__name__)
 CORS(app)
 
 UPLOAD_FOLDER = 'src/users_input'
-ALLOWED_EXTENSIONS = {'py', 'c', 'cc', 'rb'} # METER JS???
+ALLOWED_EXTENSIONS = {'py', 'c', 'cc', 'rb', 'js'} 
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+def allowed_file(filename): # Función para comprobar que los ficheros tienen la extensión permitida
+    if not filename or not '.' in filename:
+        return False
+    extension = filename.rsplit('.', 1)[-1].lower()
+    if extension not in ALLOWED_EXTENSIONS: 
+        return False
+    return True
+    
 
 @app.route('/save-text', methods=['POST'])
 def save_text():
@@ -141,12 +149,14 @@ def upload_file():
     user_name = request.form.get('userNameData', '') 
 
 
-    if file:
+    if file and allowed_file(file.filename):
         folder_path = "users_input/" + user_name + "/" + "borrar" # Carpeta del usuario (CAMBIAR RUTA)
         os.makedirs(folder_path, exist_ok=True)  # Crea el directorio si no existe
         file_path = os.path.join(folder_path, file.filename)
         file.save(file_path)
         return jsonify({'message': f'Archivo {file.filename} subido con éxito'}), 200
+    else:
+        return jsonify({'message': f'El archivo o no se subió correctamente o no tenía la extensión apropiada'}), 200
     
 @app.route('/reset-users', methods=['POST'])
 def reset_users():
