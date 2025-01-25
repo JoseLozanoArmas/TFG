@@ -61,6 +61,22 @@ def create_block_folder_user():
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
     
+@app.route('/create-question-folder-user', methods=["POST"])
+def create_question_folder_user():
+    data = request.get_json()  
+    user_name = data.get('text', '')
+    block_name = data.get('block_name', '')
+    block_name = "block_" + block_name
+    question_name = data.get('question_name', '')
+    if user_name:
+        route = 'users_input/' + user_name + "/" + block_name
+        folder_path = os.path.join(route, question_name)
+        os.makedirs(folder_path, exist_ok=True)
+        return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
+    else:
+        return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
+
+    
 @app.route('/upload-file-user', methods=['POST']) # Función para que un estudiante pueda subir su código a una pregunta
 def upload_file():
     if 'file' not in request.files:

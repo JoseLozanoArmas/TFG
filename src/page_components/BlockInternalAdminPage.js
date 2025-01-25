@@ -24,6 +24,8 @@ export const BlockInternalAdminPage = () => {
     }
   });
 
+  const [userName, setName] = useState("");
+
   const handleLogoChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -33,6 +35,35 @@ export const BlockInternalAdminPage = () => {
   };
 
   const MoveToQuestionPageAdmin = async (id) => {
+    if ((isAdmin === false) && (isMonitor === false)) {
+      let block_name = buttons[buttons.length - 1].id
+      block_name = String(block_name)
+      try { // Llamamos al método que crea la carpeta del bloque del usuario
+        const response = await fetch('http://127.0.0.1:5000/create-question-folder-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            text: userName,
+            block_name: block_name, 
+            question_name: id
+          }),
+        });
+    
+        const data = await response.json();
+    
+        if (response.ok) {
+          alert(data.message);
+        } else {
+          alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        alert('Error al conectar con el servidor.');
+        console.error(error);
+      }
+    }
+
     navigate(`/${id}`);
   };
 
@@ -48,8 +79,10 @@ export const BlockInternalAdminPage = () => {
     const userRole = localStorage.getItem("user_role");
     setIsAdmin(userRole === "admin");
     setIsMonitor(userRole === "monitor");
-    const getName = localStorage.getItem("current_block_name");
-    setCurrentBlockName(getName);
+    const getBlockName = localStorage.getItem("current_block_name");
+    setCurrentBlockName(getBlockName);
+    const getUserName = localStorage.getItem("name_user");
+    setName(getUserName);
   }, []);
 
   const addNewButton = async () => {
