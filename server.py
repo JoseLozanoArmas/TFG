@@ -7,7 +7,10 @@ app = Flask(__name__)
 CORS(app)
 
 UPLOAD_FOLDER = 'src/users_input'
+ALLOWED_EXTENSIONS = {'py', 'c', 'cc', 'rb'} # METER JS???
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 @app.route('/save-text', methods=['POST'])
 def save_text():
@@ -72,7 +75,42 @@ def create_question_block_folder_admin():
         return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
-    
+
+@app.route('/upload-admin-test-to-question-folder', methods=["POST"])
+def upload_admin_test_to_question_folder():
+    data = request.get_json()  
+    block_name = data.get('text', '')
+    question_name = data.get('question_name', '')
+    if block_name and question_name:
+        route = 'data/blocks/'
+        direcction_to_question = block_name + "/" + question_name
+        folder_path = os.path.join(route, direcction_to_question)
+
+
+
+        return jsonify({'message': f'Pruebas enviadas con éxito en {folder_path}'}), 200
+    else:
+        return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
+
+@app.route('/delete-selected-test', methods=["POST"])
+def delete_selected_test(): # AÑADIR FUNCIONALIDAD EN LA PARTE NO SERVIDOR
+    data = request.get_json()  
+    block_name = data.get('text', '')
+    question_name = data.get('question_name', '')
+    test_name = data.get('test_name', '')
+    if block_name and question_name and test_name:
+        route = 'data/blocks/'
+        direcction_to_question = block_name + "/" + question_name + "/" + test_name
+        folder_path = os.path.join(route, direcction_to_question)
+        try:
+            for filename in os.listdir(folder_path):
+                file_path = os.path.join(folder_path, filename)
+            if os.path.isfile(file_path):
+                os.unlink(file_path) 
+            return jsonify({'message': 'Prueba eliminada con éxito'}), 200
+        except Exception as e:
+            return jsonify({'message': f'Error al eliminar contenido: {str(e)}'}), 500
+
 
     
 @app.route('/delete-last-block-folder-admin', methods=["POST"])

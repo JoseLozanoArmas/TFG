@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, Route, useNavigate, useParams } from 'react-router-dom';
 import './QuestionPageAdmin.css';
 import icon from '../img/icon_plus.png';
 
 export const QuestionPageAdmin = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [title, setTitle] = useState(() => {
     const savedTittle = localStorage.getItem("title");
@@ -77,9 +78,10 @@ export const QuestionPageAdmin = () => {
 
   const handleFileUpload = (event, key) => {
     const file = event.target.files[0];
+    let save_name = file.name;
     setButtons((prevButtons) =>
       prevButtons.map((button) =>
-        button.id === key ? { ...button, file: file?.name || null} : button
+        button.id === key ? { ...button, file: save_name || null} : button
       )
     );
   };
@@ -118,14 +120,29 @@ export const QuestionPageAdmin = () => {
     }
 
     // Comprobamos que todos los botones tengan puntuación y pruebas añadidas
-    {buttons.map((button) => 
-      (button.file === null ? alert(`En la prueba ${button.id} no se introdujo ningún fichero de prueba`) : null) ||
-      (button.puntuation <= 0 ? alert(`En la prueba ${button.id} no se introdujo una puntuación mayor a 0`) : null)
-    )}
+    let is_possible_to_send_files = true;
+    {buttons.forEach((button) => {
+      if (button.file === null) {
+        alert(`En la prueba ${button.id} no se introdujo ningún fichero de prueba`);
+        is_possible_to_send_files = false;
+      }
+      if (button.puntuation <= 0) {
+        alert(`En la prueba ${button.id} no se introdujo una puntuación mayor a 0`);
+        is_possible_to_send_files = false;
+      }
+    })}
 
+    if (is_possible_to_send_files === true) {
 
-
-    alert("añadir la condición para que cuando se pulse el boton de confirmar te mande a la pagina de las preguntas")
+      /*
+      let previous_route = "block_internal_admin_page/" + block_name
+      alert("Información registrada con éxito")
+      navigate(`/${previous_route}`)
+      */
+      alert("descomentar lo de moverme a la página anterior")
+    } else {
+      return;
+    }
   };
 
   const SendFileUser = async () => {
@@ -149,7 +166,8 @@ export const QuestionPageAdmin = () => {
       const data = await response.json();
       if (response.ok) {
         alert(data.message);
-        // METER LA CONDICIÓN PARA VOLVER A LA PÁGINA ANTERIOR
+        let previous_route = "block_internal_admin_page/" + block_name
+        navigate(`/${previous_route}`)
       } else {
         alert(`Error: ${data.message}`);
       }
