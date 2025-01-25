@@ -135,6 +135,21 @@ def delete_last_block_folder_admin():
     else:
         return jsonify({'message': 'Texto vacío, no se puede eliminar carpeta'}), 400
 
+@app.route('/delete-question-folder-admin', methods=["POST"])
+def delete_question_folder_admin():
+    data = request.get_json()  
+    block_name = data.get('text', '')
+    question_name = data.get('question_name', '')
+    if block_name and question_name:
+        route = 'data/blocks/'
+        direcction_to_question = block_name + "/" + question_name
+        folder_path = os.path.join(route, direcction_to_question)
+        try:
+            if os.path.isdir(folder_path):
+                shutil.rmtree(folder_path) 
+            return jsonify({'message': f'Carpeta de pregunta {question_name} eliminada con éxito'}), 200
+        except Exception as e:
+            return jsonify({'message': f'Error al eliminar contenido: {str(e)}'}), 500
 
 @app.route('/upload-file-user', methods=['POST'])
 def upload_file():

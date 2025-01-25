@@ -88,8 +88,31 @@ export const BlockInternalAdminPage = () => {
     }
   };
 
-  const removeLastButton = () => {
+  const removeLastButton = async () => {
+    let name_question_folder = buttons[buttons.length - 1].name
     setButtons((prevButtons) => prevButtons.slice(0,-1));
+    try {
+      const response = await fetch('http://127.0.0.1:5000/delete-question-folder-admin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          text: currentBlockName,
+          question_name: name_question_folder, 
+        }),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error);
+    }
   };
 
   useEffect(() => {
