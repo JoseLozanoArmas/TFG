@@ -153,30 +153,46 @@ export const BlockInternalAdminPage = () => {
     localStorage.setItem(`button_${id}`, JSON.stringify(buttons));
   }, [currentLogo, buttons]);
 
-  return (
-    <div className="App_block_internal_page">
-      <div className="tittle_block_internal_admin_page">
-        <h1>Bloque de preguntas interior</h1>
+  if ((isAdmin === true) || (isMonitor === true)) {
+    return (
+      <div className="App_block_internal_page">
+        <div className="tittle_block_internal_admin_page">
+          <h1>Bloque de preguntas interior</h1>
+        </div>
+        <input id="file-input" type="file" accept="image/*" style={{ display: 'none' }} onChange={handleLogoChange} />
+        <button className="button_logo_internal_page" onClick={triggerFileInput}>
+          <img src={currentLogo} alt="Logo" />
+        </button>
+        {buttons.map((button) => ( 
+          <button key={button.id} className="button_new_question" onClick={() => {MoveToQuestionPageAdmin(button.name);}}>
+            {button.label}
+          </button>
+        ))}
+        {buttons.length < 8 && (
+          <button className="button_question" onClick={addNewButton}>
+            <img src={icon} alt="Icono de pregunta" />
+          </button>
+        )}
+        {buttons.length >= 0 && (
+          <button className="button_remove_last" onClick={removeLastButton}>
+            Deshacer última pregunta
+          </button>
+        )}
       </div>
-      <input id="file-input" type="file" accept="image/*" style={{ display: 'none' }} onChange={handleLogoChange} />
-      <button className="button_logo_internal_page" onClick={triggerFileInput}>
+    );
+  } else {
+    return (
+      <div className="App_block_internal_page">
+        <div className="tittle_block_internal_admin_page">
+          <h1>Bloque de preguntas interior</h1>
+        </div>
         <img src={currentLogo} alt="Logo" />
-      </button>
-      {buttons.map((button) => ( 
-        <button key={button.id} className="button_new_question" onClick={() => {MoveToQuestionPageAdmin(button.name);}}>
-          {button.label}
-        </button>
-      ))}
-      {buttons.length < 8 && ((isAdmin === true) || (isMonitor === true)) && (
-        <button className="button_question" onClick={addNewButton}>
-          <img src={icon} alt="Icono de pregunta" />
-        </button>
-      )}
-      {buttons.length >= 0 && ((isAdmin === true) || (isMonitor === true)) && (
-        <button className="button_remove_last" onClick={removeLastButton}>
-          Deshacer última pregunta
-        </button>
-      )}
-    </div>
-  );
+        {buttons.map((button) => ( 
+          <button key={button.id} className="button_new_question" onClick={() => {MoveToQuestionPageAdmin(button.name);}}>
+            {button.label}
+          </button>
+        ))}
+      </div>
+    );
+  }
 };
