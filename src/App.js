@@ -64,7 +64,7 @@ const Home = () => {
           {"Login"}
           <textarea value={user_name} onChange={(e) => saveUserName(e.target.value)} placeholder="Inserte nombre de usuario..."></textarea>
           <button onClick={SaveUser}>Iniciar</button>
-          <button className="admin_button" onClick={GoToAdminPageUser}>¿Entrar cómo administrador?</button>
+          <button className="admin_button" onClick={GoToAdminPageUser}>¿Entrar cómo docente?</button>
         </div>
       </header>
     </div>

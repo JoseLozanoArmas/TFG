@@ -209,6 +209,11 @@ export const BlockGeneralAdminPage = () => {
           Deshacer último bloque
         </button>
       )}
+      {buttons.length > 1 && ((isAdmin === true) || (isMonitor === true)) && (
+        <button className="button_change_to_user">
+          Probar cómo usuario
+        </button>
+      )}
     </div>
   );
 };

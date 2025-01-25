@@ -173,9 +173,14 @@ export const BlockInternalAdminPage = () => {
             <img src={icon} alt="Icono de pregunta" />
           </button>
         )}
-        {buttons.length >= 0 && (
+        {buttons.length >= 1 && (
           <button className="button_remove_last" onClick={removeLastButton}>
             Deshacer última pregunta
+          </button>
+        )}
+        {buttons.length >= 1 && (
+          <button className="button_change_to_user">
+            Probar cómo usuario
           </button>
         )}
       </div>
