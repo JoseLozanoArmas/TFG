@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BlockGeneralAdminPage.css';
 
@@ -6,6 +6,8 @@ export const BlockGeneralAdminPage = () => {
   const navigate = useNavigate();
   const maxPageWidth = window.innerWidth - 100;
   const buttonHeight = 155;
+
+  const userContext = createContext('user');
 
   // localStorage.clear();
 
@@ -185,6 +187,10 @@ export const BlockGeneralAdminPage = () => {
     }
   };
 
+  const ChangePermission = () => {
+    alert("pendiente")
+  }
+
   return (
     <div className="App3">
       <div className="tittle_block_general_page">
@@ -210,7 +216,7 @@ export const BlockGeneralAdminPage = () => {
         </button>
       )}
       {buttons.length > 1 && ((isAdmin === true) || (isMonitor === true)) && (
-        <button className="button_change_to_user">
+        <button className="button_change_to_user" onClick={ChangePermission}>
           Probar cómo usuario
         </button>
       )}

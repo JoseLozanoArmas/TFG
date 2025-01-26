@@ -204,6 +204,9 @@ export const QuestionPageAdmin = () => {
         {buttons.length >= 1 && (
           <button className="button_save_question_page_admin" onClick={checkAllInformation}>Confirmar</button>
         )}
+        {buttons.length >= 1 && (
+          <button className="button_change_to_user">Probar cómo usuario</button>
+        )}
       </div>
     );
   } else {

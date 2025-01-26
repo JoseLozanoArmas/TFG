@@ -133,6 +133,20 @@
   color: black
 }
 
+.button_change_to_user {
+  position: fixed; 
+  bottom: 20px; 
+  right: 20px; 
+  background-color: rgb(1, 187, 1); 
+  color: white; 
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); 
+  transition: background-color 0.3s; 
+}
+
 .user_submit_code {
   display: flex;
   align-items: center; 
