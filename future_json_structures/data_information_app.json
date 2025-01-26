@@ -1,5 +1,6 @@
 {
     "block_1": {
+      "img": "src/img/logo_ull.png",
       "question_1": {
         "title": "¿Cuál es tu nombre?",
         "description": "Por favor, escribe tu nombre completo."
@@ -14,6 +15,7 @@
       }
     },
     "block_2": {
+      "img": "src/img/logo_ull.png",
       "question_1": {
         "title": "¿Qué hobbies tienes?",
         "description": "Enumera tus pasatiempos favoritos."
