@@ -201,9 +201,7 @@ def regist_question_admin():
                     final_json = first_midle_json + new_content + second_midle_json
                 else:
                     find_current_block = re.search(search_current_block_and_img, content)
-                    print("entro")
                     if find_current_block:
-                        
                         first_midle_json = content[:find_current_block.end()]
                         second_midle_json = content[find_current_block.end():]
                         final_json = first_midle_json + first_content + second_midle_json
@@ -214,6 +212,44 @@ def regist_question_admin():
             return jsonify({'message': f'Pregunta registrada con éxito'}), 200
     else:
         # Crear el archivo si no existe
+        return jsonify({'message': 'Error, no se pudo encontrar el fichero de registro debido'}), 400
+
+@app.route('/update-current-question', methods=["POST"])
+def update_current_question():
+    data = request.get_json()  
+    block_id = data.get('text', '')
+    question_id = data.get('question_id', '')
+    tittle = data.get('tittle', '')
+    description = data.get('description','')
+    search_block_and_last_question = r"\"block_" + str(block_id) + r"\":\s*{\s*\n*.*\n*(.|\n)*?\"question.*" + str(question_id) + r"\"(.|\n)*?}"
+    search_current_block_and_img = r"\"block_" + str(block_id) + r"\"\s*:\s*{(.|\n)*?\"img\"\s*:\s*\".*\""
+    current_question = ",\n      \"question_" + str(question_id) + "\": {\n"
+    new_tittle = "        \"tittle\": \"" + tittle + "\",\n"
+    new_description = "        \"description\": \"" + description + "\"\n"
+    end_question = "      }"
+    new_content = current_question + new_tittle + new_description + end_question
+
+    first_midle_json = ""
+    second_midle_json = ""
+    final_json = ""
+
+    if os.path.exists(route_to_data_json_block_and_question):  # Comprueba si el archivo existe en la ruta
+        with open(route_to_data_json_block_and_question, 'r') as file: # Guardamos y leemos el archivo
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines: 
+                find_cuestion_to_change = re.search(search_block_and_last_question, content)
+                find_route_to_img = re.search(search_current_block_and_img, content)
+                if find_cuestion_to_change and find_route_to_img:
+                    first_midle_json = content[:find_route_to_img.end()]
+                    second_midle_json = content[find_cuestion_to_change.end():]
+                    final_json = first_midle_json + new_content + second_midle_json
+                else:
+                    return jsonify({'message': 'Error. No se encontró la ruta a la pregunta'}), 400
+        with open(route_to_data_json_block_and_question, 'w') as file:
+           file.write(final_json)
+        return jsonify({'message': f'Pregunta actualizada con éxito'}), 200
+    else:
         return jsonify({'message': 'Error, no se pudo encontrar el fichero de registro debido'}), 400
 
 @app.route('/upload-admin-test-to-question-folder', methods=["POST"]) # Permitir subir pruebas a una pregunta a los administradores/monitores
