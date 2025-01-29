@@ -108,7 +108,7 @@ export const QuestionPageAdmin = () => {
     setButtons((prevButtons) => []);
   }
 
-  const checkAllInformation = () => {
+  const checkAllInformation = async () => {
     if (!title.trim()) { 
       alert("Por favor introduzca un titulo a la pregunta");
       return;
@@ -133,6 +133,35 @@ export const QuestionPageAdmin = () => {
     })}
 
     if (is_possible_to_send_files === true) {
+
+      let get_block_id = block_name[block_name.length - 1]
+      let get_question_id = question_name[question_name.length - 1]
+      alert(get_block_id)
+      
+      try { // Guardamos la info de la pregunta en el JSON de registro
+        const response = await fetch('http://127.0.0.1:5000/regist-question-admin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            text: get_block_id,
+            question_id: get_question_id, 
+            tittle: title,
+            description: description
+          }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          alert(data.message);
+        } else {
+          alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        alert('Error al conectar con el servidor.');
+        console.error(error); 
+      }
+ 
 
       /*
       let previous_route = "block_internal_admin_page/" + block_name
