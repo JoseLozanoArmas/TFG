@@ -2,6 +2,7 @@ import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import shutil
+import re
 
 app = Flask(__name__)
 CORS(app)
@@ -10,6 +11,8 @@ UPLOAD_FOLDER = 'src/users_input'
 ALLOWED_EXTENSIONS = {'py', 'c', 'cc', 'rb', 'js'} 
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+route_to_data_json_block_and_question = "future_json_structures/data_information_app.json" # RUTA AL JSON QUE REGISTRA LOS BLOQUES Y PREGUNTAS
 
 # Funciones de ayuda
 def allowed_file(filename): # Función para comprobar que los ficheros tienen la extensión permitida
@@ -113,6 +116,42 @@ def create_block_folder_admin():
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
     
+@app.route('/regist-block-admin', methods=["POST"])
+def regist_block_admin():
+    data = request.get_json()
+    block_id = data.get('text', '')
+    route_default_img = "      \"img\": \"src/img/logo_ull.png\"\n"
+    end_block = "    }\n"
+    end_doc = "}"
+    content_block = ""
+    # Comprobar si el archivo existe
+    if os.path.exists(route_to_data_json_block_and_question):  # Comprueba si el archivo existe en la ruta
+        with open(route_to_data_json_block_and_question, 'r') as file:  
+            lines = file.readlines()
+            if lines:
+                lines = lines[:-2]
+            if block_id == 1:
+                content_block = "{\n    \"block_" + str(block_id) + "\": {\n"
+            else:   
+                content_block = "    },\n    \"block_" + str(block_id) + "\": {\n"
+            with open(route_to_data_json_block_and_question, 'w') as file:
+                file.writelines(lines)
+                file.write(content_block)
+                file.write(route_default_img)
+                file.write(end_block)
+                file.write(end_doc)
+            return jsonify({'message': f'Información actualizada'}), 200
+    else:
+        # Crear el archivo si no existe
+        with open(route_to_data_json_block_and_question, 'w') as file:
+            content_block = "{\n    \"block_" + str(block_id) + "\": {\n"
+            with open(route_to_data_json_block_and_question, 'w') as file:
+                file.write(content_block)
+                file.write(route_default_img)
+                file.write(end_block)
+                file.write(end_doc)
+        return jsonify({'message': f'Archivo de registro creado'}), 200
+    
 @app.route('/create-question-block-folder-admin', methods=["POST"]) # Creación de carpetas para las preguntas de los bloques de los administradores/monitores
 def create_question_block_folder_admin():
     data = request.get_json()  
@@ -126,6 +165,42 @@ def create_question_block_folder_admin():
         return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
+    
+@app.route('/regist-question-admin', methods=["POST"])
+def regist_question_admin():
+    data = request.get_json()  
+    block_id = data.get('text', '')
+    question_id = data.get('question_id', '')
+    tittle = data.get('tittle', '')
+    description = data.get('description','')
+    search_last_question = r"\"block_" + str(block_id) + r"\":\s*{\s*\n*.*\n*(.|\n)*?\"question.*" + str(question_id) + r"\"(.|\n)*?}"
+    new_question = ",\n    \"question_" + str(question_id + 1) + "\": {\n"
+    new_tittle = "      \"tittle\": \"" + tittle + "\",\n"
+    new_description = "      \"description\": \"" + description + "\"\n"
+    end_question = "    }"
+    new_content = new_question + new_tittle + new_description + end_question
+    first_midle_json = ""
+    second_midle_json = ""
+    final_json = ""
+
+    if os.path.exists(route_to_data_json_block_and_question):  # Comprueba si el archivo existe en la ruta
+        with open(route_to_data_json_block_and_question, 'r') as file: # Guardamos y leemos el archivo
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines: 
+                find_last_question = re.search(search_last_question, content) # Comprobamos que en el bloque que buscamos haya al menos una pregunta
+                if find_last_question:
+                    first_midle_json = content[:find_last_question.end()]
+                    second_midle_json = content[find_last_question.end():]
+                    final_json = first_midle_json + new_content + second_midle_json
+                else:
+                    return jsonify({'message': 'Texto vacío, no se puede registrar la pregunta'}), 400
+        with open(route_to_data_json_block_and_question, 'w') as file:
+            file.write(final_json)
+            return jsonify({'message': f'Pregunta registrada con éxito'}), 200
+    else:
+        # Crear el archivo si no existe
+        return jsonify({'message': 'Error, no se pudo encontrar el fichero de registro debido'}), 400
 
 @app.route('/upload-admin-test-to-question-folder', methods=["POST"]) # Permitir subir pruebas a una pregunta a los administradores/monitores
 def upload_admin_test_to_question_folder():
@@ -178,6 +253,32 @@ def delete_last_block_folder_admin():
     else:
         return jsonify({'message': 'Texto vacío, no se puede eliminar carpeta'}), 400
 
+@app.route('/delete-last-block-json', methods=["POST"])
+def delete_last_block_json():
+    data = request.get_json()  
+    block_id = data.get('text', '') 
+    search_block = r"\s*\"block_" + str(block_id) + r"\":\s*{(.|\n)*"
+    before_deleted_part = ""
+    final_content = ""
+
+    # Comprobar si el archivo existe
+    if os.path.exists(route_to_data_json_block_and_question):  # Comprueba si el archivo existe en la ruta
+        with open(route_to_data_json_block_and_question, 'r') as file:  
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines:
+                find_last_block = re.search(search_block, content)
+                if find_last_block:
+                    before_deleted_part = content[:find_last_block.start() - 1]
+                    final_content = before_deleted_part + "\n}"
+                    if final_content == "\n}":
+                        final_content = "{" + final_content
+            with open(route_to_data_json_block_and_question, 'w') as file:
+                file.write(final_content)
+        return jsonify({'message': f'Último bloque eliminado del JSON de registro'}), 200
+    else:
+        return jsonify({'message': f'Error al eliminar el último bloque del JSON de registro'}), 400
+
 @app.route('/delete-question-folder-admin', methods=["POST"]) # Eliminar la carpeta de la última pregunta de los administradores/monitores
 def delete_question_folder_admin():
     data = request.get_json()  
@@ -193,6 +294,66 @@ def delete_question_folder_admin():
             return jsonify({'message': f'Carpeta de pregunta {question_name} eliminada con éxito'}), 200
         except Exception as e:
             return jsonify({'message': f'Error al eliminar contenido: {str(e)}'}), 500
+
+@app.route('/delete-last-question-admin', methods=["POST"])
+def delete_last_question_admin():
+    data = request.get_json()  
+    block_id = data.get('text', '')
+    question_id = data.get('question_name', '')
+    search_block_and_last_question = r"\"block_" + str(block_id) + r"\":\s*{\s*\n*.*\n*(.|\n)*?\"question.*" + str(question_id) + r"\"(.|\n)*?}"
+    search_only_last_question = r"\"question_" + str(question_id) + r"\"(.|\n)*?}"
+    if os.path.exists(route_to_data_json_block_and_question):  # Comprueba si el archivo existe en la ruta
+        with open(route_to_data_json_block_and_question, 'r') as file: # Guardamos y leemos el archivo
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines: 
+                find_last_question = re.search(search_block_and_last_question, content)
+                if find_last_question:
+                    content_before_remove_question = content[:find_last_question.end()]
+                    rest_file = content[find_last_question.end():]
+                    find_only_last_question = re.search(search_only_last_question, content_before_remove_question) # Localizamos la pregunta en si y calculamos el recorte
+                    cut_lenght = find_only_last_question.end() - find_only_last_question.start()
+                    cut_last_question = content_before_remove_question[:-cut_lenght]
+                    final_json = cut_last_question + rest_file # Juntamos todo
+        with open(route_to_data_json_block_and_question, 'w') as file:
+            file.write(final_json)
+        return jsonify({'message': f'Última pregunta del bloque block_{block_id} eliminada del JSON de registro'}), 200
+    else:
+        return jsonify({'message': f'Error, no se pudo encontrar el fichero de registro debido'}), 500
+     
+@app.route('/update-route-img', methods=["POST"])
+def uptdate_route_img():
+    data = request.get_json()  
+    block_id = data.get('text', '')
+    route_img = data.get('route_img', '')
+    search_current_block_and_img = r"\"block_" + str(block_id) + r"\":\s*{(.|\n)*?\"img\":\s*\".*?\",?" # funciona
+    search_only_img = r"\"img\":.*"
+    new_img = "\"img\": " + route_img
+    content_before_change_old_img = ""
+    final_json = ""
+    if os.path.exists(route_to_data_json_block_and_question):
+        with open(route_to_data_json_block_and_question, 'r') as file: # Guardamos y leemos el archivo
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines: 
+                find_old_img = re.search(search_current_block_and_img, content) # Comprobamos que en el bloque que buscamos haya al menos una pregunta
+                if find_old_img:
+                    content_before_change_old_img = content[:find_old_img.end()] # Recortar hasta encontrar la ruta de la img
+                    save_possible_comma = content_before_change_old_img[-1] # Comprobamos si tiene o no ","
+                    rest_file = content[find_old_img.end():] # Guardamos el resto del fichero antes de la img
+                    find_only_img_route = re.search(search_only_img, content_before_change_old_img) # Localizamos en si la img y calculamos cuanto mide para sustituir por la nueva
+                    cut_lenght = find_only_img_route.end() - find_only_img_route.start()
+                    cut_old_route = content_before_change_old_img[:-cut_lenght]
+                    if (save_possible_comma == ","): # En caso de haber coma se la añadimos a la ruta nueva
+                        new_img = new_img + ","
+                    final_json = cut_old_route + new_img + rest_file # Juntamos todo
+                else:
+                    return jsonify({'message': f'Error, no se pudo encontrar la imagen'}), 500
+        with open(route_to_data_json_block_and_question, 'w') as file:
+            file.write(final_json)
+        return jsonify({'message': f'Imágen actualizada con éxito'}), 200
+    else:
+        return jsonify({'message': f'Error, no se pudo encontrar el fichero de registro debido'}), 500
 
 # Funciones de settings
 @app.route('/reset-users', methods=['POST']) # Eliminar todos los registros de los estudiantes (administrador)

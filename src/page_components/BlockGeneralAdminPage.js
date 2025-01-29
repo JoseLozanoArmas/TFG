@@ -117,6 +117,27 @@ export const BlockGeneralAdminPage = () => {
       alert('Error al conectar con el servidor.');
       console.error(error);
     }
+
+    // Registrar la información en el JSON
+    const button_id = newButton.id - 1
+    try {
+      const response = await fetch('http://127.0.0.1:5000/regist-block-admin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: button_id }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error);
+    }
   };
 
   const handleBotonPaginaClick = async (id) => {
@@ -153,7 +174,7 @@ export const BlockGeneralAdminPage = () => {
   const removeLastButton = async () => {
     let save_name = buttons[buttons.length - 1].id - 1
     save_name = String(save_name)
-    try {
+    try { // Eliminar la carpeta del último bloque
       const response = await fetch('http://127.0.0.1:5000/delete-last-block-folder-admin', {
         method: 'POST',
         headers: {
@@ -181,6 +202,31 @@ export const BlockGeneralAdminPage = () => {
         return prevHistory.slice(0, -1);
       });
       setButtons((prevButtons) => prevButtons.slice(0, -1));
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error);
+    }
+
+    let button_id =  buttons[buttons.length - 1].id - 1
+
+    try { // Llamamos al método que borra del registro al bloque
+      const response = await fetch('http://127.0.0.1:5000/delete-last-block-json', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          text: button_id 
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.message}`);
+      }
     } catch (error) {
       alert('Error al conectar con el servidor.');
       console.error(error);

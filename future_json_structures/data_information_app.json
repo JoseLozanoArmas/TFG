@@ -1,33 +1,5 @@
 {
     "block_1": {
-      "img": "src/img/logo_ull.png",
-      "question_1": {
-        "title": "¿Cuál es tu nombre?",
-        "description": "Por favor, escribe tu nombre completo."
-      },
-      "question_2": {
-        "title": "¿Cuál es tu edad?",
-        "description": "Indica tu edad en años."
-      },
-      "question_3": {
-        "title": "¿Cuál es tu ocupación?",
-        "description": "Describe brevemente a qué te dedicas."
-      }
-    },
-    "block_2": {
-      "img": "src/img/logo_ull.png",
-      "question_1": {
-        "title": "¿Qué hobbies tienes?",
-        "description": "Enumera tus pasatiempos favoritos."
-      },
-      "question_2": {
-        "title": "¿Cuál es tu ciudad de origen?",
-        "description": "Escribe la ciudad donde naciste."
-      },
-      "question_3": {
-        "title": "¿Tienes mascotas?",
-        "description": "Indica si tienes mascotas y cuántas."
-      }
+      "img": "src/img/logo_ull.png"
     }
 }
-  
