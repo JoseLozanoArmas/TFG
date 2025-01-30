@@ -133,71 +133,98 @@ export const QuestionPageAdmin = () => {
       }
     })}
 
-    if (is_possible_to_send_files === true) {
+    if (is_possible_to_send_files === false) { return; }
 
-      let get_block_id = block_name[block_name.length - 1]
-      let get_question_id = question_name[question_name.length - 1]
-      
-      if (activate_function_update === false) {
-        activate_function_update = true
-        try { // Guardamos la info de la pregunta en el JSON de registro
-          const response = await fetch('http://127.0.0.1:5000/regist-question-admin', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-              text: get_block_id,
-              question_id: get_question_id, 
-              tittle: title,
-              description: description
-            }),
-          });
-          const data = await response.json();
-          if (response.ok) {
-            alert(data.message);
-          } else {
-            alert(`Error: ${data.message}`);
-          }
-        } catch (error) {
-          alert('Error al conectar con el servidor.');
-          console.error(error); 
+    let get_block_id = block_name[block_name.length - 1]
+    let get_question_id = question_name[question_name.length - 1]
+    if (activate_function_update === false) {
+      activate_function_update = true
+      try { // Guardamos la info de la pregunta en el JSON de registro
+        const response = await fetch('http://127.0.0.1:5000/regist-question-admin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            text: get_block_id,
+            question_id: get_question_id, 
+            tittle: title,
+            description: description
+          }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          alert(data.message);
+        } else {
+          alert(`Error: ${data.message}`);
         }
-      } else {
-        try { // Guardamos la info de la pregunta en el JSON de registro
-          const response = await fetch('http://127.0.0.1:5000/update-current-question', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-              text: get_block_id,
-              question_id: get_question_id, 
-              tittle: title,
-              description: description
-            }),
-          });
-          const data = await response.json();
-          if (response.ok) {
-            alert(data.message);
-          } else {
-            alert(`Error: ${data.message}`);
-          }
-        } catch (error) {
-          alert('Error al conectar con el servidor.');
-          console.error(error); 
-        }
+      } catch (error) {
+        alert('Error al conectar con el servidor.');
+        console.error(error); 
       }
+    } else {
+      try { // Guardamos la info de la pregunta en el JSON de registro
+        const response = await fetch('http://127.0.0.1:5000/update-current-question', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            text: get_block_id,
+            question_id: get_question_id, 
+            tittle: title,
+            description: description
+          }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          alert(data.message);
+        } else {
+          alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        alert('Error al conectar con el servidor.');
+        console.error(error); 
+      }
+    }
+
+    // Enviar archivos
+    const formData = new FormData();
+    formData.append('text', block_name);
+    formData.append('question_name', question_name);
+
+    buttons.forEach((button) => {
+      const fileInput = document.getElementById(`fileInput_${button.id}`).files[0];
+      if (fileInput) {
+        formData.append('files', fileInput);
+      }
+    });
+
+    alert("llego")
+      
+    try { // Guardamos la info de la pregunta en el JSON de registro
+      const response = await fetch('http://127.0.0.1:5000/upload-admin-test-to-question-folder', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error); 
+    }
 
       /*
       let previous_route = "block_internal_admin_page/" + block_name
       alert("Información registrada con éxito")
       navigate(`/${previous_route}`)
       */
-      alert("descomentar lo de moverme a la página anterior")
-    } else {
-      return;
-    }
+    
+    
   };
 
   const SendFileUser = async () => {

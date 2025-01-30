@@ -192,7 +192,6 @@ def regist_question_admin():
         with open(route_to_data_json_block_and_question, 'r') as file: # Guardamos y leemos el archivo
             lines = file.readlines()
             content = ''.join(lines)
-            print(content)
             if lines: 
                 find_last_question = re.search(search_last_question, content) # Comprobamos que en el bloque que buscamos haya al menos una pregunta
                 if find_last_question:
@@ -254,26 +253,34 @@ def update_current_question():
 
 @app.route('/upload-admin-test-to-question-folder', methods=["POST"]) # Permitir subir pruebas a una pregunta a los administradores/monitores
 def upload_admin_test_to_question_folder():
-    data = request.get_json()  
-    block_name = data.get('text', '')
-    question_name = data.get('question_name', '')
+    block_name = request.form.get('text', '')
+    question_name = request.form.get('question_name', '')
+    print("block name: ", block_name)
+    print("question_name: ", question_name)
     if block_name and question_name:
         route = 'data/blocks/'
         direcction_to_question = block_name + "/" + question_name
+        print(direcction_to_question)
         folder_path = os.path.join(route, direcction_to_question)
-
-
-
+        os.makedirs(folder_path, exist_ok=True)
+        files = request.files.getlist('files') 
+        if not files:
+            return jsonify({'message': 'No se mandó ningún archivo'}), 400
+        saved_files = []
+        for file in files:
+            file_path = os.path.join(folder_path, file.filename)
+            file.save(file_path)
+            saved_files.append(file.filename)
         return jsonify({'message': f'Pruebas enviadas con éxito en {folder_path}'}), 200
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
 
 @app.route('/delete-selected-test', methods=["POST"]) # Eliminar una prueba en concreto de una pregunta de los administradores/monitores
 def delete_selected_test(): # AÑADIR FUNCIONALIDAD EN LA PARTE NO SERVIDOR
-    data = request.get_json()  
-    block_name = data.get('text', '')
-    question_name = data.get('question_name', '')
-    test_name = data.get('test_name', '')
+    block_name = request.form.get('text', '')
+    question_name = request.form.get('question_name', '')
+    test_name = request.form.get('test_name', '')
+
     if block_name and question_name and test_name:
         route = 'data/blocks/'
         direcction_to_question = block_name + "/" + question_name + "/" + test_name
