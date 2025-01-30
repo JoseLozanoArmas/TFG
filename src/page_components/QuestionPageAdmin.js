@@ -102,6 +102,32 @@ export const QuestionPageAdmin = () => {
   };
 
   const removeCurrentButton = async (id) => {
+    const buttonToRemove = buttons.find((button) => button.id === id);
+    let save_test_name = buttonToRemove.file;
+
+    try { // Guardamos la info de la pregunta en el JSON de registro
+      const response = await fetch('http://127.0.0.1:5000/delete-selected-test', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          text: block_name,
+          question_name: question_name, 
+          test_name: save_test_name,
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error); 
+    }
+    
     setButtons((prevButtons) => prevButtons.filter((button) => button.id !== id));
   }
 
@@ -199,8 +225,6 @@ export const QuestionPageAdmin = () => {
         formData.append('files', fileInput);
       }
     });
-
-    alert("llego")
       
     try { // Guardamos la info de la pregunta en el JSON de registro
       const response = await fetch('http://127.0.0.1:5000/upload-admin-test-to-question-folder', {

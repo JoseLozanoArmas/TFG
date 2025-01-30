@@ -255,12 +255,9 @@ def update_current_question():
 def upload_admin_test_to_question_folder():
     block_name = request.form.get('text', '')
     question_name = request.form.get('question_name', '')
-    print("block name: ", block_name)
-    print("question_name: ", question_name)
     if block_name and question_name:
         route = 'data/blocks/'
         direcction_to_question = block_name + "/" + question_name
-        print(direcction_to_question)
         folder_path = os.path.join(route, direcction_to_question)
         os.makedirs(folder_path, exist_ok=True)
         files = request.files.getlist('files') 
@@ -277,22 +274,22 @@ def upload_admin_test_to_question_folder():
 
 @app.route('/delete-selected-test', methods=["POST"]) # Eliminar una prueba en concreto de una pregunta de los administradores/monitores
 def delete_selected_test(): # AÑADIR FUNCIONALIDAD EN LA PARTE NO SERVIDOR
-    block_name = request.form.get('text', '')
-    question_name = request.form.get('question_name', '')
-    test_name = request.form.get('test_name', '')
+    data = request.get_json()
+    block_name = data.get('text', '')
+    question_name = data.get('question_name', '')
+    test_name = data.get('test_name', '')
+
+    print("nombre del test: ", test_name)
 
     if block_name and question_name and test_name:
         route = 'data/blocks/'
         direcction_to_question = block_name + "/" + question_name + "/" + test_name
-        folder_path = os.path.join(route, direcction_to_question)
-        try:
-            for filename in os.listdir(folder_path):
-                file_path = os.path.join(folder_path, filename)
-            if os.path.isfile(file_path):
-                os.unlink(file_path) 
-            return jsonify({'message': 'Prueba eliminada con éxito'}), 200
-        except Exception as e:
-            return jsonify({'message': f'Error al eliminar contenido: {str(e)}'}), 500
+        file_path = os.path.join(route, direcction_to_question)
+        if os.path.isfile(file_path) or os.path.islink(file_path):
+            os.unlink(file_path) 
+            return jsonify({'message': f'Prueba \"{test_name}\" eliminada con éxito'}), 200
+    else:
+        return jsonify({'message': f'No se pudo eliminar la prueba {test_name}'}), 400
 
 
     
