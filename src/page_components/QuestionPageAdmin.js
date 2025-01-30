@@ -259,8 +259,10 @@ export const QuestionPageAdmin = () => {
 
     const fileInput = document.getElementById('fileInputUser').files[0];
     const formData = new FormData();
-    formData.append('file', fileInput); // Agregar archivo
-    formData.append('userNameData', userName); // Agregar nombre de usuario
+    formData.append('file', fileInput); 
+    formData.append('userName', userName); 
+    formData.append('blockName', block_name);
+    formData.append('questionName', question_name);
 
     try {
       const response = await fetch('http://127.0.0.1:5000/upload-file-user', {

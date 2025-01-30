@@ -41,11 +41,10 @@ def save_text():
 def save_user_name():
     data = request.get_json()  
     folder_name = data.get('text', '') 
-
     if folder_name:
-        folder_path = os.path.join('users_input', folder_name)
-        os.makedirs(folder_path, exist_ok=True)
-        return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
+        route_to_folder = os.path.join('users_input', folder_name)
+        os.makedirs(route_to_folder, exist_ok = True)
+        return jsonify({'message': f'Carpeta creada con éxito en {route_to_folder}'}), 200
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
     
@@ -59,7 +58,7 @@ def create_block_folder_user():
     if user_name:
         route = 'users_input/' + user_name + "/"
         folder_path = os.path.join(route, block_name)
-        os.makedirs(folder_path, exist_ok=True)
+        os.makedirs(folder_path, exist_ok = True)
         return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
@@ -74,7 +73,7 @@ def create_question_folder_user():
     if user_name:
         route = 'users_input/' + user_name + "/" + block_name
         folder_path = os.path.join(route, question_name)
-        os.makedirs(folder_path, exist_ok=True)
+        os.makedirs(folder_path, exist_ok = True)
         return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
@@ -84,18 +83,17 @@ def create_question_folder_user():
 def upload_file():
     if 'file' not in request.files:
         return jsonify({'message': 'No se envió ningún archivo'}), 400
-
     file = request.files['file']
-
     if file.filename == '':
         return jsonify({'message': 'El archivo no tiene nombre'}), 400
     
-    user_name = request.form.get('userNameData', '') 
-
+    user_name = request.form.get('userName', '')
+    block_name = request.form.get('blockName', '')
+    question_name = request.form.get('questionName', '') 
 
     if file and allowed_file(file.filename):
-        folder_path = "users_input/" + user_name + "/" + "borrar" # Carpeta del usuario (CAMBIAR RUTA)
-        os.makedirs(folder_path, exist_ok=True)  # Crea el directorio si no existe
+        folder_path = "users_input/" + user_name + "/" + block_name + "/" + question_name # Carpeta del usuario (CAMBIAR RUTA)
+        os.makedirs(folder_path, exist_ok = True)  # Crea el directorio si no existe
         file_path = os.path.join(folder_path, file.filename)
         file.save(file_path)
         return jsonify({'message': f'Archivo {file.filename} subido con éxito'}), 200
@@ -111,7 +109,7 @@ def create_block_folder_admin():
     if block_name:
         route = 'data/blocks/'
         folder_path = os.path.join(route, block_name)
-        os.makedirs(folder_path, exist_ok=True)
+        os.makedirs(folder_path, exist_ok = True)
         return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
@@ -161,7 +159,7 @@ def create_question_block_folder_admin():
         route = 'data/blocks/'
         direcction_to_question = block_name + "/" + question_name
         folder_path = os.path.join(route, direcction_to_question)
-        os.makedirs(folder_path, exist_ok=True)
+        os.makedirs(folder_path, exist_ok = True)
         return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
@@ -259,7 +257,7 @@ def upload_admin_test_to_question_folder():
         route = 'data/blocks/'
         direcction_to_question = block_name + "/" + question_name
         folder_path = os.path.join(route, direcction_to_question)
-        os.makedirs(folder_path, exist_ok=True)
+        os.makedirs(folder_path, exist_ok = True)
         files = request.files.getlist('files') 
         if not files:
             return jsonify({'message': 'No se mandó ningún archivo'}), 400
@@ -278,9 +276,6 @@ def delete_selected_test(): # AÑADIR FUNCIONALIDAD EN LA PARTE NO SERVIDOR
     block_name = data.get('text', '')
     question_name = data.get('question_name', '')
     test_name = data.get('test_name', '')
-
-    print("nombre del test: ", test_name)
-
     if block_name and question_name and test_name:
         route = 'data/blocks/'
         direcction_to_question = block_name + "/" + question_name + "/" + test_name
