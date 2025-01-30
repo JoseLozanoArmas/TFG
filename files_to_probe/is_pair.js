@@ -6,4 +6,4 @@ function isPair(number) {
   }
 }
 
-console.log(isPair(5));
+module.exports = isPair;
