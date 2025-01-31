@@ -118,6 +118,32 @@ export const BlockInternalAdminPage = () => {
         alert('Error al conectar con el servidor.');
         console.error(error);
       }
+
+      try {
+        const response = await fetch('http://127.0.0.1:5000/regist-question-button', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            text: currentBlockName,
+            question_id: newButton.id,
+            label: newButton.label, 
+            name: newButton.name,
+          }),
+        });
+    
+        const data = await response.json();
+        if (response.ok) {
+          alert(data.message);
+        } else {
+          alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        alert('Error al conectar con el servidor.');
+        console.error(error);
+      }
+
     }
   };
 

@@ -12,8 +12,9 @@ ALLOWED_EXTENSIONS = {'py', 'c', 'cc', 'rb', 'js'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-route_to_data_json_block_and_question = "future_json_structures/data_information_app.json" # RUTA AL JSON QUE REGISTRA LOS BLOQUES Y PREGUNTAS
-route_to_json_buttons_blocks = "future_json_structures/data_blocks_buttons.json"
+route_to_data_json_block_and_question = "future_json_structures/data_information_app.json" # RUTA AL JSON QUE REGISTRA LOS BLOQUES Y PREGUNTAS (INFO)
+route_to_json_buttons_blocks = "future_json_structures/data_blocks_buttons.json" # RUTA AL JSON QUE REGISTRA LA INFO DE LOS BOTONES DE BLOQUES
+route_to_json_buttons_questions = "future_json_structures/data_questions_buttons.json" # RUTA AL JSON QUE REGISTRA LA INFO DE LOS BOTONES DE QUESTIONS
 
 # Funciones de ayuda
 def allowed_file(filename): # Función para comprobar que los ficheros tienen la extensión permitida
@@ -251,6 +252,64 @@ def regist_question_admin():
     else:
         # Crear el archivo si no existe
         return jsonify({'message': 'Error, no se pudo encontrar el fichero de registro debido'}), 400
+
+@app.route('/regist-question-button', methods=["POST"])
+def regist_question_button():
+    data = request.get_json()  
+    block_id = data.get('text', '')
+    question_id = data.get('question_id', '')
+    label = data.get('label', '')
+    name = data.get('name', '')
+    begin_document = "{\n"
+    line_block_id = f"    \"block_{block_id}\"" + ": {\n"
+    line_question_id = f"      \"question_" + str(question_id) + "\": {\n" + "        \"id\": " + str(question_id) + ",\n"
+    line_label = f"        \"label\": \"{label}\",\n"
+    line_name = f"        \"name\": \"{name}\"\n"
+    end_entry = "      }\n    }"
+    end_question = "      }"
+    end_document = "\n}"
+    content = line_block_id + line_question_id + line_label + line_name + end_entry
+    search_block = r"\"block_" + str(block_id) + r"\"\s*:\s*{"
+    search_question = r"\"block_" + str(block_id) + "\"(.|\n)*?\"question_" + str(question_id - 1) + "\"(.|\n)*?}"
+
+    first_middle = ""
+    second_middle = ""
+    final_json = ""
+
+    if os.path.exists(route_to_json_buttons_questions):  # Comprueba si el archivo existe en la ruta
+        with open(route_to_json_buttons_questions, 'r') as file:  
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines:
+                find_current_block = re.search(search_block, content)
+                if find_current_block:
+                    find_current_question = re.search(search_question, content)
+                    if find_current_question:
+                        first_middle = content[:find_current_question.end()]
+                        new_content = "\n" + line_question_id + line_label + line_name + end_question
+                        second_middle = content[find_current_question.end():]
+                        final_json = first_middle + "," + new_content + second_middle
+                        with open(route_to_json_buttons_questions, 'w') as file:
+                            file.write(final_json)
+                    else:
+                        new_content = content[:-3]
+                        new_question_line = f"  \"question_" + str(question_id) + "\": {\n" + "        \"id\": " + str(question_id) + ",\n"
+                        new_end_doc = "\n    }\n}"
+                        new_content += new_question_line + line_label + line_name + end_question + new_end_doc
+                        with open(route_to_json_buttons_questions, 'w') as file:
+                            file.write(new_content)
+                else:
+                    content = content[:-3]
+                    new_content = "\n" + line_question_id + line_label + line_name + end_question
+                    content += "},\n    \"block_" + str(block_id) + "\": {" + new_content + "\n    }\n}"
+                    with open(route_to_json_buttons_questions, 'w') as file:
+                        file.write(content)
+                return jsonify({'message': f'Registro de botones de preguntas actualizado'}), 200
+    else:
+        with open(route_to_json_buttons_questions, 'w') as file:
+            new_content = begin_document + content + end_document
+            file.write(new_content)
+        return jsonify({'message': f'Archivo de botones de preguntas creado'}), 200
 
 @app.route('/update-current-question', methods=["POST"])
 def update_current_question():
