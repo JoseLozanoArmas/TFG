@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import './UserPageAdmin.css';
 
@@ -12,6 +12,7 @@ export const UserPageAdmin = () => {
   const [user_name, setTexto] = useState('');
   const [user_password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  
 
   const GoToControlPanel = () => {
     navigate('/control_panel'); 
@@ -40,11 +41,11 @@ export const UserPageAdmin = () => {
 
     // localStorage.setItem("user_role","monitor"); MODIFICAR LA LOGICA PARA QUE SE PUEDA EXAMINAR LOS USUARIOS REGISTRADOS
 
-    let save_content;
+    
     
 
 
-    /*
+  
     if ((user_name === USER_NAME) && (user_password === PASSWORD)) {
       alert('Contraseña aceptada');
       localStorage.setItem("user_role","admin");
@@ -57,7 +58,6 @@ export const UserPageAdmin = () => {
         alert('Usuario o contraseña incorrectos');
         return;
     }
-        */
   };
 
     return (

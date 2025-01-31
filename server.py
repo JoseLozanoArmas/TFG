@@ -13,6 +13,7 @@ ALLOWED_EXTENSIONS = {'py', 'c', 'cc', 'rb', 'js'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 route_to_data_json_block_and_question = "future_json_structures/data_information_app.json" # RUTA AL JSON QUE REGISTRA LOS BLOQUES Y PREGUNTAS
+route_to_json_buttons_blocks = "future_json_structures/data_blocks_buttons.json"
 
 # Funciones de ayuda
 def allowed_file(filename): # Función para comprobar que los ficheros tienen la extensión permitida
@@ -149,6 +150,46 @@ def regist_block_admin():
                 file.write(end_block)
                 file.write(end_doc)
         return jsonify({'message': f'Archivo de registro creado'}), 200
+
+@app.route('/regist-block-button', methods=["POST"])
+def regist_block_button():
+    data = request.get_json()
+    block_id = data.get('text', '')
+    positionX = data.get('positionX', '')
+    positionY = data.get('positionY', '')
+    type = data.get('type', '')
+    block_name = data.get('block_name', '')
+
+    begin_document = "[\n"
+    begin_entry = "    {\n"
+    line_id = f"        \"id\": {block_id},\n"
+    line_positionX = f"        \"positionX\": {positionX},\n"
+    line_positionY = f"        \"positionY\": {positionY},\n"
+    line_type = f"        \"type\": \"{type}\",\n"
+    line_block_name = f"        \"block_name\": \"{block_name}\"\n"
+    end_entry = "    }"
+    end_document = "\n]"
+    content = begin_entry + line_id + line_positionX + line_positionY + line_type + line_block_name + end_entry
+    if os.path.exists(route_to_json_buttons_blocks):  # Comprueba si el archivo existe en la ruta
+        with open(route_to_json_buttons_blocks, 'r') as file:
+            lines = file.readlines()
+        if lines:
+            lines = lines[:-2]
+        if block_id == 1:
+            content = begin_document + content + end_document
+        else:   
+            content = end_entry + ",\n" + content + end_document
+        with open(route_to_json_buttons_blocks, 'w') as file:
+            file.writelines(lines)
+            file.write(content)
+        return jsonify({'message': 'Archivo actualizado'}), 200
+    else:
+        # Crear el archivo si no existe
+        with open(route_to_json_buttons_blocks, 'w') as file:
+            content = begin_document + content + end_document
+            file.write(content)
+        return jsonify({'message': 'Archivo creado'}), 200
+
     
 @app.route('/create-question-block-folder-admin', methods=["POST"]) # Creación de carpetas para las preguntas de los bloques de los administradores/monitores
 def create_question_block_folder_admin():
@@ -325,6 +366,28 @@ def delete_last_block_json():
             with open(route_to_data_json_block_and_question, 'w') as file:
                 file.write(final_content)
         return jsonify({'message': f'Último bloque eliminado del JSON de registro'}), 200
+    else:
+        return jsonify({'message': f'Error al eliminar el último bloque del JSON de registro'}), 400
+    
+@app.route('/delete-last-block-button-of-json', methods=["POST"])
+def delete_last_block_button_of_json():
+    data = request.get_json()
+    block_id = data.get('text', '')
+    search_block = r",?\s*{\n*\s*\"id\":\s*" + str(block_id) + r"(.|\n)*?}"
+    if os.path.exists(route_to_data_json_block_and_question):  # Comprueba si el archivo existe en la ruta
+        with open(route_to_data_json_block_and_question, 'r') as file:  
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines:
+                find_last_block = re.search(search_block, content)
+                if find_last_block:
+                    content = content[:find_last_block.start()]
+                    content += "\n]"
+                else:
+                    return jsonify({'message': f'Error. No se encontró el bloque'}), 400
+        with open(route_to_data_json_block_and_question, 'w') as file:
+            file.write(content)
+        return jsonify({'message': f'Último bloque eliminado'}), 200
     else:
         return jsonify({'message': f'Error al eliminar el último bloque del JSON de registro'}), 400
 
