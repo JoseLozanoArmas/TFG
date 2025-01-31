@@ -15,9 +15,9 @@
       "role": "MONITOR"
     },
     {
-        "username": "U2",
-        "password": "Contraseña",
-        "role": "MONITOR"
+      "username": "U2",
+      "password": "Contraseña",
+      "role": "MONITOR"
     }
 ]
   
