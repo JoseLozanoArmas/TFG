@@ -118,7 +118,7 @@ export const BlockGeneralAdminPage = () => {
       console.error(error);
     }
 
-    // Registrar la información en el JSON
+    // Registrar la información en el JSON de datos de la APP
     const button_id = newButton.id - 1
     try {
       const response = await fetch('http://127.0.0.1:5000/regist-block-admin', {
@@ -138,6 +138,34 @@ export const BlockGeneralAdminPage = () => {
       alert('Error al conectar con el servidor.');
       console.error(error);
     }
+
+    // Registrar la información en el JSON de los botones de bloque
+    try {
+      const response = await fetch('http://127.0.0.1:5000/regist-block-button', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          text: button_id,
+          positionX: newButton.positionX,
+          positionY: newButton.positionY,
+          type: newButton.type,
+          block_name: newButton.block_name, 
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error);
+    }
+
+
   };
 
   const handleBotonPaginaClick = async (id) => {
@@ -208,9 +236,33 @@ export const BlockGeneralAdminPage = () => {
     }
 
     let button_id =  buttons[buttons.length - 1].id - 1
+    
 
-    try { // Llamamos al método que borra del registro al bloque
+    try { // Llamamos al método que borra del registro al bloque del json de datos de la APP
       const response = await fetch('http://127.0.0.1:5000/delete-last-block-json', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          text: button_id 
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error);
+    }
+
+    try { // Llamamos al método que borra del registro al bloque del json de registro de botones
+      const response = await fetch('http://127.0.0.1:5000/delete-last-block-button-of-json', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

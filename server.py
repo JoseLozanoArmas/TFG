@@ -154,7 +154,7 @@ def regist_block_admin():
 @app.route('/regist-block-button', methods=["POST"])
 def regist_block_button():
     data = request.get_json()
-    block_id = data.get('text', '')
+    button_id = data.get('text', '')
     positionX = data.get('positionX', '')
     positionY = data.get('positionY', '')
     type = data.get('type', '')
@@ -162,7 +162,7 @@ def regist_block_button():
 
     begin_document = "[\n"
     begin_entry = "    {\n"
-    line_id = f"        \"id\": {block_id},\n"
+    line_id = f"        \"id\": {button_id},\n"
     line_positionX = f"        \"positionX\": {positionX},\n"
     line_positionY = f"        \"positionY\": {positionY},\n"
     line_type = f"        \"type\": \"{type}\",\n"
@@ -175,7 +175,7 @@ def regist_block_button():
             lines = file.readlines()
         if lines:
             lines = lines[:-2]
-        if block_id == 1:
+        if button_id == 1:
             content = begin_document + content + end_document
         else:   
             content = end_entry + ",\n" + content + end_document
@@ -372,10 +372,10 @@ def delete_last_block_json():
 @app.route('/delete-last-block-button-of-json', methods=["POST"])
 def delete_last_block_button_of_json():
     data = request.get_json()
-    block_id = data.get('text', '')
-    search_block = r",?\s*{\n*\s*\"id\":\s*" + str(block_id) + r"(.|\n)*?}"
-    if os.path.exists(route_to_data_json_block_and_question):  # Comprueba si el archivo existe en la ruta
-        with open(route_to_data_json_block_and_question, 'r') as file:  
+    button_id = data.get('text', '')
+    search_block = r",?\s*{\n*\s*\"id\":\s*" + str(button_id) + r"(.|\n)*?}"
+    if os.path.exists(route_to_json_buttons_blocks):  # Comprueba si el archivo existe en la ruta
+        with open(route_to_json_buttons_blocks, 'r') as file:  
             lines = file.readlines()
             content = ''.join(lines)
             if lines:
@@ -385,7 +385,7 @@ def delete_last_block_button_of_json():
                     content += "\n]"
                 else:
                     return jsonify({'message': f'Error. No se encontró el bloque'}), 400
-        with open(route_to_data_json_block_and_question, 'w') as file:
+        with open(route_to_json_buttons_blocks, 'w') as file:
             file.write(content)
         return jsonify({'message': f'Último bloque eliminado'}), 200
     else:
