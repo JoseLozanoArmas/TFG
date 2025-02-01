@@ -491,7 +491,48 @@ def delete_last_question_admin():
         return jsonify({'message': f'Última pregunta del bloque block_{block_id} eliminada del JSON de registro'}), 200
     else:
         return jsonify({'message': f'Error, no se pudo encontrar el fichero de registro debido'}), 500
-     
+ 
+@app.route('/delete-question-button-json')
+def delete_question_button_json():
+    data = request.get_json()  
+    block_id = data.get('text', '')
+    question_id = data.get('question_id', '')
+    search_block = r"\"block_" + str(block_id) + r"\"\s*:\s*{"
+    search_question = r"\"block_" + str(block_id) + r"\"(.|\n)*?\"question_" + str(question_id) + r"\"(.|\n)*?}"
+    search_question_in_cut = r",?\s*\"question_" + str(question_id) + r"\"(.|\n)*?}"
+    first_middle = ""
+    second_middle = ""
+    final_json = ""
+    if os.path.exists(route_to_json_buttons_questions):  # Comprueba si el archivo existe en la ruta
+        with open(route_to_json_buttons_questions, 'r') as file:  
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines:
+                find_current_block = re.search(search_block, content)
+                if find_current_block:
+                    find_current_question = re.search(search_question, content)
+                    if find_current_question:
+                        first_middle = content[:find_current_question.end()]
+                        second_middle = content[find_current_question.end():]
+                        save_block_and_cuestion = find_current_question.group()
+                        find_question_in_cut = re.search(search_question_in_cut, save_block_and_cuestion)
+                        if find_question_in_cut:
+                            first_middle = first_middle[:-len(find_question_in_cut.group())]
+                            final_json = first_middle + second_middle
+                            with open(route_to_json_buttons_questions, 'w') as file:
+                                file.write(final_json)
+                            return jsonify({'message': f'Botón de la pregunta \"question_{question_id}\" del bloque \"block_{block_id}\" registrado'}), 200
+                        else:
+                            return jsonify({'message': f'Error inesperado al localizar la pregunta a eliminar'}), 400
+                    else:
+                        return jsonify({'message': f'Error, no se encontró la pregunta a eliminar'}), 400
+                else:
+                    return jsonify({'message': f'Error, no se encontró el bloque de la pregunta a eliminar'}), 400
+            else:
+                return jsonify({'message': f'Error, no se encontró contenido a eliminar'}), 400
+    else:
+        return jsonify({'message': f'Error, no se encontró el archivo de registro'}), 400
+
 @app.route('/update-route-img', methods=["POST"])
 def uptdate_route_img():
     data = request.get_json()  
