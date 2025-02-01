@@ -22,7 +22,7 @@ export const QuestionPageAdmin = () => {
       return [];
     }
   });
-  const [uploadedFiles, setUploadedFiles] = useState("");
+  const [uploadedFiles, setUploadedFiles] = useState({});
   const [block_name, setBlockName] = useState("");
   const [question_name, setQuestionName] = useState("");
   const make_invisible = { display: "none" }
@@ -80,7 +80,7 @@ export const QuestionPageAdmin = () => {
   const handleFileUpload = (event, key) => {
     const file = event.target.files[0];
     if (key === "fileUser") {
-      setUploadedFiles((lastFiles) => ({ ...lastFiles, file: file.name }));
+      setUploadedFiles((lastFiles) => ({ ...lastFiles, fileUser: file.name }));
     } else {
       setButtons((prevButtons) =>
         prevButtons.map((button) =>
@@ -328,7 +328,7 @@ export const QuestionPageAdmin = () => {
         <div className="user_submit_code">
           <button className="button_submit_code" onClick={() => triggerFileInputUser('fileInputUser')}>{content_of_button_user}</button>
           <input id="fileInputUser" type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, 'fileUser')} />
-          {uploadedFiles.fileUser && <span className="file_name_display">{uploadedFiles.fileUser}</span>}
+          {uploadedFiles.fileUser && <span className="file_name_display_user">{uploadedFiles.fileUser}</span>}
         </div>
         <div className="user_submit_code">
           <button className="button_submit_code" onClick={SendFileUser}>Confirmar</button>

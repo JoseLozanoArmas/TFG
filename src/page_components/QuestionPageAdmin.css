@@ -94,6 +94,12 @@
   margin-left: 20px;
 }
 
+.file_name_display_user {
+  font-size: 20px;
+  color: white;
+  margin-left: 30px;
+}
+
 
 .label_puntuation_admin {
   color: #ffffff;
