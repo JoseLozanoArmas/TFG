@@ -22,7 +22,7 @@ export const QuestionPageAdmin = () => {
       return [];
     }
   });
-  const [uploadedFiles, setUploadedFiles] = useState({});
+  const [uploadedFiles, setUploadedFiles] = useState("");
   const [block_name, setBlockName] = useState("");
   const [question_name, setQuestionName] = useState("");
   const make_invisible = { display: "none" }
@@ -245,13 +245,9 @@ export const QuestionPageAdmin = () => {
       console.error(error); 
     }
 
-      /*
-      let previous_route = "block_internal_admin_page/" + block_name
-      alert("Información registrada con éxito")
-      navigate(`/${previous_route}`)
-      */
-    
-    
+    let previous_route = "block_internal_admin_page/" + block_name
+    alert("Información registrada con éxito")
+    navigate(`/${previous_route}`)  
   };
 
   const SendFileUser = async () => {
