@@ -22,7 +22,7 @@ export const QuestionPageAdmin = () => {
       return [];
     }
   });
-  const [uploadedFiles, setUploadedFiles] = useState("");
+  const [uploadedFiles, setUploadedFiles] = useState({});
   const [block_name, setBlockName] = useState("");
   const [question_name, setQuestionName] = useState("");
   const make_invisible = { display: "none" }
@@ -80,11 +80,11 @@ export const QuestionPageAdmin = () => {
   const handleFileUpload = (event, key) => {
     const file = event.target.files[0];
     if (key === "fileUser") {
-      setUploadedFiles((lastFiles) => ({ ...lastFiles, fileUser: file.name }));
+      setUploadedFiles((lastFiles) => ({ ...lastFiles, file: file.name }));
     } else {
       setButtons((prevButtons) =>
         prevButtons.map((button) =>
-          button.id === key ? { ...button, fileUser: file.name } : button
+          button.id === key ? { ...button, file: file.name } : button
         )
       );
     }
