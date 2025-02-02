@@ -135,8 +135,8 @@ export const QuestionPageAdmin = () => {
     setButtons((prevButtons) => prevButtons.filter((button) => button.id !== id));
   }
 
-  const removeAll = async (id) => {
-    setButtons((prevButtons) => []);
+  const ChangePermission = () => {
+    alert("pendiente")
   }
 
   const checkAllInformation = async () => {
@@ -313,7 +313,7 @@ export const QuestionPageAdmin = () => {
           <button className="button_save_question_page_admin" onClick={checkAllInformation}>Confirmar</button>
         )}
         {buttons.length >= 1 && (
-          <button className="button_change_to_user">Probar cómo usuario</button>
+          <button className="button_change_to_admin_or_monitor_on_question" onClick={ChangePermission}>Probar cómo usuario</button>
         )}
       </div>
     );

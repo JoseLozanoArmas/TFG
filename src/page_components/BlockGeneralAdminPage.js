@@ -314,7 +314,7 @@ export const BlockGeneralAdminPage = () => {
         </button>
       )}
       {buttons.length > 1 && ((isAdmin === true) || (isMonitor === true)) && (
-        <button className="button_change_to_user" onClick={ChangePermission}>
+        <button className="button_change_to_admin_or_monitor" onClick={ChangePermission}>
           Probar cómo usuario
         </button>
       )}

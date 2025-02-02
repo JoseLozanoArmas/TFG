@@ -76,18 +76,17 @@
   transition: background-color 0.3s; 
 }
 
-.button_change_to_user {
+.button_change_to_admin_or_monitor {
   position: fixed; 
   bottom: 20px; 
   right: 250px; 
-  background-color: rgb(1, 187, 1); 
-  color: white; 
+  background-color: yellow; 
+  color: black; 
   border: none; 
   padding: 10px 20px; 
   border-radius: 5px; 
   cursor: pointer; 
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); 
-  transition: background-color 0.3s; 
 }
 
 .button_remove_last:hover {

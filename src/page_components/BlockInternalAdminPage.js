@@ -180,6 +180,10 @@ export const BlockInternalAdminPage = () => {
     localStorage.setItem(`button_${id}`, JSON.stringify(buttons));
   }, [currentLogo, buttons]);
 
+  const ChangePermission = () => {
+    alert("pendiente")
+  }
+  
   if ((isAdmin === true) || (isMonitor === true)) {
     return (
       <div className="App_block_internal_page">
@@ -206,7 +210,7 @@ export const BlockInternalAdminPage = () => {
           </button>
         )}
         {buttons.length >= 1 && (
-          <button className="button_change_to_user">
+          <button className="button_change_to_admin_or_monitor" onClick={ChangePermission}>
             Probar cómo usuario
           </button>
         )}
