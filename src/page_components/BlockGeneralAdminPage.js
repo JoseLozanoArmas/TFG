@@ -31,7 +31,9 @@ export const BlockGeneralAdminPage = () => {
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [isMonitor, setIsMonitor] = useState(false);
+  const [isTemporalyUser, setIsTemporalyUser] = useState(false);
   const [userName, setName] = useState("");
+  const [saveRol, setSaveRol] = useState("");
 
   useEffect(() => {
     const userRole = localStorage.getItem("user_role");
@@ -39,6 +41,7 @@ export const BlockGeneralAdminPage = () => {
     setIsMonitor(userRole === "monitor")
     const getName = localStorage.getItem("name_user");
     setName(getName);
+    setSaveRol(userRole);
   }, []);
 
   useEffect(() => {
@@ -286,7 +289,15 @@ export const BlockGeneralAdminPage = () => {
   };
 
   const ChangePermission = () => {
-    alert("pendiente")
+    if (isTemporalyUser === false) {
+      if (isAdmin === true) { setIsAdmin(false) }
+      if (isMonitor === true) { setIsMonitor(false) }
+      setIsTemporalyUser(true) 
+    } else {
+      setIsTemporalyUser(false);
+      if (saveRol === "admin") { setIsAdmin(true) }
+      if (saveRol === "monitor") { setIsMonitor(true) }
+    }
   }
 
   return (
@@ -316,6 +327,11 @@ export const BlockGeneralAdminPage = () => {
       {buttons.length > 1 && ((isAdmin === true) || (isMonitor === true)) && (
         <button className="button_change_to_admin_or_monitor" onClick={ChangePermission}>
           Probar cómo usuario
+        </button>
+      )}
+      {buttons.length > 1 && (isTemporalyUser == true) && (
+        <button className="button_change_to_admin_or_monitor" onClick={ChangePermission}>
+          Volver al rol anterior
         </button>
       )}
     </div>

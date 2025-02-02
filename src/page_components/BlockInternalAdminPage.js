@@ -24,7 +24,23 @@ export const BlockInternalAdminPage = () => {
     }
   });
 
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isMonitor, setIsMonitor] = useState(false);
+  const [isTemporalyUser, setIsTemporalyUser] = useState(false);
   const [userName, setName] = useState("");
+  const [saveRol, setSaveRol] = useState("");
+  const [currentBlockName, setCurrentBlockName] = useState("");
+
+  useEffect(() => {
+    const userRole = localStorage.getItem("user_role");
+    setIsAdmin(userRole === "admin");
+    setIsMonitor(userRole === "monitor");
+    const getBlockName = localStorage.getItem("current_block_name");
+    setCurrentBlockName(getBlockName);
+    const getUserName = localStorage.getItem("name_user");
+    setName(getUserName);
+    setSaveRol(userRole);
+  }, []);
 
   const handleLogoChange = (event) => {
     const file = event.target.files[0];
@@ -69,20 +85,6 @@ export const BlockInternalAdminPage = () => {
   const triggerFileInput = () => {
     document.getElementById("file-input").click();
   };
-
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isMonitor, setIsMonitor] = useState(false);
-  const [currentBlockName, setCurrentBlockName] = useState("");
-
-  useEffect(() => {
-    const userRole = localStorage.getItem("user_role");
-    setIsAdmin(userRole === "admin");
-    setIsMonitor(userRole === "monitor");
-    const getBlockName = localStorage.getItem("current_block_name");
-    setCurrentBlockName(getBlockName);
-    const getUserName = localStorage.getItem("name_user");
-    setName(getUserName);
-  }, []);
 
   const addNewButton = async () => {
     if (buttons.length < 8) {
@@ -181,7 +183,15 @@ export const BlockInternalAdminPage = () => {
   }, [currentLogo, buttons]);
 
   const ChangePermission = () => {
-    alert("pendiente")
+    if (isTemporalyUser === false) {
+      if (isAdmin === true) { setIsAdmin(false) }
+      if (isMonitor === true) { setIsMonitor(false) }
+      setIsTemporalyUser(true) 
+    } else {
+      setIsTemporalyUser(false);
+      if (saveRol === "admin") { setIsAdmin(true) }
+      if (saveRol === "monitor") { setIsMonitor(true) }
+    }
   }
   
   if ((isAdmin === true) || (isMonitor === true)) {
@@ -214,6 +224,23 @@ export const BlockInternalAdminPage = () => {
             Probar cómo usuario
           </button>
         )}
+      </div>
+    );
+  } else if(isTemporalyUser === true) {
+    return (
+      <div className="App_block_internal_page">
+        <div className="tittle_block_internal_admin_page">
+          <h1>Bloque de preguntas interior</h1>
+        </div>
+        <img src={currentLogo} alt="Logo" />
+        {buttons.map((button) => ( 
+          <button key={button.id} className="button_new_question" onClick={() => {MoveToQuestionPageAdmin(button.name);}}>
+            {button.label}
+          </button>
+        ))}
+        <button className="button_change_to_admin_or_monitor" onClick={ChangePermission}>
+          Volver al rol anterior
+        </button>
       </div>
     );
   } else {

@@ -43,6 +43,9 @@ export const QuestionPageAdmin = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isMonitor, setIsMonitor] = useState(false);
   const [userName, setName] = useState("");
+  const [isTemporalyUser, setIsTemporalyUser] = useState(false);
+  const [saveRol, setSaveRol] = useState("");
+
 
   useEffect(() => {
     const userRole = localStorage.getItem("user_role");
@@ -54,6 +57,7 @@ export const QuestionPageAdmin = () => {
     setBlockName(getBlockName);
     const getQuestionName = localStorage.getItem("current_question_name")
     setQuestionName(getQuestionName)
+    setSaveRol(userRole);
   }, []);
 
   useEffect(() => {
@@ -136,7 +140,15 @@ export const QuestionPageAdmin = () => {
   }
 
   const ChangePermission = () => {
-    alert("pendiente")
+    if (isTemporalyUser === false) {
+      if (isAdmin === true) { setIsAdmin(false) }
+      if (isMonitor === true) { setIsMonitor(false) }
+      setIsTemporalyUser(true) 
+    } else {
+      setIsTemporalyUser(false);
+      if (saveRol === "admin") { setIsAdmin(true) }
+      if (saveRol === "monitor") { setIsMonitor(true) }
+    }
   }
 
   const checkAllInformation = async () => {
@@ -317,6 +329,28 @@ export const QuestionPageAdmin = () => {
         )}
       </div>
     );
+  } else if (isTemporalyUser === true) {
+    return(
+      <div className="App_question_page_user">
+        <div className="tittle_question_page_admin">
+          <input type="text" value={title} className="title_input_admin" readOnly/>
+        </div>
+        <div className="description_question_page_admin">
+          <input type="text" value={description} className="description_input_admin" readOnly/>
+        </div>
+        <div className="user_submit_code">
+          <button className="button_submit_code" onClick={() => triggerFileInputUser('fileInputUser')}>{content_of_button_user}</button>
+          <input id="fileInputUser" type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, 'fileUser')} />
+          {uploadedFiles.fileUser && <span className="file_name_display_user">{uploadedFiles.fileUser}</span>}
+        </div>
+        <div className="user_submit_code">
+          <button className="button_submit_code" onClick={SendFileUser}>Confirmar</button>
+        </div>
+        <button className="button_change_to_admin_or_monitor" onClick={ChangePermission}>
+          Volver al rol anterior
+        </button>
+      </div>
+    )
   } else {
     return (
       <div className="App_question_page_user">
