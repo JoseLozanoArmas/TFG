@@ -63,9 +63,6 @@ export const BlockInternalAdminPage = () => {
         console.error(error);
       }
     }
-
-    alert(id)
-
     navigate(`/${id}`);
   };
 
