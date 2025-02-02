@@ -12,9 +12,14 @@ ALLOWED_EXTENSIONS = {'py', 'c', 'cc', 'rb', 'js'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+# Rutas a los ficheros de registro de información
 route_to_data_json_block_and_question = "future_json_structures/data_information_app.json" # RUTA AL JSON QUE REGISTRA LOS BLOQUES Y PREGUNTAS (INFO)
 route_to_json_buttons_blocks = "future_json_structures/data_blocks_buttons.json" # RUTA AL JSON QUE REGISTRA LA INFO DE LOS BOTONES DE BLOQUES
 route_to_json_buttons_questions = "future_json_structures/data_questions_buttons.json" # RUTA AL JSON QUE REGISTRA LA INFO DE LOS BOTONES DE QUESTIONS
+
+# Rutas a las carpetas donde se subiran los códigos
+route_to_users_input = "users_input"
+route_to_admins_and_monitors_tests = "data/blocks"
 
 # Funciones de ayuda
 def allowed_file(filename): # Función para comprobar que los ficheros tienen la extensión permitida
@@ -633,6 +638,38 @@ def remove_last_user():
     with open(file_path, 'w') as file: # Escribir las líneas excepto la última de vuelta al archivo
         file.writelines(lines[:-1])  # Todas las líneas excepto la última
     return jsonify({'message': 'Usuario eliminado con éxito'}), 200
+
+
+# Funciones de corrección de código
+
+# FALTA ADAPTARLAS CON EL RESTO DE FUNCIONES
+def save_all_user_routes_files(user_name, block_id):
+    users_files = []
+    create_route_files = route_to_users_input + "/" + user_name + "/" + block_id # Comprobamos que la dirección del usuario existe
+    if os.path.exists(create_route_files): 
+        save_route_to_questions = os.listdir(create_route_files)
+        for i in range(len(save_route_to_questions)):
+            route_to_file = create_route_files + "/" + save_route_to_questions[i]
+            save_route_to_file = os.listdir(route_to_file)
+            for j in range(len(save_route_to_file)):
+                aux_route = create_route_files + "/" + save_route_to_questions[i] + "/" + save_route_to_file[j]
+                users_files.append(aux_route)      
+    else:
+        return jsonify({'message': 'Hubo un error durante el procesado de los datos, vuelva a intentarlo'}), 400     
+    users_files.sort()
+    return users_files
+
+def filter_routes_to_tests_for_questions(block_id, question_id, user_file):
+    route_to_test = route_to_admins_and_monitors_tests + "/" + block_id + "/" + question_id + "/"
+    save_route_to_test = os.listdir(route_to_test)
+    save_users_code_extension = os.path.splitext(user_file)
+    save_users_code_extension = save_users_code_extension[1]
+    tests_to_use = []
+    for i in range(len(save_route_to_test)):
+        aux_extension = os.path.splitext(save_route_to_test[i])
+        if aux_extension[1] == save_users_code_extension:
+            tests_to_use.append(save_route_to_test[i])
+    return tests_to_use
 
 
 if __name__ == '__main__':
