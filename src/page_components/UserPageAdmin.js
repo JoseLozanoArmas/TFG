@@ -70,7 +70,7 @@ export const UserPageAdmin = () => {
               <div className="password-container">
                 <input type={showPassword ? "text" : "password"} className="textarea_user_page_admin_password" value={user_password} onChange={(e) => setPassword(e.target.value)} placeholder="Inserte contraseña..."/>
                 <button onClick={togglePasswordVisibility} className="visibility-button">
-                  <img src={showPassword ? require('../img/icon_plus.png') : require('../img/configuracion.png')} className ="visibility-image"/>
+                  <img src={showPassword ? require('../img/eye.png') : require('../img/closed_eye.png')} className ="visibility-image"/>
                 </button>
               </div>
               <button onClick={SaveUser}>Iniciar</button>
