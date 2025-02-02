@@ -64,6 +64,8 @@ export const BlockInternalAdminPage = () => {
       }
     }
 
+    alert(id)
+
     navigate(`/${id}`);
   };
 
@@ -87,10 +89,12 @@ export const BlockInternalAdminPage = () => {
 
   const addNewButton = async () => {
     if (buttons.length < 8) {
+      // ANTES EN NAME ESTABA question_${buttons.length + 1} LO DE AHORA ES UN EXPERIMENTO
+      let new_question_name = currentBlockName + `_question_${buttons.length + 1}`
       const newButton = {
         id: buttons.length + 1,
         label: `Pregunta ${buttons.length + 1}`,
-        name: `question_${buttons.length + 1}`
+        name: new_question_name,
       };
 
       localStorage.setItem("current_question_name", newButton.name);

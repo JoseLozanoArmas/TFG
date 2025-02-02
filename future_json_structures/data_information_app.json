@@ -2,28 +2,8 @@
     "block_1": {
       "img": "src/img/logo_ull.png",
       "question_1": {
-        "tittle": "dd",
-        "description": "w"
-      },
-      "question_2": {
-        "tittle": "dd",
-        "description": "w"
-      },
-      "question_2": {
-        "tittle": "dd",
-        "description": "w"
-      },
-      "question_2": {
-        "tittle": "dd",
-        "description": "w"
-      },
-      "question_2": {
-        "tittle": "dd",
-        "description": "w"
-      },
-      "question_2": {
-        "tittle": "dd",
-        "description": "w"
+        "tittle": "f",
+        "description": "f"
       }
     }
 }

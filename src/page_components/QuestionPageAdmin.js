@@ -4,6 +4,7 @@ import './QuestionPageAdmin.css';
 import icon from '../img/icon_plus.png';
 
 export const QuestionPageAdmin = () => {
+  // localStorage.clear();
   const navigate = useNavigate();
   const { id } = useParams();
   const [title, setTitle] = useState(() => {
