@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext} from 'react';
+import React, { useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BlockGeneralAdminPage.css';
 
@@ -6,8 +6,6 @@ export const BlockGeneralAdminPage = () => {
   const navigate = useNavigate();
   const maxPageWidth = window.innerWidth - 100;
   const buttonHeight = 155;
-
-  const userContext = createContext('user');
 
   // localStorage.clear();
 
@@ -49,12 +47,9 @@ export const BlockGeneralAdminPage = () => {
     localStorage.setItem('botonMasHistory', JSON.stringify(botonMasHistory));
   }, [buttons, botonMasHistory]);
 
-  const handleBotonMasClick = async (id) => {
+  const handlePlusButtonClick = async (id) => {
     const clickedButton = buttons.find((button) => button.id === id);
-    if (!clickedButton) {
-      console.error('Botón no encontrado.');
-      return;
-    }
+    
     const newPositionX = clickedButton.positionX + 200;
     let positionX = 0;
     if (newPositionX >= maxPageWidth) {
@@ -167,13 +162,11 @@ export const BlockGeneralAdminPage = () => {
       alert('Error al conectar con el servidor.');
       console.error(error);
     }
-
-
   };
 
-  const handleBotonPaginaClick = async (id) => {
+  const handleNewPageButtonClick = async (id) => {
     if ((isAdmin === false) && (isMonitor === false)) {
-      let save_name = buttons[buttons.length - 1].id - 1
+      let save_name = id
       save_name = String(save_name)
       try { // Llamamos al método que crea la carpeta del bloque del usuario
         const response = await fetch('http://127.0.0.1:5000/create-block-folder-user', {
@@ -199,7 +192,7 @@ export const BlockGeneralAdminPage = () => {
         console.error(error);
       }
     }
-    navigate(`/block_internal_admin_page/${buttons[buttons.length - 1].block_name}`);
+    navigate(`/block_internal_admin_page/block_${id - 1}`);
   };
 
   const removeLastButton = async () => {
@@ -309,9 +302,9 @@ export const BlockGeneralAdminPage = () => {
         (button.type === 'boton_mas' && ((isAdmin === true) || (isMonitor === true))) || button.type !== 'boton_mas' ? (
           <button key={button.id} onClick={() => {
             if (button.type === 'boton_mas') {
-              handleBotonMasClick(button.id);
+              handlePlusButtonClick(button.id);
             } else {
-              handleBotonPaginaClick(button.id);
+              handleNewPageButtonClick(button.id);
             }
           }
         } className="image-button" style={{transform: `translate(${button.positionX}px, ${button.positionY}px)`}}>
