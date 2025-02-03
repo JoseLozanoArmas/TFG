@@ -145,10 +145,17 @@ export const QuestionPageAdmin = () => {
       if (isAdmin === true) { setIsAdmin(false) }
       if (isMonitor === true) { setIsMonitor(false) }
       setIsTemporalyUser(true) 
+      alert("Permisos cambiados a usuario")
     } else {
       setIsTemporalyUser(false);
-      if (saveRol === "admin") { setIsAdmin(true) }
-      if (saveRol === "monitor") { setIsMonitor(true) }
+      if (saveRol === "admin") { 
+        setIsAdmin(true)
+        alert("Permisos de administrador recuperados") 
+      }
+      if (saveRol === "monitor") { 
+        setIsMonitor(true) 
+        alert("Permisos de monitor recuperados")
+      }
     }
   }
 
@@ -326,7 +333,7 @@ export const QuestionPageAdmin = () => {
           <button className="button_save_question_page_admin" onClick={checkAllInformation}>Confirmar</button>
         )}
         {buttons.length >= 1 && (
-          <button className="button_change_to_admin_or_monitor_on_question" onClick={ChangePermission}>Probar cómo usuario</button>
+          <button className="button_change_to_admin_or_monitor_activated" onClick={ChangePermission}>Probar cómo usuario</button>
         )}
       </div>
     );
@@ -347,7 +354,7 @@ export const QuestionPageAdmin = () => {
         <div className="user_submit_code">
           <button className="button_submit_code" onClick={SendFileUser}>Confirmar</button>
         </div>
-        <button className="button_change_to_admin_or_monitor_on_question" onClick={ChangePermission}>
+        <button className="button_change_to_admin_or_monitor_activated" onClick={ChangePermission}>
           Volver al rol anterior
         </button>
       </div>

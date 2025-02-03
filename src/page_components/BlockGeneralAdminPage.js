@@ -287,10 +287,17 @@ export const BlockGeneralAdminPage = () => {
       if (isAdmin === true) { setIsAdmin(false) }
       if (isMonitor === true) { setIsMonitor(false) }
       setIsTemporalyUser(true) 
+      alert("Permisos cambiados a usuario")
     } else {
       setIsTemporalyUser(false);
-      if (saveRol === "admin") { setIsAdmin(true) }
-      if (saveRol === "monitor") { setIsMonitor(true) }
+      if (saveRol === "admin") { 
+        setIsAdmin(true)
+        alert("Permisos de administrador recuperados") 
+      }
+      if (saveRol === "monitor") { 
+        setIsMonitor(true) 
+        alert("Permisos de monitor recuperados")
+      }
     }
   }
 
@@ -324,7 +331,7 @@ export const BlockGeneralAdminPage = () => {
         </button>
       )}
       {buttons.length > 1 && (isTemporalyUser == true) && (
-        <button className="button_change_to_admin_or_monitor" onClick={ChangePermission}>
+        <button className="button_change_to_admin_or_monitor_activated" onClick={ChangePermission}>
           Volver al rol anterior
         </button>
       )}

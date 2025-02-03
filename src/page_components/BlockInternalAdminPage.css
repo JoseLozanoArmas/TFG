@@ -76,6 +76,19 @@
   transition: background-color 0.3s; 
 }
 
+.button_change_to_admin_or_monitor_activated {
+  position: fixed; 
+  bottom: 20px; 
+  right: 30px; 
+  background-color: yellow; 
+  color: black; 
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); 
+}
+
 .button_change_to_admin_or_monitor {
   position: fixed; 
   bottom: 20px; 
