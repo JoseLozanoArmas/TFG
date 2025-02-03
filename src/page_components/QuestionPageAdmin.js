@@ -299,7 +299,6 @@ export const QuestionPageAdmin = () => {
   }
   
   if ((isAdmin === true) || (isMonitor === true)) {
-    alert(id)
     return (
       <div className="App_question_page_admin">
         <div className="tittle_question_page_admin">
@@ -348,7 +347,7 @@ export const QuestionPageAdmin = () => {
         <div className="user_submit_code">
           <button className="button_submit_code" onClick={SendFileUser}>Confirmar</button>
         </div>
-        <button className="button_change_to_admin_or_monitor" onClick={ChangePermission}>
+        <button className="button_change_to_admin_or_monitor_on_question" onClick={ChangePermission}>
           Volver al rol anterior
         </button>
       </div>
