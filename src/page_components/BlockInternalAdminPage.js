@@ -7,6 +7,9 @@ import icon from '../img/icon_plus.png';
 export const BlockInternalAdminPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+
+  const current_block_name = id;
+
   const [currentLogo, setCurrentLogo] = useState(() => {
     const savedLogo = localStorage.getItem(`logo_${id}`);
     if (savedLogo) {
@@ -29,14 +32,11 @@ export const BlockInternalAdminPage = () => {
   const [isTemporalyUser, setIsTemporalyUser] = useState(false);
   const [userName, setName] = useState("");
   const [saveRol, setSaveRol] = useState("");
-  const [currentBlockName, setCurrentBlockName] = useState("");
 
   useEffect(() => {
     const userRole = localStorage.getItem("user_role");
     setIsAdmin(userRole === "admin");
     setIsMonitor(userRole === "monitor");
-    const getBlockName = localStorage.getItem("current_block_name");
-    setCurrentBlockName(getBlockName);
     const getUserName = localStorage.getItem("name_user");
     setName(getUserName);
     setSaveRol(userRole);
@@ -89,7 +89,7 @@ export const BlockInternalAdminPage = () => {
   const addNewButton = async () => {
     if (buttons.length < 8) {
       // ANTES EN NAME ESTABA question_${buttons.length + 1} LO DE AHORA ES UN EXPERIMENTO
-      let new_question_name = currentBlockName + `_question_${buttons.length + 1}`
+      let new_question_name = current_block_name + `_question_${buttons.length + 1}`
       const newButton = {
         id: buttons.length + 1,
         label: `Pregunta ${buttons.length + 1}`,
@@ -106,7 +106,7 @@ export const BlockInternalAdminPage = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ 
-            text: currentBlockName,
+            text: current_block_name,
             question_name: newButton.name, 
           }),
         });
@@ -129,7 +129,7 @@ export const BlockInternalAdminPage = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ 
-            text: currentBlockName,
+            text: current_block_name,
             question_id: newButton.id,
             label: newButton.label, 
             name: newButton.name,
@@ -160,7 +160,7 @@ export const BlockInternalAdminPage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          text: currentBlockName,
+          text: current_block_name,
           question_name: name_question_folder, 
         }),
       });

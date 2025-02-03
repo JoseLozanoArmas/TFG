@@ -7,6 +7,7 @@ export const QuestionPageAdmin = () => {
   // localStorage.clear();
   const navigate = useNavigate();
   const { id } = useParams();
+
   const [title, setTitle] = useState(() => {
     const savedTittle = localStorage.getItem("title");
     if (savedTittle) {
@@ -298,13 +299,14 @@ export const QuestionPageAdmin = () => {
   }
   
   if ((isAdmin === true) || (isMonitor === true)) {
+    alert(id)
     return (
       <div className="App_question_page_admin">
         <div className="tittle_question_page_admin">
-          <input type="text" value={title} onChange={handleTitleChange} className="title_input_admin" placeholder="Escriba el título aquí"/>
+          <input key={id} type="text" value={title} onChange={handleTitleChange} className="title_input_admin" placeholder="Escriba el título aquí"/>
         </div>
         <div className="description_question_page_admin">
-          <input type="text" value={description} onChange={handleDescriptionChange} className="description_input_admin" placeholder="Escriba la descripción aquí"/>
+          <input key={id} type="text" value={description} onChange={handleDescriptionChange} className="description_input_admin" placeholder="Escriba la descripción aquí"/>
         </div>
         {buttons.map((button) => (
         <div key={button.id} className="puntuation_question_page_admin">
@@ -333,10 +335,10 @@ export const QuestionPageAdmin = () => {
     return(
       <div className="App_question_page_user">
         <div className="tittle_question_page_admin">
-          <input type="text" value={title} className="title_input_admin" readOnly/>
+          <input key={id} type="text" value={title} className="title_input_admin" readOnly/>
         </div>
         <div className="description_question_page_admin">
-          <input type="text" value={description} className="description_input_admin" readOnly/>
+          <input key={id} type="text" value={description} className="description_input_admin" readOnly/>
         </div>
         <div className="user_submit_code">
           <button className="button_submit_code" onClick={() => triggerFileInputUser('fileInputUser')}>{content_of_button_user}</button>
@@ -355,10 +357,10 @@ export const QuestionPageAdmin = () => {
     return (
       <div className="App_question_page_user">
         <div className="tittle_question_page_admin">
-          <input type="text" value={title} className="title_input_admin" readOnly/>
+          <input key={id} type="text" value={title} className="title_input_admin" readOnly/>
         </div>
         <div className="description_question_page_admin">
-          <input type="text" value={description} className="description_input_admin" readOnly/>
+          <input key={id} type="text" value={description} className="description_input_admin" readOnly/>
         </div>
         <div className="user_submit_code">
           <button className="button_submit_code" onClick={() => triggerFileInputUser('fileInputUser')}>{content_of_button_user}</button>

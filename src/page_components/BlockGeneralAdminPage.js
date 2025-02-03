@@ -192,6 +192,7 @@ export const BlockGeneralAdminPage = () => {
         console.error(error);
       }
     }
+
     navigate(`/block_internal_admin_page/block_${id - 1}`);
   };
 
