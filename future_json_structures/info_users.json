@@ -1,12 +1,7 @@
 [
     {
-      "username": "x",
-      "password": "xxxx",
-      "rol": "ADMIN"
-    },
-    {
-      "username": "x",
-      "password": "xxxx",
+      "username": "admin",
+      "password": "1234",
       "rol": "ADMIN"
     }
 ]

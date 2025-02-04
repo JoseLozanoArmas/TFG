@@ -16,9 +16,8 @@ export const BlockGeneralAdminPage = () => {
       try {
         const response = await fetch(route_to_server + 'get-data-blocks-buttons-json');
         const data = await response.json();
-        
         if (response.ok) {
-          setSaveJson(data.data);  // Guardamos el contenido en el estado
+          setSaveJson(JSON.parse(data.data));  // Guardamos el contenido en el estado
         } else {
           console.error(`Error: ${data.error}`);
         }
@@ -28,6 +27,7 @@ export const BlockGeneralAdminPage = () => {
     };
     getJsonData();
   }, []);
+
 
   // localStorage.clear();
 
