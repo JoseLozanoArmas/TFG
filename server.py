@@ -702,10 +702,25 @@ def filter_routes_to_tests_for_questions(block_id, question_id, user_file):
             tests_to_use.append(save_route_to_test[i])
     return tests_to_use
 
+# Lecturas de JSON
+
 @app.route('/get-data-blocks-buttons-json', methods=["GET"])
 def get_data_blocks_buttons_json():
     if os.path.exists(route_to_json_buttons_blocks): 
         with open(route_to_json_buttons_blocks, 'r') as file:
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines:
+                return jsonify({'data': content}), 200
+            else:
+                pass
+    else:
+        pass
+
+@app.route('/get-info-users-json', methods=["GET"])
+def get_info_users_json():
+    if os.path.exists(route_to_info_users_json): 
+        with open(route_to_info_users_json, 'r') as file:
             lines = file.readlines()
             content = ''.join(lines)
             if lines:
