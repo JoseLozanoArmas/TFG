@@ -11,7 +11,7 @@ export const QuestionPageAdmin = () => {
   const { id } = useParams();
 
   const [title, setTitle] = useState(() => {
-    const savedTittle = localStorage.getItem("title");
+    const savedTittle = localStorage.getItem(`title_${id}`);
     if (savedTittle) {
       return JSON.parse(savedTittle);
     } else {
@@ -19,7 +19,7 @@ export const QuestionPageAdmin = () => {
     }
   }); 
   const [description, setDescription] = useState(() => {
-    const savedDescription = localStorage.getItem("description");
+    const savedDescription = localStorage.getItem(`description_${id}`);
     if (savedDescription) {
       return JSON.parse(savedDescription);
     } else {
@@ -64,8 +64,8 @@ export const QuestionPageAdmin = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("title", JSON.stringify(title));
-    localStorage.setItem("description", JSON.stringify(description));
+    localStorage.setItem(`title_${id}`, JSON.stringify(title));
+    localStorage.setItem(`description_${id}`, JSON.stringify(description));
   })
 
   const handleTitleChange = (event) => {
