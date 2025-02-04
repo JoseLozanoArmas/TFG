@@ -7,6 +7,26 @@ export const BlockGeneralAdminPage = () => {
   const maxPageWidth = window.innerWidth - 100;
   const buttonHeight = 155;
 
+  const [saveJson, setSaveJson] = useState();
+
+  useEffect(() => {
+    const getJsonData = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/get-data-blocks-buttons-json');
+        const data = await response.json();
+        
+        if (response.ok) {
+          setSaveJson(data.data);  // Guardamos el contenido en el estado
+        } else {
+          console.error(`Error: ${data.error}`);
+        }
+      } catch (error) {
+        console.error('Error al obtener los datos del servidor', error);
+      }
+    };
+    getJsonData();
+  }, []);
+
   // localStorage.clear();
 
   const [buttons, setButtons] = useState(() => {
