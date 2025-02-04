@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import './InternalUserPage.css';
 import default_user_image from '../img/user_img.png';
 
+const route_to_server = "http://127.0.0.1:5000/"
+
 export const InternalUserPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -100,7 +102,7 @@ export const InternalUserPage = () => {
 
     let new_user = userName + "," + password + "," + rol;
     try {
-      const response = await fetch('http://127.0.0.1:5000/add-new-user', {
+      const response = await fetch(route_to_server + 'add-new-user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

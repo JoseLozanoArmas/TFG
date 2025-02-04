@@ -2,6 +2,8 @@ import React, { useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BlockGeneralAdminPage.css';
 
+const route_to_server = "http://127.0.0.1:5000/"
+
 export const BlockGeneralAdminPage = () => {
   const navigate = useNavigate();
   const maxPageWidth = window.innerWidth - 100;
@@ -12,7 +14,7 @@ export const BlockGeneralAdminPage = () => {
   useEffect(() => {
     const getJsonData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:5000/get-data-blocks-buttons-json');
+        const response = await fetch(route_to_server + 'get-data-blocks-buttons-json');
         const data = await response.json();
         
         if (response.ok) {
@@ -117,7 +119,7 @@ export const BlockGeneralAdminPage = () => {
     // Crea el bloque en el servidor
     const newBlock = `block_${newButton.id - 1}`;
     try {
-      const response = await fetch('http://127.0.0.1:5000/create-block-folder-admin', {
+      const response = await fetch(route_to_server + 'create-block-folder-admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -139,7 +141,7 @@ export const BlockGeneralAdminPage = () => {
     // Registrar la información en el JSON de datos de la APP
     const button_id = newButton.id - 1
     try {
-      const response = await fetch('http://127.0.0.1:5000/regist-block-admin', {
+      const response = await fetch(route_to_server + 'regist-block-admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -159,7 +161,7 @@ export const BlockGeneralAdminPage = () => {
 
     // Registrar la información en el JSON de los botones de bloque
     try {
-      const response = await fetch('http://127.0.0.1:5000/regist-block-button', {
+      const response = await fetch(route_to_server + 'regist-block-button', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -189,7 +191,7 @@ export const BlockGeneralAdminPage = () => {
       let save_name = id
       save_name = String(save_name)
       try { // Llamamos al método que crea la carpeta del bloque del usuario
-        const response = await fetch('http://127.0.0.1:5000/create-block-folder-user', {
+        const response = await fetch(route_to_server + 'create-block-folder-user', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -220,7 +222,7 @@ export const BlockGeneralAdminPage = () => {
     let save_name = buttons[buttons.length - 1].id - 1
     save_name = String(save_name)
     try { // Eliminar la carpeta del último bloque
-      const response = await fetch('http://127.0.0.1:5000/delete-last-block-folder-admin', {
+      const response = await fetch(route_to_server + 'delete-last-block-folder-admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -256,7 +258,7 @@ export const BlockGeneralAdminPage = () => {
     
 
     try { // Llamamos al método que borra del registro al bloque del json de datos de la APP
-      const response = await fetch('http://127.0.0.1:5000/delete-last-block-json', {
+      const response = await fetch(route_to_server + 'delete-last-block-json', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -279,7 +281,7 @@ export const BlockGeneralAdminPage = () => {
     }
 
     try { // Llamamos al método que borra del registro al bloque del json de registro de botones
-      const response = await fetch('http://127.0.0.1:5000/delete-last-block-button-of-json', {
+      const response = await fetch(route_to_server + 'delete-last-block-button-of-json', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

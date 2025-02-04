@@ -3,6 +3,8 @@ import { Navigate, Route, useNavigate, useParams } from 'react-router-dom';
 import './QuestionPageAdmin.css';
 import icon from '../img/icon_plus.png';
 
+const route_to_server = "http://127.0.0.1:5000/"
+
 export const QuestionPageAdmin = () => {
   // localStorage.clear();
   const navigate = useNavigate();
@@ -115,7 +117,7 @@ export const QuestionPageAdmin = () => {
     let save_test_name = buttonToRemove.file;
     if (buttonToRemove.file !== null) {     
       try { // Guardamos la info de la pregunta en el JSON de registro
-        const response = await fetch('http://127.0.0.1:5000/delete-selected-test', {
+        const response = await fetch(route_to_server + 'delete-selected-test', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -190,7 +192,7 @@ export const QuestionPageAdmin = () => {
     if (activate_function_update === false) {
       activate_function_update = true
       try { // Guardamos la info de la pregunta en el JSON de registro
-        const response = await fetch('http://127.0.0.1:5000/regist-question-admin', {
+        const response = await fetch(route_to_server + 'regist-question-admin', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -214,7 +216,7 @@ export const QuestionPageAdmin = () => {
       }
     } else {
       try { // Guardamos la info de la pregunta en el JSON de registro
-        const response = await fetch('http://127.0.0.1:5000/update-current-question', {
+        const response = await fetch(route_to_server + 'update-current-question', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -251,7 +253,7 @@ export const QuestionPageAdmin = () => {
     });
       
     try { // Guardamos la info de la pregunta en el JSON de registro
-      const response = await fetch('http://127.0.0.1:5000/upload-admin-test-to-question-folder', {
+      const response = await fetch(route_to_server + 'upload-admin-test-to-question-folder', {
         method: 'POST',
         body: formData,
       });
@@ -285,7 +287,7 @@ export const QuestionPageAdmin = () => {
     formData.append('questionName', question_name);
 
     try {
-      const response = await fetch('http://127.0.0.1:5000/upload-file-user', {
+      const response = await fetch(route_to_server + 'upload-file-user', {
         method: 'POST',
         body: formData,
         userNameData: JSON.stringify({ text: userName }),

@@ -4,6 +4,8 @@ import './BlockInternalAdminPage.css';
 import logo from '../img/logo_ull.png';
 import icon from '../img/icon_plus.png';
 
+const route_to_server = "http://127.0.0.1:5000/"
+
 export const BlockInternalAdminPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -55,7 +57,7 @@ export const BlockInternalAdminPage = () => {
       let block_name = buttons[buttons.length - 1].id
       block_name = String(block_name)
       try { // Llamamos al método que crea la carpeta del bloque del usuario
-        const response = await fetch('http://127.0.0.1:5000/create-question-folder-user', {
+        const response = await fetch(route_to_server + 'create-question-folder-user', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -100,7 +102,7 @@ export const BlockInternalAdminPage = () => {
 
       setButtons((prevButtons) => [...prevButtons, newButton]);
       try {
-        const response = await fetch('http://127.0.0.1:5000/create-question-block-folder-admin', {
+        const response = await fetch(route_to_server + 'create-question-block-folder-admin', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -123,7 +125,7 @@ export const BlockInternalAdminPage = () => {
       }
 
       try {
-        const response = await fetch('http://127.0.0.1:5000/regist-question-button', {
+        const response = await fetch(route_to_server + 'regist-question-button', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -154,7 +156,7 @@ export const BlockInternalAdminPage = () => {
     let name_question_folder = buttons[buttons.length - 1].name
     setButtons((prevButtons) => prevButtons.slice(0,-1));
     try {
-      const response = await fetch('http://127.0.0.1:5000/delete-question-folder-admin', {
+      const response = await fetch(route_to_server + 'delete-question-folder-admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

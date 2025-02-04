@@ -2,12 +2,14 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DeleteOptions.css';
 
+const route_to_server = "http://127.0.0.1:5000/"
+
 export const DeleteOptions = () => {
   const navigate = useNavigate();
 
   const resetUsers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/reset-users', {
+      const response = await fetch(route_to_server + 'reset-users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,7 +30,7 @@ export const DeleteOptions = () => {
 
   const resetBlocksData = async () => {
     try {
-      const response = await fetch('http://localhost:5000/reset-blocks-data', {
+      const response = await fetch(route_to_server + 'reset-blocks-data', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +51,7 @@ export const DeleteOptions = () => {
   
   const resetUsersRegisteredData = async () => {
     try {
-      const response = await fetch('http://localhost:5000/reset-users-registered-data', {
+      const response = await fetch(route_to_server + 'reset-users-registered-data', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

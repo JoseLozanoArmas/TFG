@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './GeneralUserPage.css';
 
+const route_to_server = "http://127.0.0.1:5000/"
+
 export const GeneralUserPage = () => {
   const navigate = useNavigate();
   const maxPageWidth = window.innerWidth - 100;
@@ -84,7 +86,7 @@ export const GeneralUserPage = () => {
     });
     setUsers((prevButtons) => prevButtons.slice(0, -1));
     try {
-      const response = await fetch('http://127.0.0.1:5000/remove-last-user', {
+      const response = await fetch(route_to_server + 'remove-last-user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

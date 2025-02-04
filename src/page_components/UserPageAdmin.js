@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import './UserPageAdmin.css';
 
+const route_to_server = "http://127.0.0.1:5000/"
+
 export const UserPageAdmin = () => {
   const USER_NAME = "admin";
   const PASSWORD = "1234";

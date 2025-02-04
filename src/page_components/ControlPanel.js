@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ControlPanel.css';
 
+const route_to_server = "http://127.0.0.1:5000/"
+
 export const ControlPanel = () => {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);

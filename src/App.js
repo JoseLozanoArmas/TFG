@@ -12,6 +12,8 @@ import { Settings } from './page_components/Settings';
 import { GeneralUserPage } from './page_components/GeneralUserPage';
 import { InternalUserPage } from './page_components/InternalUserPage';
 
+const route_to_server = "http://127.0.0.1:5000/"
+
 const Home = () => {
   const navigate = useNavigate();
 
@@ -32,7 +34,7 @@ const Home = () => {
     }
 
     try { // Crear la carpeta del usuario
-      const response = await fetch('http://127.0.0.1:5000/save-user-name', {
+      const response = await fetch(route_to_server + 'save-user-name', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
