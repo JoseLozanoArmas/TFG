@@ -114,9 +114,7 @@ export const InternalUserPage = () => {
       const data = await response.json();
       if (response.ok) {
         alert(data.message);
-
-        // METER CONDICIÓN PARA VOLVER A LA PAGINA ANTERIOR
-
+        navigate('/general_users')
       } else {
         alert(`Error: ${data.message}`);
         return; 
