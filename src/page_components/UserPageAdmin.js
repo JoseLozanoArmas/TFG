@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as useNavigate } from 'react-router-dom';
 import './UserPageAdmin.css';
 
 const route_to_server = "http://127.0.0.1:5000/"
 
 export const UserPageAdmin = () => {
-  const USER_NAME = "admin";
-  const PASSWORD = "1234";
-  const USER_NAME_MONITOR = "monitor";
-  const PASSWORD_MONITOR = "1234";
   const navigate = useNavigate();
 
   const [user_name, setTexto] = useState('');
@@ -50,7 +46,6 @@ export const UserPageAdmin = () => {
   const comprobate_user = (user, password) => {
     for (let i = 0; i < saveJson.length; ++i) {
       if ((user === saveJson[i].username) && (password === saveJson[i].password)) {
-        // meter el permiso de turno
         if (saveJson[i].rol === "ADMIN") { localStorage.setItem("user_role","admin"); }
         if (saveJson[i].rol === "MONITOR") { localStorage.setItem("user_role","monitor"); }
         return true;
