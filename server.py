@@ -498,13 +498,17 @@ def delete_last_question_admin():
     else:
         return jsonify({'message': f'Error, no se pudo encontrar el fichero de registro debido'}), 500
  
-@app.route('/delete-question-button-json')
+@app.route('/delete-question-button-json', methods=["POST"])
 def delete_question_button_json():
     data = request.get_json()  
     block_id = data.get('text', '')
     question_id = data.get('question_id', '')
-    search_block = r"\"block_" + str(block_id) + r"\"\s*:\s*{"
-    search_question = r"\"block_" + str(block_id) + r"\"(.|\n)*?\"question_" + str(question_id) + r"\"(.|\n)*?}"
+
+    print(block_id)
+    print(question_id)
+
+    search_block = r"\"" + block_id + r"\"\s*:\s*{"
+    search_question = r"\"" + block_id + r"\"(.|\n)*?\"question_" + str(question_id) + r"\"(.|\n)*?}"
     search_question_in_cut = r",?\s*\"question_" + str(question_id) + r"\"(.|\n)*?}"
     first_middle = ""
     second_middle = ""
@@ -527,7 +531,7 @@ def delete_question_button_json():
                             final_json = first_middle + second_middle
                             with open(route_to_json_buttons_questions, 'w') as file:
                                 file.write(final_json)
-                            return jsonify({'message': f'Botón de la pregunta \"question_{question_id}\" del bloque \"block_{block_id}\" registrado'}), 200
+                            return jsonify({'message': f'Botón de la pregunta \"question_{question_id}\" del bloque \"{block_id}\" eliminado'}), 200
                         else:
                             return jsonify({'message': f'Error inesperado al localizar la pregunta a eliminar'}), 400
                     else:

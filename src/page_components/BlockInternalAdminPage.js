@@ -131,7 +131,7 @@ export const BlockInternalAdminPage = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ 
-            text: current_block_name,
+            text: newButton.id,
             question_id: newButton.id,
             label: newButton.label, 
             name: newButton.name,
@@ -154,6 +154,7 @@ export const BlockInternalAdminPage = () => {
 
   const removeLastButton = async () => {
     let name_question_folder = buttons[buttons.length - 1].name
+    let question_id = buttons[buttons.length - 1].id
     setButtons((prevButtons) => prevButtons.slice(0,-1));
     try {
       const response = await fetch(route_to_server + 'delete-question-folder-admin', {
@@ -177,6 +178,31 @@ export const BlockInternalAdminPage = () => {
       alert('Error al conectar con el servidor.');
       console.error(error);
     }
+
+    try {
+      const response = await fetch(route_to_server + 'delete-question-button-json', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          text: current_block_name,
+          question_id: question_id, 
+        }),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error);
+    }
+
+
   };
 
   useEffect(() => {
