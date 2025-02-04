@@ -100,7 +100,6 @@ export const InternalUserPage = () => {
       return;
     }
 
-    let new_user = userName + "," + password + "," + rol;
     try {
       const response = await fetch(route_to_server + 'add-new-user', {
         method: 'POST',
@@ -108,7 +107,9 @@ export const InternalUserPage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          text: new_user
+          text: userName,
+          password: password,
+          rol: rol
         }),
       });
       const data = await response.json();

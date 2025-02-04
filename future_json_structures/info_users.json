@@ -1,23 +1,12 @@
 [
     {
-      "username": "admin",
-      "password": "1234",
-      "role": "ADMIN"
+      "username": "x",
+      "password": "xxxx",
+      "rol": "ADMIN"
     },
     {
-      "username": "monitor",
-      "password": "1234",
-      "role": "MONITOR"
-    },
-    {
-      "username": "U1",
-      "password": "Contraseña",
-      "role": "MONITOR"
-    },
-    {
-      "username": "U2",
-      "password": "Contraseña",
-      "role": "MONITOR"
+      "username": "x",
+      "password": "xxxx",
+      "rol": "ADMIN"
     }
 ]
-  

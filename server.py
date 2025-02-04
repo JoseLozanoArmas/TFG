@@ -16,6 +16,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 route_to_data_json_block_and_question = "future_json_structures/data_information_app.json" # RUTA AL JSON QUE REGISTRA LOS BLOQUES Y PREGUNTAS (INFO)
 route_to_json_buttons_blocks = "future_json_structures/data_blocks_buttons.json" # RUTA AL JSON QUE REGISTRA LA INFO DE LOS BOTONES DE BLOQUES
 route_to_json_buttons_questions = "future_json_structures/data_questions_buttons.json" # RUTA AL JSON QUE REGISTRA LA INFO DE LOS BOTONES DE QUESTIONS
+route_to_info_users_json = "future_json_structures/info_users.json" # RUTA AL JSON QUE GESTIONA LOS USUARIOS
 
 # Rutas a las carpetas donde se subiran los códigos
 route_to_users_input = "users_input"
@@ -619,13 +620,39 @@ def reset_users_registered_data():
 @app.route('/add-new-user', methods=['POST']) # Añadir un nuevo usuario ya sea administrador o monitor
 def add_new_user():
     data = request.get_json()  
-    text = data.get('text', '')  
-    if text:
-        with open('data/users_registered/info_users.csv', 'a') as file: # Si le pongo la opción 'w' sobreescribe con 'a' añado
-            file.write(text + '\n')
-        return jsonify({'message': 'Usuario registrado con éxito'}), 200
+    username = data.get('text', '')  
+    password = data.get('password', '')
+    rol = data.get('rol', '')
+    begin_doc = "[\n"
+    first_line = "    },\n"
+    username_line = "    {\n      \"username\": \"" + username + "\",\n"
+    password_line = "      \"password\": \"" + password + "\",\n"
+    rol_line = "      \"rol\": \"" + rol + "\"\n"
+    end_line = "    }\n]"
+    if os.path.exists(route_to_info_users_json):
+        with open(route_to_info_users_json, 'r') as file:
+            lines = file.readlines()
+            lines = lines[:-2]
+            content = ''.join(lines)
+            if lines:
+                with open(route_to_info_users_json, 'w') as file:
+                    file.write(content)  # Escribimos las líneas originales menos las 2 últimas
+                    file.write(first_line)  # Añadimos el comienzo del objeto
+                    file.write(username_line)
+                    file.write(password_line)
+                    file.write(rol_line)
+                    file.write(end_line)  # Añadimos el final del documento
+                    return jsonify({'message': 'Usuario registrado con éxito'}), 200
+            else:
+                return jsonify({'message': 'Texto vacío'}), 400
     else:
-        return jsonify({'message': 'Texto vacío'}), 400
+        with open(route_to_info_users_json, 'w') as file:
+            file.write(begin_doc)  # Añadimos el comienzo del objeto
+            file.write(username_line)
+            file.write(password_line)
+            file.write(rol_line)
+            file.write(end_line)  # Añadimos el final del documento
+            return jsonify({'message': 'Archivo de registro de usuarios creado'}), 200
 
 @app.route('/remove-last-user', methods=['POST']) # Eliminar el último usuario ya sea administrador o monitor
 def remove_last_user():
