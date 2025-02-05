@@ -138,6 +138,26 @@ export const BlockGeneralAdminPage = () => {
       console.error(error);
     }
 
+    try {
+      const response = await fetch(route_to_server + 'create-block-folder-admin-for-puntuations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: newBlock }),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error);
+    }
+
     // Registrar la información en el JSON de datos de la APP
     const button_id = newButton.id - 1
     try {
@@ -238,6 +258,7 @@ export const BlockGeneralAdminPage = () => {
         alert(`Error: ${data.message}`);
         return; 
       }
+
       setBotonMasHistory((prevHistory) => {
         if (prevHistory.length === 0) { return prevHistory; }
         const lastPosition = prevHistory[prevHistory.length - 1];
@@ -254,9 +275,30 @@ export const BlockGeneralAdminPage = () => {
       console.error(error);
     }
 
-    let button_id =  buttons[buttons.length - 1].id - 1
-    
+    try { // Eliminar la carpeta de puntuaciones del último bloque
+      const response = await fetch(route_to_server + 'delete-last-block-folder-admin-for-puntuations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: save_name
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.message}`);
+        return; 
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error);
+    }
 
+
+    let button_id =  buttons[buttons.length - 1].id - 1
     try { // Llamamos al método que borra del registro al bloque del json de datos de la APP
       const response = await fetch(route_to_server + 'delete-last-block-json', {
         method: 'POST',
