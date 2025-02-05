@@ -17,7 +17,7 @@ route_to_data_json_block_and_question = "future_json_structures/data_information
 route_to_json_buttons_blocks = "future_json_structures/data_blocks_buttons.json" # RUTA AL JSON QUE REGISTRA LA INFO DE LOS BOTONES DE BLOQUES
 route_to_json_buttons_questions = "future_json_structures/data_questions_buttons.json" # RUTA AL JSON QUE REGISTRA LA INFO DE LOS BOTONES DE QUESTIONS
 route_to_info_users_json = "future_json_structures/info_users.json" # RUTA AL JSON QUE GESTIONA LOS USUARIOS
-
+route_to_rankings_info = "data/rankings_info"
 # Rutas a las carpetas donde se subiran los códigos
 route_to_users_input = "users_input"
 route_to_admins_and_monitors_tests = "data/blocks"
@@ -674,7 +674,9 @@ def remove_last_user():
 # Funciones de corrección de código
 
 # FALTA ADAPTARLAS CON EL RESTO DE FUNCIONES
-def save_all_user_routes_files(user_name, block_id):
+
+# P3
+def save_all_user_routes_files(user_name, block_id): 
     users_files = []
     create_route_files = route_to_users_input + "/" + user_name + "/" + block_id # Comprobamos que la dirección del usuario existe
     if os.path.exists(create_route_files): 
@@ -690,6 +692,37 @@ def save_all_user_routes_files(user_name, block_id):
     users_files.sort()
     return users_files
 
+# P4
+def save_all_user_routes_files(user_name, block_id):
+    users_files = []
+    create_route_files = route_to_users_input + "/" + user_name + "/" + block_id # Comprobamos que la dirección del usuario existe
+    if os.path.exists(create_route_files): 
+        save_route_to_questions = os.listdir(create_route_files)
+        for i in range(len(save_route_to_questions)):
+            route_to_file = create_route_files + "/" + save_route_to_questions[i]
+            save_route_to_file = os.listdir(route_to_file)
+            for j in range(len(save_route_to_file)):
+                aux_route = create_route_files + "/" + save_route_to_questions[i] + "/" + save_route_to_file[j]
+                users_files.append(aux_route)      
+    else:
+        print("Error")     
+    users_files.sort()
+    return users_files
+
+
+# P5
+def localize_all_questions(block_id):
+    all_questions = []
+    route_to_tests = route_to_admins_and_monitors_tests + "/" + block_id # Guardamos la dirección a los tests
+    if os.path.exists(route_to_tests): 
+        save_route_to_questions = os.listdir(route_to_tests)
+        for i in range(len(save_route_to_questions)):
+            all_questions.append(save_route_to_questions[i])    
+    else:
+        return jsonify({'message': "Error, no se pudo localizar las preguntas"}), 400    
+    all_questions.sort()
+    return all_questions
+
 def filter_routes_to_tests_for_questions(block_id, question_id, user_file):
     route_to_test = route_to_admins_and_monitors_tests + "/" + block_id + "/" + question_id + "/"
     save_route_to_test = os.listdir(route_to_test)
@@ -702,6 +735,98 @@ def filter_routes_to_tests_for_questions(block_id, question_id, user_file):
             tests_to_use.append(save_route_to_test[i])
     return tests_to_use
 
+# P7
+def regist_user_puntuation(block_id, username, puntuation, time):
+    create_route = route_to_rankings_info + block_id + ".json" 
+    begin_doc = "[\n"
+    username_line = "    {\n        " + "\"username\": \"" + username + "\",\n"
+    puntuation_line = "        \"puntuation\": " + str(puntuation) + ",\n" 
+    time_line = "        \"time\": " + str(time) + "\n    }"
+    new_enter = "},\n"
+    end_doc = "\n]" 
+    if os.path.exists(create_route):
+        with open(create_route, 'r') as file:
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines:
+                content = content[:-3]
+                with open(create_route, 'w') as file:
+                    file.write(content)
+                    file.write(new_enter)
+                    file.write(username_line)
+                    file.write(puntuation_line)
+                    file.write(time_line)
+                    file.write(end_doc)
+            else:
+                print(f"Hubo un error inesperado con el fichero de registro de {create_route}") 
+    else:
+        with open(create_route, 'w') as file:
+            file.write(begin_doc)
+            file.write(username_line)
+            file.write(puntuation_line)
+            file.write(time_line)
+            file.write(end_doc)
+
+# P8
+def procesate_object(string_to_procesate):
+    string_to_procesate = string_to_procesate[:-1]
+    string_to_procesate = string_to_procesate.split(":")
+    second_half = string_to_procesate[1]
+    second_half = second_half[1:]
+    if second_half.isalpha():
+        second_half = float(second_half)
+    return second_half
+
+def sort_users_puntuations_file(block_id): # REVISAR???
+    create_route = route_to_rankings_info + block_id + ".json"
+    search_entrace = r"{(.|\n)*?}"
+    search_user = r"\"username\".*?,"
+    search_puntuation = r"\"puntuation\".*?,"
+    search_time = r"\"time\".*?\n"
+    save_objects_users = []
+    if os.path.exists(create_route): 
+        with open(create_route, 'r') as file:  
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines:
+                for entrance in re.finditer(search_entrace, content):
+                    save_entrance = entrance.group()
+                    find_user = re.search(search_user, save_entrance)
+                    save_user = find_user.group()
+                    save_user = procesate_object(save_user)
+                    find_puntuation = re.search(search_puntuation, save_entrance)
+                    save_puntuation = find_puntuation.group()
+                    save_puntuation = procesate_object(save_puntuation)
+                    find_time = re.search(search_time, save_entrance)
+                    save_time = find_time.group()
+                    save_time = procesate_object(save_time)
+                    new_object = {
+                        "username" : save_user,
+                        "puntuation": float(save_puntuation),
+                        "time": float(save_time)
+                    }
+                    save_objects_users.append(new_object)
+        save_objects_users.sort(key = lambda x: (-x["puntuation"], x["time"]))
+        begin_doc = "[\n"
+        end_doc = "]"
+        with open(create_route, 'w') as file:
+                file.write(begin_doc)
+                for i in range(len(save_objects_users)):
+                    aux_user_name = save_objects_users[i]["username"]
+                    aux_puntuation = save_objects_users[i]["puntuation"]
+                    aux_time = save_objects_users[i]["time"]
+                    file.write("    {\n")
+                    file.write(f"        \"username\": {aux_user_name},\n")
+                    file.write(f"        \"puntuation\": {aux_puntuation},\n")
+                    file.write(f"        \"time\": {aux_time}\n")
+                    if i == len(save_objects_users) - 1:
+                        file.write("    }\n")
+                    else:
+                        file.write("    },\n")
+                file.write(end_doc)
+    else:
+        return jsonify({'message': "Error, no se encontró el documento"}), 400
+ 
 # Lecturas de JSON
 
 @app.route('/get-data-blocks-buttons-json', methods=["GET"])
