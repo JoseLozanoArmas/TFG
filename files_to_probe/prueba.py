@@ -15,9 +15,12 @@ def ejecute_code(route):
             elif extension == "rb":
                 result = subprocess.run(["ruby", route], capture_output=True, text=True)
                 print(result.stdout)
-            elif extension == "js":
-                result = subprocess.run(["node", route], capture_output=True, text=True)
-                print(result.stdout)
+            elif extension == "js": # Llamamos a los test de JEST y si el returncode es 0 es que ha pasado el test en caso contrario retornamos false
+                result = subprocess.run(["jest", route], capture_output=True, text=True)
+                if result.returncode == 0:
+                    return True
+                else:
+                    return False
             elif extension == "c" or extension == "cc":
                 executable_name = "a.out"
                 result = subprocess.run(["g++", route, "-o", executable_name], capture_output=True, text=True)
@@ -28,14 +31,15 @@ def ejecute_code(route):
                     print("Error de compilación:")
                     print(result.stderr)
         else: # Si no coincide se manda mensaje de error
-            print("La extensión del archivo no está permitida")
+            print("La extensión del archivo no está permitida") # MANDAR MENSJAE DE ERROR
     else: # En caso de que el fichero no exista mandamos aviso
         print(f"El archivo en la ruta '{route}' no existe.") # MODIFICAR ESTO PARA QUE MANDE UN ERROR Y NO UN PRINT
                 
-file_path_js = "factorial.js"
+file_path_js = "test_factorial.test.js"
 file_path_python = "factorial.py"
 file_path_c_plus = "factorial.cc"
 file_path_c = "factorial.c"
 file_path_ruby = "factorial.rb"
 file_path_ejecutable = "a.out"
-ejecute_code(file_path_js)
+
+print(ejecute_code(file_path_js))
