@@ -4,7 +4,7 @@ import subprocess
 
 
 # Función que ejecuta el código en la ruta que se le pasa
-def ejecute_code(route):
+def check_if_the_code_pass_the_test(route):
     if os.path.exists(route): # Comprobamos que el fichero existe
         files_pattern = r".*\.(py|cc?|rb|js)" # Con esta expresión regular gestionamos los ficheros
         if re.match(files_pattern, route): # En caso de que coincida se procede a evaluar las distintas opciones con las que se haya hecho match
@@ -45,4 +45,4 @@ file_path_c = "factorial.c"
 file_path_ruby = "factorial.rb"
 file_path_ejecutable = "a.out"
 
-ejecute_code(file_path_python)
+check_if_the_code_pass_the_test(file_path_python)

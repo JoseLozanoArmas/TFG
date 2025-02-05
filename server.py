@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import shutil
 import re
+import subprocess
 
 app = Flask(__name__)
 CORS(app)
@@ -702,7 +703,6 @@ def remove_last_user():
 
 # FALTA ADAPTARLAS CON EL RESTO DE FUNCIONES
 # P3 
- 
 @app.route('/check_is_possible_to_correct', methods = ["POST"])
 def check_is_possible_to_correct():
     data = request.get_json()  
@@ -743,7 +743,6 @@ def save_all_user_routes_files(user_name, block_id):
     users_files.sort()
     return users_files
 
-
 # P5
 def localize_all_questions(block_id):
     all_questions = []
@@ -768,6 +767,56 @@ def filter_routes_to_tests_for_questions(block_id, question_id, user_file):
         if aux_extension[1] == save_users_code_extension:
             tests_to_use.append(save_route_to_test[i])
     return tests_to_use
+
+# P6
+def check_if_the_code_pass_the_test(route):
+    if os.path.exists(route): # Comprobamos que el fichero existe
+        files_pattern = r".*\.(py|cc?|rb|js)" # Con esta expresión regular gestionamos los ficheros
+        if re.match(files_pattern, route): # En caso de que coincida se procede a evaluar las distintas opciones con las que se haya hecho match
+            extension = re.findall(files_pattern, route)[0]  
+            if extension == "py": 
+                result = subprocess.run(["python3", route], capture_output=True, text=True)
+                if result.returncode == 0:
+                    return True
+                else:
+                    return False
+            elif extension == "rb":
+                result = subprocess.run(["ruby", route], capture_output=True, text=True)
+                print(result.stdout)
+            elif extension == "js": # Llamamos a los test de JEST y si el returncode es 0 es que ha pasado el test en caso contrario retornamos false
+                result = subprocess.run(["jest", route], capture_output=True, text=True)
+                if result.returncode == 0:
+                    return True
+                else:
+                    return False
+            elif extension == "c" or extension == "cc":
+                executable_name = "a.out"
+                result = subprocess.run(["g++", route, "-o", executable_name], capture_output=True, text=True)
+                if result.returncode == 0: # En caso de que se haya podido compilar ejecutamos el resultado
+                    execution_result = subprocess.run([f"./{executable_name}"], capture_output=True, text=True)
+                    print(execution_result.stdout)
+                else:
+                    print("Error de compilación:")
+                    print(result.stderr)
+        else: # Si no coincide se manda mensaje de error
+            return jsonify({'message': "Error, la extensión del archivo no está permitida"}), 400    
+    else: # En caso de que el fichero no exista mandamos aviso
+        return jsonify({'message': f"Error, El archivo en la ruta \"{route}\" no existe."}), 400
+
+def calculate_puntuation_for_user(username, block_id):
+    users_files = save_all_user_routes_files(username, block_id) # P4 # Guardamos todas las entradas del usuario
+    all_questions_created = localize_all_questions(block_id) # P5 # Guardamos cuantas preguntas se han creado
+    save_all_test = [] 
+    if len(all_questions_created) != len(users_files):
+        return jsonify({'message': "Error, hay más entradas por parte del usuario, que preguntas creadas"}), 400
+    for i in range(len(all_questions_created)): # A continuación guardaremos para cada pregunta, todas las pruebas disponibles en base a la entrada
+        save_all_test.append(filter_routes_to_tests_for_questions(block_id, all_questions_created[i], users_files[i]))
+    save_tests_extension = ""
+    for i in range(len(save_all_test)): # Cómo todo los tests tendrán la misma extensión filtro por el primero de ellos
+        save_tests_extension = os.path.splitext(save_all_test[i][0])
+        save_tests_extension = save_tests_extension[1]
+        print(save_tests_extension)
+
 
 # P7
 def regist_user_puntuation(block_id, username, puntuation, time):
