@@ -701,8 +701,32 @@ def remove_last_user():
 # Funciones de corrección de código
 
 # FALTA ADAPTARLAS CON EL RESTO DE FUNCIONES
+# P3 
+ 
+@app.route('/check_is_possible_to_correct', methods = ["POST"])
+def check_is_possible_to_correct():
+    data = request.get_json()  
+    user_name = data.get('text', '')  
+    block_id = data.get('block_id', '')
+    create_route_to_tests = route_to_admins_and_monitors_tests + "/" + block_id # Guardamos las rutas a donde las pruebas y entradas
+    create_route_to_user_inputs = route_to_users_input + "/" + user_name + "/" + block_id
+    if os.path.exists(create_route_to_tests) and os.path.exists(create_route_to_user_inputs): # En caso de que ambas existan procedemos
+        save_total_questions = os.listdir(create_route_to_tests)
+        save_total_user_inputs = os.listdir(create_route_to_user_inputs)
+        if len(save_total_questions) == len(save_total_user_inputs): # Si no hay el mismo numero de pruebas que las del usuario y los admins se retorna false
+            for i in range(len(save_total_user_inputs)): # Si hay el mismo, se comprueba que NO esten vacias
+                aux_route = create_route_to_user_inputs + "/" + save_total_user_inputs[i]
+                if len(os.listdir(aux_route)) == 0: # En caso de estarlo se retorna Falso
+                    return jsonify({'data': False})
+            return jsonify({'data': True}) # Si se llega aquí quiere decir que el usuario a respondido a todo y se puede evaluar
+        else:
+            return jsonify({'data': False})
+    else:
+        # METER CONDICIÓN DE ERROR?????
+        return jsonify({'data': False})
 
-# P3
+
+# P4
 def save_all_user_routes_files(user_name, block_id): 
     users_files = []
     create_route_files = route_to_users_input + "/" + user_name + "/" + block_id # Comprobamos que la dirección del usuario existe
@@ -716,23 +740,6 @@ def save_all_user_routes_files(user_name, block_id):
                 users_files.append(aux_route)      
     else:
         return jsonify({'message': 'Hubo un error durante el procesado de los datos, vuelva a intentarlo'}), 400     
-    users_files.sort()
-    return users_files
-
-# P4
-def save_all_user_routes_files(user_name, block_id):
-    users_files = []
-    create_route_files = route_to_users_input + "/" + user_name + "/" + block_id # Comprobamos que la dirección del usuario existe
-    if os.path.exists(create_route_files): 
-        save_route_to_questions = os.listdir(create_route_files)
-        for i in range(len(save_route_to_questions)):
-            route_to_file = create_route_files + "/" + save_route_to_questions[i]
-            save_route_to_file = os.listdir(route_to_file)
-            for j in range(len(save_route_to_file)):
-                aux_route = create_route_files + "/" + save_route_to_questions[i] + "/" + save_route_to_file[j]
-                users_files.append(aux_route)      
-    else:
-        print("Error")     
     users_files.sort()
     return users_files
 

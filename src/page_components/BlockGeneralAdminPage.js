@@ -208,7 +208,7 @@ export const BlockGeneralAdminPage = () => {
 
   const handleNewPageButtonClick = async (id) => {
     if ((isAdmin === false) && (isMonitor === false)) {
-      let save_name = id
+      let save_name = id - 1
       save_name = String(save_name)
       try { // Llamamos al método que crea la carpeta del bloque del usuario
         const response = await fetch(route_to_server + 'create-block-folder-user', {
