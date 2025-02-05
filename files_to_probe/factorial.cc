@@ -7,7 +7,3 @@ int factorial(int number) {
   }
   return result;
 }
-
-int main() {
-  std::cout << factorial(5) << std::endl;
-}
