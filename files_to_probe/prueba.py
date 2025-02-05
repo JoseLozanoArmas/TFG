@@ -2,6 +2,7 @@ import os
 import re
 import subprocess
 
+
 # Función que ejecuta el código en la ruta que se le pasa
 def ejecute_code(route):
     if os.path.exists(route): # Comprobamos que el fichero existe
@@ -9,9 +10,11 @@ def ejecute_code(route):
         if re.match(files_pattern, route): # En caso de que coincida se procede a evaluar las distintas opciones con las que se haya hecho match
             extension = re.findall(files_pattern, route)[0]  
             if extension == "py": 
-                with open(route, "r") as file: # Leemos y ejecutamos el fichero directamente
-                    code = file.read()
-                    exec(code)
+                result = subprocess.run(["python3", route], capture_output=True, text=True)
+                if result.returncode == 0:
+                    return True
+                else:
+                    return False
             elif extension == "rb":
                 result = subprocess.run(["ruby", route], capture_output=True, text=True)
                 print(result.stdout)
@@ -36,10 +39,10 @@ def ejecute_code(route):
         print(f"El archivo en la ruta '{route}' no existe.") # MODIFICAR ESTO PARA QUE MANDE UN ERROR Y NO UN PRINT
                 
 file_path_js = "test_factorial.test.js"
-file_path_python = "factorial.py"
+file_path_python = "test_factorial.py"
 file_path_c_plus = "factorial.cc"
 file_path_c = "factorial.c"
 file_path_ruby = "factorial.rb"
 file_path_ejecutable = "a.out"
 
-print(ejecute_code(file_path_js))
+ejecute_code(file_path_python)
