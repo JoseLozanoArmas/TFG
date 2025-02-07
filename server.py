@@ -662,20 +662,25 @@ def add_new_user():
     password_line = "      \"password\": \"" + password + "\",\n"
     rol_line = "      \"rol\": \"" + rol + "\"\n"
     end_line = "    }\n]"
+    search_user = r"\"username\":\s*\"" + username + r"\""
     if os.path.exists(route_to_info_users_json):
         with open(route_to_info_users_json, 'r') as file:
             lines = file.readlines()
             lines = lines[:-2]
             content = ''.join(lines)
             if lines:
-                with open(route_to_info_users_json, 'w') as file:
-                    file.write(content)  # Escribimos las líneas originales menos las 2 últimas
-                    file.write(first_line)  # Añadimos el comienzo del objeto
-                    file.write(username_line)
-                    file.write(password_line)
-                    file.write(rol_line)
-                    file.write(end_line)  # Añadimos el final del documento
-                    return jsonify({'message': 'Usuario registrado con éxito'}), 200
+                find_if_user_exist = re.search(search_user, content)
+                if find_if_user_exist:
+                    return jsonify({'message': 'El usuario ya estaba registrado'}), 400
+                else:     
+                    with open(route_to_info_users_json, 'w') as file:
+                        file.write(content)  # Escribimos las líneas originales menos las 2 últimas
+                        file.write(first_line)  # Añadimos el comienzo del objeto
+                        file.write(username_line)
+                        file.write(password_line)
+                        file.write(rol_line)
+                        file.write(end_line)  # Añadimos el final del documento
+                        return jsonify({'message': 'Usuario registrado con éxito'}), 200
             else:
                 return jsonify({'message': 'Texto vacío'}), 400
     else:
@@ -696,7 +701,7 @@ def remove_last_user():
             content = "".join(lines)
             if lines:
                 find_users = re.findall(search_users_enters, content)
-                if len(find_users) > 2:
+                if len(find_users) > 1:
                     save_the_last = ""
                     for search in re.finditer(search_users_enters, content):
                         save_the_last = search
