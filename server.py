@@ -685,17 +685,28 @@ def add_new_user():
             file.write(rol_line)
             file.write(end_line)  # Añadimos el final del documento
             return jsonify({'message': 'Archivo de registro de usuarios creado'}), 200
-
+ 
 @app.route('/remove-last-user', methods=['POST']) # Eliminar el último usuario ya sea administrador o monitor
 def remove_last_user():
-    file_path = 'data/users_registered/info_users.csv'    
-    with open(file_path, 'r') as file: # Leer todas las líneas del archivo
-        lines = file.readlines()
-    if len(lines) <= 1: # Verificar que haya más de una línea
-        # print("No se puede eliminar al administrador por defecto")
-        return
-    with open(file_path, 'w') as file: # Escribir las líneas excepto la última de vuelta al archivo
-        file.writelines(lines[:-1])  # Todas las líneas excepto la última
+    search_users_enters = r"{(.|\n)*?}"
+    if os.path.exists(route_to_info_users_json): 
+        with open(route_to_info_users_json, 'r') as file:
+            lines = file.readlines()
+            content = "".join(lines)
+            if lines:
+                find_users = re.findall(search_users_enters, content)
+                if len(find_users) > 2:
+                    save_the_last = ""
+                    for search in re.finditer(search_users_enters, content):
+                        save_the_last = search
+                    content = content[:save_the_last.start() - 7] # Eliminamos los espacios y las comas
+                    content += "}\n]"
+                    with open(route_to_info_users_json, 'w') as file:
+                        file.write(content)
+                else:
+                    pass
+    else:
+        return jsonify({'message': "Error, no se encontró el fichero de registro de usuarios"}), 400
     return jsonify({'message': 'Usuario eliminado con éxito'}), 200
 
 
