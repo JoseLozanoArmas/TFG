@@ -395,13 +395,14 @@ def delete_selected_test(): # AÑADIR FUNCIONALIDAD EN LA PARTE NO SERVIDOR
     block_name = data.get('text', '')
     question_name = data.get('question_name', '')
     test_name = data.get('test_name', '')
+
     if block_name and question_name and test_name:
         route = 'data/blocks/'
         direcction_to_question = block_name + "/" + question_name + "/" + test_name
         file_path = os.path.join(route, direcction_to_question)
         if os.path.isfile(file_path) or os.path.islink(file_path):
             os.unlink(file_path) 
-            return jsonify({'message': f'Prueba \"{test_name}\" eliminada con éxito'}), 200
+        return jsonify({'message': f'Prueba \"{test_name}\" eliminada con éxito'}), 200
     else:
         return jsonify({'message': f'No se pudo eliminar la prueba {test_name}'}), 400
 
