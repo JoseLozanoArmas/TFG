@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './GeneralUserPage.css';
 
 const route_to_server = "http://127.0.0.1:5000/"
@@ -9,6 +9,7 @@ export const GeneralUserPage = () => {
   const maxPageWidth = window.innerWidth - 100;
   const userHeight = 155;
   const [isAdmin, setIsAdmin] = useState(false);
+  const { id } = useParams();
 
   // localStorage.clear();
   
@@ -18,7 +19,7 @@ export const GeneralUserPage = () => {
   }, []);
 
   const [users, setUsers] = useState(() => {
-    const saveUsers = localStorage.getItem('users');
+    const saveUsers = localStorage.getItem(`users_${id}`);
     if (saveUsers) {
       return JSON.parse(saveUsers);
     } else {
@@ -27,7 +28,7 @@ export const GeneralUserPage = () => {
   });
 
   const [userHistory, setUserHistory] = useState(() => {
-    const savedHistory = localStorage.getItem('userHistory');
+    const savedHistory = localStorage.getItem(`userHistory_${id}`);
     if (savedHistory) {
       return JSON.parse(savedHistory);
     } else {
@@ -36,8 +37,8 @@ export const GeneralUserPage = () => {
   });
 
   useEffect(() => {
-    localStorage.setItem('users', JSON.stringify(users));
-    localStorage.setItem('userHistory', JSON.stringify(userHistory));
+    localStorage.setItem(`users_${id}`, JSON.stringify(users));
+    localStorage.setItem(`userHistory_${id}`, JSON.stringify(userHistory));
   }, [users, userHistory]);
 
   const handleButtonPlusClick = async (id) => {
@@ -106,7 +107,7 @@ export const GeneralUserPage = () => {
   };
 
   const handleButtonUserClick = async (id) => {
-    navigate("/creation_user")
+    navigate(`/creation_user/${id}`)
   }
 
   return (

@@ -20,7 +20,7 @@ export const InternalUserPage = () => {
   // localStorage.clear();
 
   const [userName, setUserName] = useState(() => {
-    const savedUserName = localStorage.getItem("userName");
+    const savedUserName = localStorage.getItem(`userName_${id}`);
     if (savedUserName) {
       return JSON.parse(savedUserName);
     } else {
@@ -29,7 +29,7 @@ export const InternalUserPage = () => {
   }); 
 
   const [password, setPassword] = useState(() => {
-    const savedPassword = localStorage.getItem("password");
+    const savedPassword = localStorage.getItem(`password_${id}`);
     if (savedPassword) {
       return JSON.parse(savedPassword);
     } else {
@@ -38,7 +38,7 @@ export const InternalUserPage = () => {
   }); 
 
   const [rol, setRol] = useState(() => {
-    const savedRol = localStorage.getItem("rol");
+    const savedRol = localStorage.getItem(`rol_${id}`);
     if (savedRol) {
       return JSON.parse(savedRol);
     } else {
@@ -55,9 +55,9 @@ export const InternalUserPage = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("userName", JSON.stringify(userName));
-    localStorage.setItem("password", JSON.stringify(password));
-    localStorage.setItem("rol", JSON.stringify(rol));
+    localStorage.setItem(`userName_${id}`, JSON.stringify(userName));
+    localStorage.setItem(`password_${id}`, JSON.stringify(password));
+    localStorage.setItem(`rol_${id}`, JSON.stringify(rol));
   })
 
   const handleLogoChange = (event) => {
@@ -131,17 +131,17 @@ export const InternalUserPage = () => {
       <div className="tittle_creation_user_page">
         <h1>Creación de Usuario</h1>
       </div>
-      <input id="file-input" type="file" accept="image/*" style={{ display: 'none' }} onChange={handleLogoChange}/>
+      <input key={id} id="file-input" type="file" accept="image/*" style={{ display: 'none' }} onChange={handleLogoChange}/>
       <button className="button_image_user" onClick={triggerFileInput}>
         <img src={currentLogo} alt="Logo" />
       </button>
       <div className="input_format">
-        <input type="text" value={userName} onChange={handleUserNameChange} className="title_input_admin" placeholder="Escriba el nombre de usuario aquí"/>
+        <input key={id} type="text" value={userName} onChange={handleUserNameChange} className="title_input_admin" placeholder="Escriba el nombre de usuario aquí"/>
       </div>
       <div className="input_format">
-        <input type="text" value={password} onChange={handlePasswordChange} className="title_input_admin" placeholder="Escriba la contraseña aquí"/>
+        <input key={id} type="text" value={password} onChange={handlePasswordChange} className="title_input_admin" placeholder="Escriba la contraseña aquí"/>
       </div>
-      <div className="input_format">
+      <div key={id} className="input_format">
         <select value={rol} onChange={handleRolChange} className="title_select_admin">
           <option value="" disabled>Seleccione rol</option>
           <option value="ADMIN">Administrador</option>
