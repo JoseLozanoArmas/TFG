@@ -5,5 +5,3 @@ def factorial(number)
     end
     result
 end
-
-puts factorial(5)

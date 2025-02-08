@@ -3,5 +3,3 @@ def is_pair(number):
         return True
     else:
         return False
-    
-print(is_pair(5))

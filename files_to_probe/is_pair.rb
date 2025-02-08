@@ -5,6 +5,3 @@ def is_pair(number)
       false
     end
 end
-  
-puts is_pair(5)
-  
