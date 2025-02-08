@@ -278,10 +278,27 @@ export const QuestionPageAdmin = () => {
       if (resultFileInput) {
         formData.append('resultFiles', resultFileInput);
       }
+      formData.append('points', button.puntuation);
     });
       
     try { // Guardamos la info de la pregunta en el JSON de registro
       const response = await fetch(route_to_server + 'upload-admin-test-to-question-folder', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error); 
+    }
+
+    try { // Guardamos la info de la pregunta en el JSON de registro
+      const response = await fetch(route_to_server + 'prueba', {
         method: 'POST',
         body: formData,
       });
@@ -355,7 +372,7 @@ export const QuestionPageAdmin = () => {
           {button.result_file && <span className="file_name_display">{button.result_file}</span>}
 
           <div className="label_puntuation_admin">Añada una puntuación al final de la pregunta:</div>
-          <input type="number" value={button.puntuation} onChange={(e) => handlePuntuationChange(e, button.id)} className="puntuation_input_admin"/>
+          <input id={`puntuation_${button.id}`} type="number" value={button.puntuation} onChange={(e) => handlePuntuationChange(e, button.id)} className="puntuation_input_admin"/>
           <button className="button_delete_test" onClick={() => removeCurrentButton(button.id)}>
             Eliminar prueba
           </button>

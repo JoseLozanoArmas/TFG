@@ -368,6 +368,12 @@ def update_current_question():
     else:
         return jsonify({'message': 'Error, no se pudo encontrar el fichero de registro debido'}), 400
 
+@app.route('/prueba', methods=["POST"])
+def prueba():
+    points = request.values.getlist('points')
+    print(points)
+    return jsonify({'message': f'prueba'}), 200
+    
 @app.route('/upload-admin-test-to-question-folder', methods=["POST"]) # Permitir subir pruebas a una pregunta a los administradores/monitores
 def upload_admin_test_to_question_folder():
     block_name = request.form.get('text', '')
@@ -838,6 +844,8 @@ def calculate_puntuation_for_user(username, block_id):
     save_all_test = [] 
     if len(all_questions_created) != len(users_files):
         return jsonify({'message': "Error, hay más entradas por parte del usuario, que preguntas creadas"}), 400
+    
+    """
     for i in range(len(all_questions_created)): # A continuación guardaremos para cada pregunta, todas las pruebas disponibles en base a la entrada
         save_all_test.append(filter_routes_to_tests_for_questions(block_id, all_questions_created[i], users_files[i]))
     save_tests_extension = ""
@@ -845,6 +853,7 @@ def calculate_puntuation_for_user(username, block_id):
         save_tests_extension = os.path.splitext(save_all_test[i][0])
         save_tests_extension = save_tests_extension[1]
         print(save_tests_extension)
+    """
 
 
 # P7
@@ -966,6 +975,8 @@ def get_info_users_json():
                 pass
     else:
         pass
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
