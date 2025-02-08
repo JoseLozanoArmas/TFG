@@ -10,6 +10,9 @@ export const QuestionPageAdmin = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  const separate = id.split("_");
+  const block = separate.slice(0, 2).join("_"); // Guardar el nombre del bloque
+
   const [title, setTitle] = useState(() => {
     const savedTittle = localStorage.getItem(`title_${id}`);
     if (savedTittle) {
@@ -57,10 +60,8 @@ export const QuestionPageAdmin = () => {
     setIsMonitor(userRole === "monitor")
     const getName = localStorage.getItem("name_user");
     setName(getName);
-    const getBlockName = localStorage.getItem("current_block_name")
-    setBlockName(getBlockName);
-    const getQuestionName = localStorage.getItem("current_question_name")
-    setQuestionName(getQuestionName)
+    setBlockName(block);
+    setQuestionName(id)
     setSaveRol(userRole);
   }, []);
 
@@ -113,10 +114,6 @@ export const QuestionPageAdmin = () => {
   };
 
   const triggerFileInputUser = (id) => {
-    document.getElementById(id).click();
-  }
-
-  const triggerResultFileInputUser = (id) => {
     document.getElementById(id).click();
   }
 

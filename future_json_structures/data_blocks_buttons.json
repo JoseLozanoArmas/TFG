@@ -5,12 +5,12 @@
         "positionY": 0,
         "type": "boton_pagina",
         "block_name": "block_1"
-[
+    },
     {
-        "id": 1,
-        "positionX": 0,
+        "id": 2,
+        "positionX": 200,
         "positionY": 0,
         "type": "boton_pagina",
-        "block_name": "block_1"
+        "block_name": "block_2"
     }
 ]

@@ -54,7 +54,7 @@ export const BlockInternalAdminPage = () => {
 
   const MoveToQuestionPageAdmin = async (id) => {
     if ((isAdmin === false) && (isMonitor === false)) {
-      let block_name = buttons[buttons.length - 1].id
+      let block_name = current_block_name[current_block_name.length - 1]
       block_name = String(block_name)
       try { // Llamamos al método que crea la carpeta del bloque del usuario
         const response = await fetch(route_to_server + 'create-question-folder-user', {
