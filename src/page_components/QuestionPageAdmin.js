@@ -30,7 +30,8 @@ export const QuestionPageAdmin = () => {
   const [block_name, setBlockName] = useState("");
   const [question_name, setQuestionName] = useState("");
   const make_invisible = { display: "none" }
-  const content_of_button_admin = "Suba una prueba";
+  const content_of_button_admin_enter_file = "Suba una entrada";
+  const content_of_button_admin_result_file = "Suba el resultado esperado";
   const content_of_button_user = "Suba su código";
   let activate_function_update = false
 
@@ -98,7 +99,24 @@ export const QuestionPageAdmin = () => {
     }
   };
 
+  const handleResultFileUpload = (event, key) => {
+    const file = event.target.files[0];
+    if (key === "fileUser") {
+      setUploadedFiles((lastFiles) => ({ ...lastFiles, fileUser: file.name }));
+    } else {
+      setButtons((prevButtons) =>
+        prevButtons.map((button) =>
+          button.id === key ? { ...button, result_file: file.name } : button
+        )
+      );
+    }
+  };
+
   const triggerFileInputUser = (id) => {
+    document.getElementById(id).click();
+  }
+
+  const triggerResultFileInputUser = (id) => {
     document.getElementById(id).click();
   }
 
@@ -107,6 +125,7 @@ export const QuestionPageAdmin = () => {
       id: buttons.length + 1,
       name: `prueba_${buttons.length + 1}`,
       file: null,
+      result_file: null,
       puntuation: 0
     };
     setButtons((prevButtons) => [...prevButtons, newButton]);
@@ -114,7 +133,8 @@ export const QuestionPageAdmin = () => {
 
   const removeCurrentButton = async (id) => {
     const buttonToRemove = buttons.find((button) => button.id === id);
-    let save_test_name = buttonToRemove.file;
+    let save_enter_test_name = buttonToRemove.file;
+    let save_result_test_name = buttonToRemove.result_file;
     if (buttonToRemove.file !== null) {     
       try { // Guardamos la info de la pregunta en el JSON de registro
         const response = await fetch(route_to_server + 'delete-selected-test', {
@@ -125,7 +145,8 @@ export const QuestionPageAdmin = () => {
           body: JSON.stringify({ 
             text: block_name,
             question_name: question_name, 
-            test_name: save_test_name,
+            enter_test_name: save_enter_test_name,
+            result_test_name: save_result_test_name
           }),
         });
         const data = await response.json();
@@ -176,9 +197,15 @@ export const QuestionPageAdmin = () => {
     let is_possible_to_send_files = true;
     {buttons.forEach((button) => {
       if (button.file === null) {
-        alert(`En la prueba ${button.id} no se introdujo ningún fichero de prueba`);
+        alert(`En la prueba ${button.id} no se introdujo ningún fichero de entrada`);
         is_possible_to_send_files = false;
       }
+
+      if (button.result_file === null) {
+        alert(`En la prueba ${button.id} no se introdujo ningún fichero de resultado`);
+        is_possible_to_send_files = false;
+      }
+
       if (button.puntuation <= 0) {
         alert(`En la prueba ${button.id} no se introdujo una puntuación mayor a 0`);
         is_possible_to_send_files = false;
@@ -250,6 +277,10 @@ export const QuestionPageAdmin = () => {
       if (fileInput) {
         formData.append('files', fileInput);
       }
+      const resultFileInput = document.getElementById(`fileResult_${button.id}`).files[0];
+      if (resultFileInput) {
+        formData.append('resultFiles', resultFileInput);
+      }
     });
       
     try { // Guardamos la info de la pregunta en el JSON de registro
@@ -318,9 +349,14 @@ export const QuestionPageAdmin = () => {
         </div>
         {buttons.map((button) => (
         <div key={button.id} className="puntuation_question_page_admin">
-          <button className="button_submit_test" onClick={() => document.getElementById(`fileInput_${button.id}`).click()}>{content_of_button_admin}</button>
+          <button className="button_submit_test" onClick={() => document.getElementById(`fileInput_${button.id}`).click()}>{content_of_button_admin_enter_file}</button>
           <input id={`fileInput_${button.id}`} type="file" style={make_invisible} onChange={(e) => handleFileUpload(e, button.id)} />
           {button.file && <span className="file_name_display">{button.file}</span>}
+
+          <button className="button_submit_test_2" onClick={() => document.getElementById(`fileResult_${button.id}`).click()}>{content_of_button_admin_result_file}</button>
+          <input id={`fileResult_${button.id}`} type="file" style={make_invisible} onChange={(e) => handleResultFileUpload(e, button.id)} />
+          {button.result_file && <span className="file_name_display">{button.result_file}</span>}
+
           <div className="label_puntuation_admin">Añada una puntuación al final de la pregunta:</div>
           <input type="number" value={button.puntuation} onChange={(e) => handlePuntuationChange(e, button.id)} className="puntuation_input_admin"/>
           <button className="button_delete_test" onClick={() => removeCurrentButton(button.id)}>

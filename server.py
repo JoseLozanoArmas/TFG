@@ -378,13 +378,20 @@ def upload_admin_test_to_question_folder():
         folder_path = os.path.join(route, direcction_to_question)
         os.makedirs(folder_path, exist_ok = True)
         files = request.files.getlist('files') 
-        if not files:
+        resultFiles = request.files.getlist('resultFiles')
+        if not files or not resultFiles:
             return jsonify({'message': 'No se mandó ningún archivo'}), 400
         saved_files = []
         for file in files:
             file_path = os.path.join(folder_path, file.filename)
             file.save(file_path)
             saved_files.append(file.filename)
+
+        saved_result_files = []
+        for file in resultFiles:
+            file_path = os.path.join(folder_path, file.filename)
+            file.save(file_path)
+            saved_result_files.append(file.filename)
         return jsonify({'message': f'Pruebas enviadas con éxito en {folder_path}'}), 200
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
@@ -394,17 +401,22 @@ def delete_selected_test(): # AÑADIR FUNCIONALIDAD EN LA PARTE NO SERVIDOR
     data = request.get_json()
     block_name = data.get('text', '')
     question_name = data.get('question_name', '')
-    test_name = data.get('test_name', '')
+    enter_test_name = data.get('enter_test_name', '')
+    result_test_name = data.get('result_test_name', '')
 
-    if block_name and question_name and test_name:
+    if block_name and question_name and enter_test_name and result_test_name:
         route = 'data/blocks/'
-        direcction_to_question = block_name + "/" + question_name + "/" + test_name
-        file_path = os.path.join(route, direcction_to_question)
-        if os.path.isfile(file_path) or os.path.islink(file_path):
-            os.unlink(file_path) 
-        return jsonify({'message': f'Prueba \"{test_name}\" eliminada con éxito'}), 200
+        direcction_to_enter_test_name = block_name + "/" + question_name + "/" + enter_test_name
+        direcction_to_result_test_name = block_name + "/" + question_name + "/" + result_test_name
+        file_path_to_enter_test = os.path.join(route, direcction_to_enter_test_name)
+        if os.path.isfile(file_path_to_enter_test) or os.path.islink(file_path_to_enter_test):
+            os.unlink(file_path_to_enter_test)
+        file_path_to_result_test = os.path.join(route, direcction_to_result_test_name)
+        if os.path.isfile(file_path_to_result_test) or os.path.islink(file_path_to_result_test):
+            os.unlink(file_path_to_result_test)  
+        return jsonify({'message': f'Prueba eliminada con éxito'}), 200
     else:
-        return jsonify({'message': f'No se pudo eliminar la prueba {test_name}'}), 400
+        return jsonify({'message': f'No se pudo eliminar la prueba {enter_test_name}'}), 400
 
 
     
