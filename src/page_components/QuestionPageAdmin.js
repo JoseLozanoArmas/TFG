@@ -298,7 +298,7 @@ export const QuestionPageAdmin = () => {
     }
 
     try { // Guardamos la info de la pregunta en el JSON de registro
-      const response = await fetch(route_to_server + 'prueba', {
+      const response = await fetch(route_to_server + 'regist-question-test-information', {
         method: 'POST',
         body: formData,
       });

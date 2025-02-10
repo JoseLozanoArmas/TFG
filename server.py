@@ -19,6 +19,7 @@ route_to_json_buttons_blocks = "future_json_structures/data_blocks_buttons.json"
 route_to_json_buttons_questions = "future_json_structures/data_questions_buttons.json" # RUTA AL JSON QUE REGISTRA LA INFO DE LOS BOTONES DE QUESTIONS
 route_to_info_users_json = "future_json_structures/info_users.json" # RUTA AL JSON QUE GESTIONA LOS USUARIOS
 route_to_rankings_info = "data/rankings_info"
+route_to_puntuations = "data/puntuations"
 # Rutas a las carpetas donde se subiran los códigos
 route_to_users_input = "users_input"
 route_to_admins_and_monitors_tests = "data/blocks"
@@ -368,11 +369,30 @@ def update_current_question():
     else:
         return jsonify({'message': 'Error, no se pudo encontrar el fichero de registro debido'}), 400
 
-@app.route('/prueba', methods=["POST"])
-def prueba():
+@app.route('/regist-question-test-information', methods=["POST"])
+def regist_question_test_information():
+    block_name = request.form.get('text', '')
+    question_name = request.form.get('question_name', '')
+    input_files = request.files.getlist('files')
+    result_files = request.files.getlist('resultFiles')
     points = request.values.getlist('points')
-    print(points)
-    return jsonify({'message': f'prueba'}), 200
+    create_route = route_to_puntuations + "/" + block_name + "/" + question_name + "_puntuations.json"
+    begin_doc = "[\n"
+    with open(create_route, 'w') as file:
+        file.write(begin_doc) 
+    new_test = "" 
+    for index in range (len(input_files)): 
+        begin = "  {\n"
+        enter_file = f"    \"enter_file\": \"{input_files[index].filename}\",\n"
+        result_file = f"    \"result_file\": \"{result_files[index].filename}\",\n"
+        puntuation = f"    \"puntuation\": {points[index]}\n"
+        end = "  },\n"
+        if index == len(input_files) - 1:
+            end = "  }\n]"
+        new_test = begin + enter_file + result_file + puntuation + end
+        with open(create_route, 'a') as file:
+            file.write(new_test)
+    return jsonify({'message': f'Pruebas de la pregunta {question_name} registradas con éxito'}), 200
     
 @app.route('/upload-admin-test-to-question-folder', methods=["POST"]) # Permitir subir pruebas a una pregunta a los administradores/monitores
 def upload_admin_test_to_question_folder():
