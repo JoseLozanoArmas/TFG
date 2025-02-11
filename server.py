@@ -858,13 +858,65 @@ def check_if_the_code_pass_the_test(route):
     else: # En caso de que el fichero no exista mandamos aviso
         return jsonify({'message': f"Error, El archivo en la ruta \"{route}\" no existe."}), 400
 
+def read_puntuations_regist(block_id, question_id): 
+    create_route_to_file = "data/puntuations/" + block_id + "/" + question_id + "_puntuations.json"
+    search_enters = r"{(.|\n)*?}"
+    search_enter_files = r"\"enter_file\":.*"
+    search_result_files = r"\"result_file\":.*"
+    search_puntuation = r"\"puntuation\":.*"
+    save_enter = ""
+    save_objects = []
+    if os.path.exists(create_route_to_file): 
+        with open(create_route_to_file, 'r') as file:
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines:
+                for search in re.finditer(search_enters, content):
+                    new_object = {}
+                    save_enter_file = ""
+                    save_result_file = ""
+                    save_puntuation = ""
+                    save_enter = search.group()
+                    find_enter_file = re.search(search_enter_files, save_enter)
+                    find_result_file = re.search(search_result_files, save_enter)
+                    find_puntuation = re.search(search_puntuation, save_enter)
+                    if find_enter_file:
+                        save_enter_file = find_enter_file.group()
+                        save_enter_file = save_enter_file[:-1]
+                        save_enter_file = save_enter_file.split(": ")[1]
+                        new_object["enter_file"] = save_enter_file
+                    else:
+                        return jsonify({'message': "Error inesperado"}), 400
+                    if find_result_file:
+                        save_result_file = find_result_file.group()
+                        save_result_file = save_result_file[:-1]
+                        save_result_file = save_result_file.split(": ")[1]
+                        new_object["result_file"] = save_result_file
+                    else:
+                        return jsonify({'message': "Error inesperado"}), 400
+                    if find_puntuation:
+                        save_puntuation = find_puntuation.group()
+                        save_puntuation = save_puntuation[:-1]
+                        save_puntuation = int(save_puntuation.split(": ")[1])
+                        new_object["puntuation"] = save_puntuation
+                    else:
+                        return jsonify({'message': "Error inesperado"}), 400
+                    save_objects.append(new_object)
+            else:
+                return jsonify({'message': "El fichero está vacío"}), 400
+    else:
+        return jsonify({'message': "No se encontró el fichero"}), 400
+    return save_objects
+
 def calculate_puntuation_for_user(username, block_id):
     users_files = save_all_user_routes_files(username, block_id) # P4 # Guardamos todas las entradas del usuario
     all_questions_created = localize_all_questions(block_id) # P5 # Guardamos cuantas preguntas se han creado
-    save_all_test = [] 
     if len(all_questions_created) != len(users_files):
         return jsonify({'message': "Error, hay más entradas por parte del usuario, que preguntas creadas"}), 400
-    
+    # APARTIR DE AQUI REVISAR POR QUE NO LO HE PROBADO TODAVÍA
+    for i in range(len(all_questions_created)): 
+        save_tests_current_questions = read_puntuations_regist(block_id, all_questions_created[i])
+        print(save_tests_current_questions)
     """
     for i in range(len(all_questions_created)): # A continuación guardaremos para cada pregunta, todas las pruebas disponibles en base a la entrada
         save_all_test.append(filter_routes_to_tests_for_questions(block_id, all_questions_created[i], users_files[i]))
