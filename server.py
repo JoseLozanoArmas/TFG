@@ -757,13 +757,13 @@ def remove_last_user():
 # Funciones de corrección de código
 
 # FALTA ADAPTARLAS CON EL RESTO DE FUNCIONES
-# P3  
+# P3    
 @app.route('/check_is_possible_to_correct', methods = ["POST"])
 def check_is_possible_to_correct():
     data = request.get_json()  
-    user_name = data.get('text', '')
+    userName = data.get('text', '')
     block_id = data.get('block_id', '') 
-    get_total_user_entrances = save_all_user_routes_files(user_name, block_id)
+    get_total_user_entrances = save_all_user_routes_files(userName, block_id)
     get_all_questions = localize_all_questions(block_id)
     if len(get_total_user_entrances) != len(get_all_questions):
         return jsonify({'data': False}), 200
@@ -896,8 +896,14 @@ def read_puntuations_regist(block_id, question_id):
     else:
         return jsonify({'message': "No se encontró el fichero"}), 400
     return save_objects
+ 
+@app.route('/calculate-puntuation-for-user', methods = ["POST"])
+def calculate_puntuation_for_user():
+    data = request.get_json()  
+    username = data.get('text', '')
+    block_id = data.get('block_id', '')
+    print("entro")
 
-def calculate_puntuation_for_user(username, block_id):
     users_files = save_all_user_routes_files(username, block_id) # P4 # Guardamos todas las entradas del usuario
     all_questions_created = localize_all_questions(block_id) # P5 # Guardamos cuantas preguntas se han creado
     if len(all_questions_created) != len(users_files):

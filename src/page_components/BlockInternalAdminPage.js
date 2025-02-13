@@ -34,7 +34,6 @@ export const BlockInternalAdminPage = () => {
   const [isTemporalyUser, setIsTemporalyUser] = useState(false);
   const [userName, setName] = useState("");
   const [saveRol, setSaveRol] = useState("");
-  const [isPossibleToCorrect, setIsPossibleToCorrect] = useState(false);
 
   useEffect(() => {
     const userRole = localStorage.getItem("user_role");
@@ -211,33 +210,6 @@ export const BlockInternalAdminPage = () => {
     localStorage.setItem(`button_${id}`, JSON.stringify(buttons));
   }, [currentLogo, buttons]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await checkIfIsPossibleToCorrect();
-      setIsPossibleToCorrect(result);
-    };
-    fetchData();
-  }, []);
-
-  const checkIfIsPossibleToCorrect = async () => {
-    try {
-      const response = await fetch(route_to_server + 'check_is_possible_to_correct', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: userName,
-          block_id: current_block_name,
-        }),
-      });
-      const data = await response.json();
-      return data.data;
-    } catch (error) {
-      console.error('Error al verificar si es posible corregir:', error);
-      return false;
-    }
-  }
 
   const ChangePermission = () => {
     if (isTemporalyUser === false) {
@@ -259,7 +231,37 @@ export const BlockInternalAdminPage = () => {
   }
 
   const MakeCorrection = async () => {
-    alert("pendiente")
+    try {
+      const response = await fetch(route_to_server + 'check_is_possible_to_correct', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: userName,
+          block_id: current_block_name,
+        }),
+      });
+      const data = await response.json();
+      if (data.data === true) {
+        const response = await fetch(route_to_server + 'calculate-puntuation-for-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            text: userName,
+            block_id: current_block_name,
+          }),
+        });
+      } else {
+        alert("No se han enviado todas las respuestas")
+        return;
+      }
+    } catch (error) {
+      console.error('Error al intentar corregir', error);
+      return false;
+    }
   }
   
   if ((isAdmin === true) || (isMonitor === true)) {
@@ -312,7 +314,6 @@ export const BlockInternalAdminPage = () => {
       </div>
     );
   } else {
-    if (isPossibleToCorrect) {
       return (
         <div className="App_block_internal_page">
           <div className="tittle_block_internal_admin_page">
@@ -327,20 +328,5 @@ export const BlockInternalAdminPage = () => {
           <button className="button_correct_code" onClick={() => MakeCorrection()}>Finalizar intento</button>
         </div>
       );
-    } else {
-      return (
-        <div className="App_block_internal_page">
-          <div className="tittle_block_internal_admin_page">
-            <h1>Bloque de preguntas interior</h1>
-          </div>
-          <img src={currentLogo} alt="Logo" />
-          {buttons.map((button) => ( 
-            <button key={button.id} className="button_new_question" onClick={() => {MoveToQuestionPageAdmin(button.name);}}>
-              {button.label}
-            </button>
-          ))}
-        </div>
-      );
-    }
   }
 };
