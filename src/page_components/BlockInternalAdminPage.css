@@ -102,6 +102,15 @@
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); 
 }
 
+.button_correct_code {
+  width: 200px; 
+  height: 40px;
+  background-color: lightgray; 
+  border: none; 
+  cursor: pointer;
+  color: black
+}
+
 .button_remove_last:hover {
   background-color: #c82333; 
 }

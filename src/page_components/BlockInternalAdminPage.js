@@ -34,6 +34,7 @@ export const BlockInternalAdminPage = () => {
   const [isTemporalyUser, setIsTemporalyUser] = useState(false);
   const [userName, setName] = useState("");
   const [saveRol, setSaveRol] = useState("");
+  const [isPossibleToCorrect, setIsPossibleToCorrect] = useState(false);
 
   useEffect(() => {
     const userRole = localStorage.getItem("user_role");
@@ -210,6 +211,34 @@ export const BlockInternalAdminPage = () => {
     localStorage.setItem(`button_${id}`, JSON.stringify(buttons));
   }, [currentLogo, buttons]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await checkIfIsPossibleToCorrect();
+      setIsPossibleToCorrect(result);
+    };
+    fetchData();
+  }, []);
+
+  const checkIfIsPossibleToCorrect = async () => {
+    try {
+      const response = await fetch(route_to_server + 'check_is_possible_to_correct', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: userName,
+          block_id: current_block_name,
+        }),
+      });
+      const data = await response.json();
+      return data.data;
+    } catch (error) {
+      console.error('Error al verificar si es posible corregir:', error);
+      return false;
+    }
+  }
+
   const ChangePermission = () => {
     if (isTemporalyUser === false) {
       if (isAdmin === true) { setIsAdmin(false) }
@@ -227,6 +256,10 @@ export const BlockInternalAdminPage = () => {
         alert("Permisos de monitor recuperados")
       }
     }
+  }
+
+  const MakeCorrection = async () => {
+    alert("pendiente")
   }
   
   if ((isAdmin === true) || (isMonitor === true)) {
@@ -279,18 +312,35 @@ export const BlockInternalAdminPage = () => {
       </div>
     );
   } else {
-    return (
-      <div className="App_block_internal_page">
-        <div className="tittle_block_internal_admin_page">
-          <h1>Bloque de preguntas interior</h1>
+    if (isPossibleToCorrect) {
+      return (
+        <div className="App_block_internal_page">
+          <div className="tittle_block_internal_admin_page">
+            <h1>Bloque de preguntas interior</h1>
+          </div>
+          <img src={currentLogo} alt="Logo" />
+          {buttons.map((button) => ( 
+            <button key={button.id} className="button_new_question" onClick={() => {MoveToQuestionPageAdmin(button.name);}}>
+              {button.label}
+            </button>
+          ))}
+          <button className="button_correct_code" onClick={() => MakeCorrection()}>Finalizar intento</button>
         </div>
-        <img src={currentLogo} alt="Logo" />
-        {buttons.map((button) => ( 
-          <button key={button.id} className="button_new_question" onClick={() => {MoveToQuestionPageAdmin(button.name);}}>
-            {button.label}
-          </button>
-        ))}
-      </div>
-    );
+      );
+    } else {
+      return (
+        <div className="App_block_internal_page">
+          <div className="tittle_block_internal_admin_page">
+            <h1>Bloque de preguntas interior</h1>
+          </div>
+          <img src={currentLogo} alt="Logo" />
+          {buttons.map((button) => ( 
+            <button key={button.id} className="button_new_question" onClick={() => {MoveToQuestionPageAdmin(button.name);}}>
+              {button.label}
+            </button>
+          ))}
+        </div>
+      );
+    }
   }
 };
