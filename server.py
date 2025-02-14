@@ -15,9 +15,9 @@ ALLOWED_EXTENSIONS = {'py', 'c', 'cc', 'rb', 'js'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Rutas a los ficheros de registro de información
-route_to_data_json_block_and_question = "future_json_structures/data_information_app.json" # RUTA AL JSON QUE REGISTRA LOS BLOQUES Y PREGUNTAS (INFO)
-route_to_json_buttons_blocks = "future_json_structures/data_blocks_buttons.json" # RUTA AL JSON QUE REGISTRA LA INFO DE LOS BOTONES DE BLOQUES
-route_to_json_buttons_questions = "future_json_structures/data_questions_buttons.json" # RUTA AL JSON QUE REGISTRA LA INFO DE LOS BOTONES DE QUESTIONS
+route_to_data_json_block_and_question = "data/app_data/data_information_app.json" # RUTA AL JSON QUE REGISTRA LOS BLOQUES Y PREGUNTAS (INFO)
+route_to_json_buttons_blocks = "data/app_data/data_blocks_buttons.json" # RUTA AL JSON QUE REGISTRA LA INFO DE LOS BOTONES DE BLOQUES
+route_to_json_buttons_questions = "data/app_data/data_questions_buttons.json" # RUTA AL JSON QUE REGISTRA LA INFO DE LOS BOTONES DE QUESTIONS
 route_to_info_users_json = "data/users_registered/info_users.json" # RUTA AL JSON QUE GESTIONA LOS USUARIOS
 route_to_rankings_info = "data/rankings_info"
 route_to_puntuations = "data/puntuations"
