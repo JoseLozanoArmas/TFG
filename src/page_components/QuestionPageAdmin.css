@@ -19,7 +19,7 @@
 }
 
 .title_input_admin {
-  width: 100%; 
+  max-width: 100%;
   border: none; 
   background: transparent; 
   color: #ffffff; 
