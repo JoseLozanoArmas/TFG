@@ -393,8 +393,28 @@ export const BlockGeneralAdminPage = () => {
       console.error(error);
     }
 
+    try { // Eliminar la carpeta del último bloque
+      const response = await fetch(route_to_server + 'delete-last-student-register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: save_name
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.message}`);
+        return; 
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error);
+    }
 
-    
   };
 
   const ChangePermission = () => {
