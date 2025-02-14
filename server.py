@@ -4,6 +4,7 @@ from flask_cors import CORS
 import shutil
 import re
 import subprocess
+from datetime import date, time, datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -20,6 +21,7 @@ route_to_json_buttons_questions = "future_json_structures/data_questions_buttons
 route_to_info_users_json = "future_json_structures/info_users.json" # RUTA AL JSON QUE GESTIONA LOS USUARIOS
 route_to_rankings_info = "data/rankings_info"
 route_to_puntuations = "data/puntuations"
+route_to_student_register = "data/student_register" # RUTA al registro del tiempo de los usuarios
 # Rutas a las carpetas donde se subiran los códigos
 route_to_users_input = "users_input"
 route_to_admins_and_monitors_tests = "data/blocks"
@@ -72,6 +74,59 @@ def create_block_folder_user():
         return jsonify({'message': f'Carpeta creada con éxito en {folder_path}'}), 200
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
+
+@app.route('/create-register-folder-user', methods=["POST"])
+def create_register_folder_user():
+    data = request.get_json()
+    block_name = data.get('block_name', '')
+    block_name = "block_" + block_name
+    create_route = route_to_student_register + "/" + block_name
+    if os.path.exists(create_route):
+        return jsonify({'message': 'Carpeta de registro creada'}), 200
+    else:
+        route = route_to_student_register
+        folder_path = os.path.join(route, block_name)
+        os.makedirs(folder_path, exist_ok = True)
+        return jsonify({'message': 'Carpeta de registro creada'}), 200
+
+@app.route('/regist-user', methods=["POST"])
+def regist_user(): 
+    data = request.get_json()
+    username = data.get('text', '')
+    block_name = data.get('block_name', '')
+    block_name = "block_" + block_name
+    create_route = route_to_student_register + "/" + block_name + "/" + "student_register.json"
+    time = str(datetime.now())
+    begin_doc = "[\n"
+    begin_new_entry = "  {\n"
+    line_user = "    \"username\": \"" + username + "\",\n"
+    begin_time_line = "    \"begin_time\": \"" + time + "\"\n"
+    end_entry = "  }\n"
+    end_new_entry = "},\n"
+    end_doc = "]"
+    if os.path.exists(create_route):  # Comprueba si el archivo existe en la ruta
+        with open(create_route, "r") as file:
+            lines = file.read()
+            lines = lines[:-3]
+            content = ''.join(lines)
+            with open(create_route, "w") as file:
+                file.write(content)
+                file.write(end_new_entry)
+                file.write(begin_new_entry)
+                file.write(line_user)
+                file.write(begin_time_line)
+                file.write(end_entry)
+                file.write(end_doc)
+            return jsonify({'message': f'Documento actualizado con éxito'}), 200
+    else: 
+        with open(create_route, "w") as file:
+            file.write(begin_doc)
+            file.write(begin_new_entry)
+            file.write(line_user)
+            file.write(begin_time_line)
+            file.write(end_entry)
+            file.write(end_doc)
+            return jsonify({'message': f'Carpeta creada con éxito en {create_route}'}), 200
     
 @app.route('/create-question-folder-user', methods=["POST"])
 def create_question_folder_user():

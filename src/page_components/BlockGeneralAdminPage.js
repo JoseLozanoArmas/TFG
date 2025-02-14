@@ -233,6 +233,54 @@ export const BlockGeneralAdminPage = () => {
         alert('Error al conectar con el servidor.');
         console.error(error);
       }
+
+      try { // Llamamos al método que crea la carpeta del bloque del usuario
+        const response = await fetch(route_to_server + 'create-register-folder-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            block_name: save_name, 
+          }),
+        });
+    
+        const data = await response.json();
+    
+        if (response.ok) {
+          alert(data.message);
+        } else {
+          alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        alert('Error al conectar con el servidor.');
+        console.error(error);
+      }
+
+      try { // Llamamos al método que crea la carpeta del bloque del usuario
+        const response = await fetch(route_to_server + 'regist-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            text: userName,
+            block_name: save_name, 
+          }),
+        });
+    
+        const data = await response.json();
+    
+        if (response.ok) {
+          alert(data.message);
+        } else {
+          alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        alert('Error al conectar con el servidor.');
+        console.error(error);
+      }
+
     }
 
     navigate(`/block_internal_admin_page/block_${id - 1}`);
@@ -344,6 +392,9 @@ export const BlockGeneralAdminPage = () => {
       alert('Error al conectar con el servidor.');
       console.error(error);
     }
+
+
+    
   };
 
   const ChangePermission = () => {
