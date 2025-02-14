@@ -966,32 +966,6 @@ def read_puntuations_regist(block_id, question_id):
         return jsonify({'message': "No se encontró el fichero"}), 400
     return save_objects
 
-
- 
-@app.route('/calculate-puntuation-for-user', methods = ["POST"])
-def calculate_puntuation_for_user():
-    data = request.get_json()  
-    username = data.get('text', '')
-    block_id = data.get('block_id', '')
-    print("entro")
-
-    users_files = save_all_user_routes_files(username, block_id) # P4 # Guardamos todas las entradas del usuario
-    all_questions_created = localize_all_questions(block_id) # P5 # Guardamos cuantas preguntas se han creado
-    if len(all_questions_created) != len(users_files):
-        return jsonify({'message': "Error, hay más entradas por parte del usuario, que preguntas creadas"}), 400
-    # APARTIR DE AQUI REVISAR POR QUE NO LO HE PROBADO TODAVÍA
-    for i in range(len(all_questions_created)): 
-        save_tests_current_questions = read_puntuations_regist(block_id, all_questions_created[i])
-        print(save_tests_current_questions)
-    """
-    for i in range(len(all_questions_created)): # A continuación guardaremos para cada pregunta, todas las pruebas disponibles en base a la entrada
-        save_all_test.append(filter_routes_to_tests_for_questions(block_id, all_questions_created[i], users_files[i]))
-    save_tests_extension = ""
-    for i in range(len(save_all_test)): # Cómo todo los tests tendrán la misma extensión filtro por el primero de ellos
-        save_tests_extension = os.path.splitext(save_all_test[i][0])
-        save_tests_extension = save_tests_extension[1]
-        print(save_tests_extension)
-    """
 @app.route('/regist-final-time', methods = ["POST"])
 def regist_final_time():
     data = request.get_json()  
@@ -1020,6 +994,67 @@ def regist_final_time():
                     print("Error inesperado")
     else:
         return jsonify({'message': "Error, no se encontró el documento"}), 400
+
+
+def calculate_total_time(block_id, username):
+    create_route = route_to_student_register + "/" + block_id + "/" + "student_register.json"
+    search_current_user = r"\"username\":\s*\"" + username + "\"(.|\n)*?}"
+    search_begin_time = r"\"begin_time\".*"
+    search_final_time = r"\"final_time\".*"
+    total_time = 0
+    save_begin_time = ""
+    save_final_time = ""
+    if os.path.exists(create_route):
+        with open(create_route, "r") as file:
+            lines = file.read()
+            content = ''.join(lines)
+            if lines:
+                find_user = re.search(search_current_user, content)
+                if find_user:
+                    find_begin_time = re.search(search_begin_time, content)
+                    save_begin_time = find_begin_time.group()
+                    save_begin_time = save_begin_time[:-1]
+                    save_begin_time = save_begin_time.split(": ")[1].strip('"')
+                    find_final_time = re.search(search_final_time, content)
+                    save_final_time = find_final_time.group()
+                    save_final_time = save_final_time.split(": ")[1].strip('"')
+                    begin_time = datetime.strptime(save_begin_time, "%Y-%m-%d %H:%M:%S.%f")
+                    final_time = datetime.strptime(save_final_time, "%Y-%m-%d %H:%M:%S.%f")
+                    total_time = (final_time - begin_time).seconds
+                    return total_time
+                else:
+                    return -1 # ERROR
+    else:
+        return -1 # ERROR
+
+ 
+@app.route('/calculate-puntuation-for-user', methods = ["POST"])
+def calculate_puntuation_for_user():
+    data = request.get_json()  
+    username = data.get('text', '')
+    block_id = data.get('block_id', '')
+    print("entro")
+
+    users_files = save_all_user_routes_files(username, block_id) # P4 # Guardamos todas las entradas del usuario
+    all_questions_created = localize_all_questions(block_id) # P5 # Guardamos cuantas preguntas se han creado
+    if len(all_questions_created) != len(users_files):
+        return jsonify({'message': "Error, hay más entradas por parte del usuario, que preguntas creadas"}), 400
+    # APARTIR DE AQUI REVISAR POR QUE NO LO HE PROBADO TODAVÍA
+    for i in range(len(all_questions_created)): 
+        save_tests_current_questions = read_puntuations_regist(block_id, all_questions_created[i])
+        print(save_tests_current_questions)
+    """
+    for i in range(len(all_questions_created)): # A continuación guardaremos para cada pregunta, todas las pruebas disponibles en base a la entrada
+        save_all_test.append(filter_routes_to_tests_for_questions(block_id, all_questions_created[i], users_files[i]))
+    save_tests_extension = ""
+    for i in range(len(save_all_test)): # Cómo todo los tests tendrán la misma extensión filtro por el primero de ellos
+        save_tests_extension = os.path.splitext(save_all_test[i][0])
+        save_tests_extension = save_tests_extension[1]
+        print(save_tests_extension)
+    """
+
+
+
 
 # P7
 def regist_user_puntuation(block_id, username, puntuation, time):
