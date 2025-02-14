@@ -965,6 +965,8 @@ def read_puntuations_regist(block_id, question_id):
     else:
         return jsonify({'message': "No se encontró el fichero"}), 400
     return save_objects
+
+
  
 @app.route('/calculate-puntuation-for-user', methods = ["POST"])
 def calculate_puntuation_for_user():
@@ -990,7 +992,34 @@ def calculate_puntuation_for_user():
         save_tests_extension = save_tests_extension[1]
         print(save_tests_extension)
     """
-
+@app.route('/regist-final-time', methods = ["POST"])
+def regist_final_time():
+    data = request.get_json()  
+    username = data.get('text', '')
+    block_id = data.get('block_id', '')
+    create_route = route_to_student_register + "/" + block_id + "/" + "student_register.json"
+    search_current_user = r"\"username\":\s*\"" + username + r"\"(.|\n)*?}"
+    first_half = ""
+    second_half = ""
+    if os.path.exists(create_route):
+        with open(create_route, "r") as file:
+            lines = file.read()
+            content = ''.join(lines)
+            if lines:
+                find_user = re.search(search_current_user, content)
+                if find_user:
+                    first_half = content[:find_user.end() - 4]
+                    second_half = content[find_user.end() - 4:]
+                    time = str(datetime.now())
+                    final_time_line = ",\n    \"final_time\": \"" + time + "\""
+                    new_content = first_half + final_time_line + second_half
+                    with open(create_route, "w") as file:
+                        file.write(new_content)
+                    return jsonify({'message': "Tiempo final añadido"}), 400
+                else:
+                    print("Error inesperado")
+    else:
+        return jsonify({'message': "Error, no se encontró el documento"}), 400
 
 # P7
 def regist_user_puntuation(block_id, username, puntuation, time):

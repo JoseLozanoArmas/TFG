@@ -244,6 +244,18 @@ export const BlockInternalAdminPage = () => {
       });
       const data = await response.json();
       if (data.data === true) {
+
+        const regist = await fetch(route_to_server + 'regist-final-time', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            text: userName,
+            block_id: current_block_name,
+          }),
+        });
+
         const response = await fetch(route_to_server + 'calculate-puntuation-for-user', {
           method: 'POST',
           headers: {
