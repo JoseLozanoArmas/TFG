@@ -1019,7 +1019,10 @@ def calculate_total_time(block_id, username):
                     save_final_time = save_final_time.split(": ")[1].strip('"')
                     begin_time = datetime.strptime(save_begin_time, "%Y-%m-%d %H:%M:%S.%f")
                     final_time = datetime.strptime(save_final_time, "%Y-%m-%d %H:%M:%S.%f")
+                    microseconds = (final_time - begin_time).microseconds
+                    microseconds = microseconds * 0.000001
                     total_time = (final_time - begin_time).seconds
+                    total_time += microseconds
                     return total_time
                 else:
                     return -1 # ERROR
