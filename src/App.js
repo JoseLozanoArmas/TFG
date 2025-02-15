@@ -11,6 +11,7 @@ import { DeleteOptions } from './page_components/DeleteOptions';
 import { Settings } from './page_components/Settings';
 import { GeneralUserPage } from './page_components/GeneralUserPage';
 import { InternalUserPage } from './page_components/InternalUserPage';
+import { RankingInternalPage } from './page_components/RankingInternalPage';
 
 const route_to_server = "http://127.0.0.1:5000/"
 
@@ -88,6 +89,7 @@ function App() {
         <Route path="/delete_options" element={<DeleteOptions/>}/>
         <Route path="/general_users" element={<GeneralUserPage/>}/>
         <Route path="/creation_user/:id" element={<InternalUserPage/>}/>
+        <Route path="/ranking_internal_page" element={<RankingInternalPage/>}/>
       </Routes>
     </Router>
   );
