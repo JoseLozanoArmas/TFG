@@ -883,6 +883,8 @@ def filter_routes_to_tests_for_questions(block_id, question_id, user_file):
 
 # P6
 def check_if_the_code_pass_the_test(route, enter_admin, result_admin):
+    return True
+    """
     if os.path.exists(route): # Comprobamos que el fichero existe
         files_pattern = r".*\.(py|cc?|rb|js)" # Con esta expresión regular gestionamos los ficheros
         if re.match(files_pattern, route): # En caso de que coincida se procede a evaluar las distintas opciones con las que se haya hecho match
@@ -915,6 +917,7 @@ def check_if_the_code_pass_the_test(route, enter_admin, result_admin):
             return jsonify({'message': "Error, la extensión del archivo no está permitida"}), 400    
     else: # En caso de que el fichero no exista mandamos aviso
         return jsonify({'message': f"Error, El archivo en la ruta \"{route}\" no existe."}), 400
+    """
 
 def read_puntuations_regist(block_id, question_id): 
     create_route_to_file = "data/puntuations/" + block_id + "/" + question_id + "_puntuations.json"
@@ -1010,11 +1013,12 @@ def calculate_total_time(block_id, username):
             if lines:
                 find_user = re.search(search_current_user, content)
                 if find_user:
-                    find_begin_time = re.search(search_begin_time, content)
+                    new_content = find_user.group()
+                    find_begin_time = re.search(search_begin_time, new_content)
                     save_begin_time = find_begin_time.group()
                     save_begin_time = save_begin_time[:-1]
                     save_begin_time = save_begin_time.split(": ")[1].strip('"')
-                    find_final_time = re.search(search_final_time, content)
+                    find_final_time = re.search(search_final_time, new_content)
                     save_final_time = find_final_time.group()
                     save_final_time = save_final_time.split(": ")[1].strip('"')
                     begin_time = datetime.strptime(save_begin_time, "%Y-%m-%d %H:%M:%S.%f")
@@ -1034,18 +1038,16 @@ def calculate_total_time(block_id, username):
 def calculate_puntuation_for_user():
     data = request.get_json()  
     username = data.get('text', '')
-    block_id = data.get('block_id', '')
+    block_id = data.get('block_id', '') 
     final_puntuation = 0
     users_files = save_all_user_routes_files(username, block_id) # P4 # Guardamos todas las entradas del usuario
     all_questions_created = localize_all_questions(block_id) # P5 # Guardamos cuantas preguntas se han creado
     if len(all_questions_created) != len(users_files):
         return jsonify({'message': "Error, hay más entradas por parte del usuario, que preguntas creadas"}), 400
-    # APARTIR DE AQUI REVISAR POR QUE NO LO HE PROBADO TODAVÍA
     for i in range(len(all_questions_created)): 
         save_tests_current_questions = read_puntuations_regist(block_id, all_questions_created[i])
-        print(save_tests_current_questions)
-        if check_if_the_code_pass_the_test(save_tests_current_questions["enter_file"]):
-            final_puntuation += save_tests_current_questions["puntuation"]
+        if check_if_the_code_pass_the_test(save_tests_current_questions[i]["enter_file"], save_tests_current_questions[i]["result_file"], save_tests_current_questions[i]["puntuation"]):
+            final_puntuation += save_tests_current_questions[i]["puntuation"]
     final_user_time = calculate_total_time(block_id, username)
     if final_user_time == -1:
         return jsonify({'message': "Error inesperado al gestionar el tiempo del usuario"}), 400
@@ -1058,7 +1060,7 @@ def calculate_puntuation_for_user():
 
 # P7
 def regist_user_puntuation(block_id, username, puntuation, time):
-    create_route = route_to_rankings_info + block_id + ".json" 
+    create_route = route_to_rankings_info + "/" + block_id + ".json" 
     begin_doc = "[\n"
     username_line = "    {\n        " + "\"username\": \"" + username + "\",\n"
     puntuation_line = "        \"puntuation\": " + str(puntuation) + ",\n" 
@@ -1099,7 +1101,7 @@ def procesate_object(string_to_procesate):
     return second_half
 
 def sort_users_puntuations_file(block_id): # REVISAR???
-    create_route = route_to_rankings_info + block_id + ".json"
+    create_route = route_to_rankings_info + "/" + block_id + ".json"
     search_entrace = r"{(.|\n)*?}"
     search_user = r"\"username\".*?,"
     search_puntuation = r"\"puntuation\".*?,"

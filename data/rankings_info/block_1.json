@@ -1,17 +1,12 @@
 [
     {
-        "username": "a",
-        "puntuation": 100,
-        "time": 400.32
-    },
-    {
         "username": "b",
-        "puntuation": 90,
-        "time": 400.32
+        "puntuation": 10.0,
+        "time": 21.322228
     },
     {
-        "username": "c",
-        "puntuation": 80,
-        "time": 400.32
+        "username": "a",
+        "puntuation": 10.0,
+        "time": 2829.864556
     }
 ]
