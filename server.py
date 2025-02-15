@@ -954,7 +954,6 @@ def read_puntuations_regist(block_id, question_id):
                         return jsonify({'message': "Error inesperado"}), 400
                     if find_puntuation:
                         save_puntuation = find_puntuation.group()
-                        save_puntuation = save_puntuation[:-1]
                         save_puntuation = int(save_puntuation.split(": ")[1])
                         new_object["puntuation"] = save_puntuation
                     else:

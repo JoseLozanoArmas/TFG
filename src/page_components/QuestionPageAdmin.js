@@ -68,6 +68,7 @@ export const QuestionPageAdmin = () => {
   useEffect(() => {
     localStorage.setItem(`title_${id}`, JSON.stringify(title));
     localStorage.setItem(`description_${id}`, JSON.stringify(description));
+    localStorage.setItem(`button_${id}`, JSON.stringify(buttons))
   })
 
   const handleTitleChange = (event) => {
