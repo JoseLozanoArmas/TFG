@@ -11,6 +11,15 @@ export const RankingInternalPage = () => {
   const [saveJson, setSaveJson] = useState();
   const block_id = "block_1"
   const block_number = 1
+  
+  const [userSlots, setUserSlots] = useState(() => {
+    const savedUserSlots = localStorage.getItem(`user_slots_${id}`);
+    if (savedUserSlots) {
+      return JSON.parse(savedUserSlots);
+    } else {
+      return [];
+    }
+  });
 
   const getJsonData = async() => {
     try { 
@@ -35,10 +44,22 @@ export const RankingInternalPage = () => {
     }
   }
 
+  const getUserInformation = () => {
+    for (let i = 0; i < saveJson.length; ++i) {
+      alert(saveJson[i].username)
+    }
+  }
+
   useEffect(() => {
     getJsonData();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem(`user_slots_${id}`, JSON.stringify(userSlots))
+  })
   
+
+  getUserInformation()
 
   return (
     <div className="App_ranking_internal_page">
