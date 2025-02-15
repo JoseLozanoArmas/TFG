@@ -1149,7 +1149,6 @@ def sort_users_puntuations_file(block_id): # REVISAR???
         return jsonify({'message': "Error, no se encontró el documento"}), 400
  
 # Lecturas de JSON
-
 @app.route('/get-data-blocks-buttons-json', methods=["GET"])
 def get_data_blocks_buttons_json():
     if os.path.exists(route_to_json_buttons_blocks): 
@@ -1175,6 +1174,24 @@ def get_info_users_json():
                 pass
     else:
         pass
+
+@app.route('/get-rankings-info', methods=["POST"])
+def get_rankins_info():
+    data = request.get_json()
+    block_id = data.get('text', '')
+    create_route = route_to_rankings_info + "/" + block_id + ".json"
+    if os.path.exists(create_route):
+        with open(create_route, "r") as file:
+            lines = file.read()
+            content = ''.join(lines)
+            if lines:
+                return jsonify({'data': content}), 200
+            else:
+                return jsonify({'message': "Error, el archivo está vacío"}), 400
+
+    else:
+        return jsonify({'message': f"Error, no se encontró la información de los rankins del {block_id}"}), 400
+
 
 
 

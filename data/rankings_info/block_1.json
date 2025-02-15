@@ -1,0 +1,17 @@
+[
+    {
+        "username": "a",
+        "puntuation": 100,
+        "time": 400.32
+    },
+    {
+        "username": "b",
+        "puntuation": 90,
+        "time": 400.32
+    },
+    {
+        "username": "c",
+        "puntuation": 80,
+        "time": 400.32
+    }
+]
