@@ -882,7 +882,7 @@ def filter_routes_to_tests_for_questions(block_id, question_id, user_file):
     return tests_to_use
 
 # P6
-def check_if_the_code_pass_the_test(route):
+def check_if_the_code_pass_the_test(route, enter_admin, result_admin):
     if os.path.exists(route): # Comprobamos que el fichero existe
         files_pattern = r".*\.(py|cc?|rb|js)" # Con esta expresión regular gestionamos los ficheros
         if re.match(files_pattern, route): # En caso de que coincida se procede a evaluar las distintas opciones con las que se haya hecho match
@@ -1032,8 +1032,7 @@ def calculate_puntuation_for_user():
     data = request.get_json()  
     username = data.get('text', '')
     block_id = data.get('block_id', '')
-    print("entro")
-
+    final_puntuation = 0
     users_files = save_all_user_routes_files(username, block_id) # P4 # Guardamos todas las entradas del usuario
     all_questions_created = localize_all_questions(block_id) # P5 # Guardamos cuantas preguntas se han creado
     if len(all_questions_created) != len(users_files):
@@ -1042,15 +1041,14 @@ def calculate_puntuation_for_user():
     for i in range(len(all_questions_created)): 
         save_tests_current_questions = read_puntuations_regist(block_id, all_questions_created[i])
         print(save_tests_current_questions)
-    """
-    for i in range(len(all_questions_created)): # A continuación guardaremos para cada pregunta, todas las pruebas disponibles en base a la entrada
-        save_all_test.append(filter_routes_to_tests_for_questions(block_id, all_questions_created[i], users_files[i]))
-    save_tests_extension = ""
-    for i in range(len(save_all_test)): # Cómo todo los tests tendrán la misma extensión filtro por el primero de ellos
-        save_tests_extension = os.path.splitext(save_all_test[i][0])
-        save_tests_extension = save_tests_extension[1]
-        print(save_tests_extension)
-    """
+        if check_if_the_code_pass_the_test(save_tests_current_questions["enter_file"]):
+            final_puntuation += save_tests_current_questions["puntuation"]
+    final_user_time = calculate_total_time(block_id, username)
+    if final_user_time == -1:
+        return jsonify({'message': "Error inesperado al gestionar el tiempo del usuario"}), 400
+    regist_user_puntuation(block_id, username, final_puntuation, final_user_time)
+    sort_users_puntuations_file(block_id)
+    return jsonify({'message': "Puntuación total registrada"}), 200 
 
 
 
