@@ -89,7 +89,7 @@ function App() {
         <Route path="/delete_options" element={<DeleteOptions/>}/>
         <Route path="/general_users" element={<GeneralUserPage/>}/>
         <Route path="/creation_user/:id" element={<InternalUserPage/>}/>
-        <Route path="/ranking_internal_page" element={<RankingInternalPage/>}/>
+        <Route path="/ranking_internal_page/:id" element={<RankingInternalPage/>}/>
       </Routes>
     </Router>
   );

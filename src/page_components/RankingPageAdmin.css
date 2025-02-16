@@ -1,18 +1,18 @@
-.ranking_page_admin {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  color: white;
-  padding: 20px;
+.App_ranking_general_page {
+  margin-top: 15px;
+  flex-direction: column; 
+  align-items: center; 
 }
 
-.button_reset_ranking {
-  background-color: #dc3545; 
-  color: white;
-  border: none; 
-  padding: 10px 20px; 
-  border-radius: 5px; 
-  cursor: pointer; 
+.tittle_general_ranking_page {
+  width: 100%; 
+  border: 2px solid white; 
+  padding: 20px; 
+  background-color: rgba(0, 0, 0, 0.792); 
+  color: white; 
+  text-align: center; 
+  box-sizing: border-box; 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); 
+  position: relative; 
+  margin-bottom: 20px; 
 }
