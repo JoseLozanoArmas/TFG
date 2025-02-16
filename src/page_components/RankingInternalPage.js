@@ -8,9 +8,10 @@ export const RankingInternalPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
+
   const [saveJson, setSaveJson] = useState(null);
-  const block_id = "block_1"
-  const block_number = 1
+  const block_id = id
+  const block_number = block_id[block_id.length - 1]
   
   const [userSlots, setUserSlots] = useState(() => {
     const savedUserSlots = localStorage.getItem(`user_slots_${id}`);
