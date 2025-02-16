@@ -235,6 +235,7 @@ def regist_block_button():
     positionY = data.get('positionY', '')
     type = data.get('type', '')
     block_name = data.get('block_name', '')
+    default_image = data.get('default_image', '')
 
     begin_document = "[\n"
     begin_entry = "    {\n"
@@ -242,10 +243,11 @@ def regist_block_button():
     line_positionX = f"        \"positionX\": {positionX},\n"
     line_positionY = f"        \"positionY\": {positionY},\n"
     line_type = f"        \"type\": \"{type}\",\n"
-    line_block_name = f"        \"block_name\": \"{block_name}\"\n"
+    line_block_name = f"        \"block_name\": \"{block_name}\",\n"
+    line_default_image = f"        \"default_image\": \"{default_image}\"\n"
     end_entry = "    }"
     end_document = "\n]"
-    content = begin_entry + line_id + line_positionX + line_positionY + line_type + line_block_name + end_entry
+    content = begin_entry + line_id + line_positionX + line_positionY + line_type + line_block_name + line_default_image + end_entry
     if os.path.exists(route_to_json_buttons_blocks):  # Comprueba si el archivo existe en la ruta
         with open(route_to_json_buttons_blocks, 'r') as file:
             lines = file.readlines()
@@ -259,7 +261,7 @@ def regist_block_button():
             file.writelines(lines)
             file.write(content)
         return jsonify({'message': 'Archivo actualizado'}), 200
-    else:
+    else: 
         # Crear el archivo si no existe
         with open(route_to_json_buttons_blocks, 'w') as file:
             content = begin_document + content + end_document

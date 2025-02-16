@@ -16,3 +16,18 @@
   position: relative; 
   margin-bottom: 20px; 
 }
+
+.user-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.image-button {
+  background: none; 
+  border: none; 
+  padding: 0; 
+  cursor: pointer; 
+  position: absolute; 
+  transition: transform 0.3s ease; 
+  margin-left: 10px;
+}

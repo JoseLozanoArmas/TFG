@@ -4,10 +4,5 @@
     "block_2": {
     },
     "block_3": {
-      "question_1": {
-        "id": 1,
-        "label": "Pregunta 1",
-        "name": "block_1_question_1"
-      }
     }
 }

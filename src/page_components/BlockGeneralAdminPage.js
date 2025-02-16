@@ -108,6 +108,7 @@ export const BlockGeneralAdminPage = () => {
       positionY: clickedButton.positionY,
       type: "boton_pagina",
       block_name: block_name,
+      default_image: "../img/logo_ull.png"
     };
   
     // Actualiza el estado de los botones
@@ -192,6 +193,7 @@ export const BlockGeneralAdminPage = () => {
           positionY: newButton.positionY,
           type: newButton.type,
           block_name: newButton.block_name, 
+          default_image: newButton.default_image,
         }),
       });
       const data = await response.json();

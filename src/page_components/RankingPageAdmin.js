@@ -48,8 +48,6 @@ export const RankingPageAdmin = () => {
     getUserInformation();
   }, [saveJson])
 
-  
-  console.log(saveJson)
 
   useEffect(() => {
     localStorage.setItem(`block_buttons_${id}`, JSON.stringify(blockButtons))
@@ -59,14 +57,18 @@ export const RankingPageAdmin = () => {
     navigate(`/ranking_internal_page/${id}`)
   }
 
+  console.log(blockButtons[0].default_image)
+
   return (
     <div className="App_ranking_general_page">
       <div className="tittle_general_ranking_page">
         <h1>Mapa general de los Rankings</h1>  
       </div>
       {blockButtons.map((button) => (
-        <button key={button.id} style={{transform: `translate(${button.positionX}px, ${button.positionY}px)`}}
-         onClick={() => MoveToRankingPage(button.block_name)}></button>
+        <button key={button.id} className="image-button" style={{transform: `translate(${button.positionX}px, ${button.positionY}px)`}}
+          onClick={() => MoveToRankingPage(button.block_name)}>
+          <img src={require(button.default_image)} className="user-image"/>
+        </button>
       ))}
     </div>
   );
