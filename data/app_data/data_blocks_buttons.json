@@ -5,6 +5,6 @@
         "positionY": 0,
         "type": "boton_pagina",
         "block_name": "block_1",
-        "default_image": "./img/logo_ull.png"
+        "default_image": "../img/logo_ull.png"
     }
 ]

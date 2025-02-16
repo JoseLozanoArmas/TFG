@@ -57,7 +57,7 @@ export const RankingPageAdmin = () => {
     navigate(`/ranking_internal_page/${id}`)
   }
 
-  console.log(blockButtons[0].default_image)
+  localStorage.clear()
 
   return (
     <div className="App_ranking_general_page">
@@ -67,7 +67,7 @@ export const RankingPageAdmin = () => {
       {blockButtons.map((button) => (
         <button key={button.id} className="image-button" style={{transform: `translate(${button.positionX}px, ${button.positionY}px)`}}
           onClick={() => MoveToRankingPage(button.block_name)}>
-          <img src={require(button.default_image)} className="user-image"/>
+          <img src={require("../img/logo_ull.png")} className="user-image"/>
         </button>
       ))}
     </div>
