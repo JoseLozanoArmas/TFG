@@ -1,0 +1,12 @@
+[
+  {
+    "enter_file": "fichero_entrada.txt",
+    "result_file": "fichero_resultado.txt",
+    "puntuation": 20
+  },
+  {
+    "enter_file": "fichero_entrada.txt",
+    "result_file": "fichero_resultado.txt",
+    "puntuation": 20
+  }
+]

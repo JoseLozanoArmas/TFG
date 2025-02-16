@@ -884,42 +884,56 @@ def filter_routes_to_tests_for_questions(block_id, question_id, user_file):
     return tests_to_use
 
 # P6
-def check_if_the_code_pass_the_test(route, enter_admin, result_admin):
-    return True
-    """
-    if os.path.exists(route): # Comprobamos que el fichero existe
+def check_if_the_code_pass_the_test(user_file, admin_enter, admin_result):
+    result = ""
+    save_enter = ""
+    save_result = ""
+    with open(admin_enter, 'r') as file:
+        save_enter = file.read()
+    with open(admin_result, 'r') as file:
+        save_result = file.read()
+        
+    if os.path.exists(user_file): # Comprobamos que el fichero existe
         files_pattern = r".*\.(py|cc?|rb|js)" # Con esta expresión regular gestionamos los ficheros
-        if re.match(files_pattern, route): # En caso de que coincida se procede a evaluar las distintas opciones con las que se haya hecho match
-            extension = re.findall(files_pattern, route)[0]  
-            if extension == "py": 
-                result = subprocess.run(["python3", route], capture_output=True, text=True)
-                if result.returncode == 0:
-                    return True
-                else:
-                    return False
-            elif extension == "rb":
-                result = subprocess.run(["ruby", route], capture_output=True, text=True)
-                print(result.stdout)
-            elif extension == "js": # Llamamos a los test de JEST y si el returncode es 0 es que ha pasado el test en caso contrario retornamos false
-                result = subprocess.run(["jest", route], capture_output=True, text=True)
-                if result.returncode == 0:
-                    return True
-                else:
-                    return False
-            elif extension == "c" or extension == "cc":
+        if re.match(files_pattern, user_file): # En caso de que coincida se procede a evaluar las distintas opciones con las que se haya hecho match
+            extension = re.findall(files_pattern, user_file)[0]  
+            if extension == "py": # Funciona
+                result = subprocess.run(["python3", user_file, save_enter], capture_output = True, text = True)
+                result = result.stdout
+                result = result[:-1] # Eliminamos el salto de línea que se genera por defect
+            elif extension == "rb": # Funciona
+                result = subprocess.run(["ruby", user_file, save_enter], capture_output = True, text = True)
+                result = result.stdout
+                result = result[:-1] # Eliminamos el salto de línea que se genera por defect
+            elif extension == "js": # Funciona
+                result = subprocess.run(["node", user_file, save_enter], capture_output = True, text = True)
+                result = result.stdout
+                result = result[:-1] # Eliminamos el salto de línea que se genera por defect
+            elif extension == "c": # Funciona
                 executable_name = "a.out"
-                result = subprocess.run(["g++", route, "-o", executable_name], capture_output=True, text=True)
-                if result.returncode == 0: # En caso de que se haya podido compilar ejecutamos el resultado
-                    execution_result = subprocess.run([f"./{executable_name}"], capture_output=True, text=True)
-                    print(execution_result.stdout)
+                correct_compilation = subprocess.run(["g++", user_file, "-o", executable_name], capture_output = True)
+                if correct_compilation.returncode == 0: # En caso de que se haya podido compilar ejecutamos el resultado
+                    result = subprocess.run([f"./{executable_name}", save_enter], capture_output = True, text = True)
+                    result = result.stdout
+                    result = result[:-1] # Eliminamos el salto de línea que se genera por defecto
                 else:
-                    print("Error de compilación:")
-                    print(result.stderr)
-        else: # Si no coincide se manda mensaje de error
-            return jsonify({'message': "Error, la extensión del archivo no está permitida"}), 400    
+                    return False
+            elif extension == "cc": # Funciona
+                executable_name = "a.out"
+                correct_compilation = subprocess.run(["g++", user_file, "-o", executable_name], capture_output = True)
+                if correct_compilation.returncode == 0: # En caso de que se haya podido compilar ejecutamos el resultado
+                    result = subprocess.run([f"./{executable_name}", save_enter], capture_output = True, text = True)
+                    result = result.stdout
+                else:
+                    return False
+            if result == save_result:
+                return True
+            else:
+                return False
+        else: # Si no coincide se retorna como falso (no está admitido)
+            return False
     else: # En caso de que el fichero no exista mandamos aviso
-        return jsonify({'message': f"Error, El archivo en la ruta \"{route}\" no existe."}), 400
-    """
+        return jsonify({'message': "Error inesperado"}), 400
 
 def read_puntuations_regist(block_id, question_id): 
     create_route_to_file = "data/puntuations/" + block_id + "/" + question_id + "_puntuations.json"
@@ -1048,7 +1062,7 @@ def calculate_puntuation_for_user():
         return jsonify({'message': "Error, hay más entradas por parte del usuario, que preguntas creadas"}), 400
     for i in range(len(all_questions_created)): 
         save_tests_current_questions = read_puntuations_regist(block_id, all_questions_created[i])
-        if check_if_the_code_pass_the_test(save_tests_current_questions[i]["enter_file"], save_tests_current_questions[i]["result_file"], save_tests_current_questions[i]["puntuation"]):
+        if check_if_the_code_pass_the_test(users_files[i], save_tests_current_questions[i]["enter_file"], save_tests_current_questions[i]["result_file"]):
             final_puntuation += save_tests_current_questions[i]["puntuation"]
     final_user_time = calculate_total_time(block_id, username)
     if final_user_time == -1:
@@ -1056,9 +1070,6 @@ def calculate_puntuation_for_user():
     regist_user_puntuation(block_id, username, final_puntuation, final_user_time)
     sort_users_puntuations_file(block_id)
     return jsonify({'message': "Puntuación total registrada"}), 200 
-
-
-
 
 # P7
 def regist_user_puntuation(block_id, username, puntuation, time):
