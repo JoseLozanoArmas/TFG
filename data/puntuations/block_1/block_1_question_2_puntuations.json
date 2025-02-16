@@ -1,12 +1,12 @@
 [
   {
-    "enter_file": "fichero_entrada.txt",
-    "result_file": "fichero_resultado.txt",
+    "enter_file": "data/blocks/block_1/block_1_question_2/fichero_entrada.txt",
+    "result_file": "data/blocks/block_1/block_1_question_2/fichero_resultado.txt",
     "puntuation": 20
   },
   {
-    "enter_file": "fichero_entrada.txt",
-    "result_file": "fichero_resultado.txt",
+    "enter_file": "data/blocks/block_1/block_1_question_2/fichero_entrada.txt",
+    "result_file": "data/blocks/block_1/block_1_question_2/fichero_resultado.txt",
     "puntuation": 20
   }
 ]

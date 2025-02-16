@@ -425,7 +425,7 @@ def update_current_question():
         return jsonify({'message': f'Pregunta actualizada con éxito'}), 200
     else:
         return jsonify({'message': 'Error, no se pudo encontrar el fichero de registro debido'}), 400
-
+ 
 @app.route('/regist-question-test-information', methods=["POST"])
 def regist_question_test_information():
     block_name = request.form.get('text', '')
@@ -440,8 +440,8 @@ def regist_question_test_information():
     new_test = "" 
     for index in range (len(input_files)): 
         begin = "  {\n"
-        enter_file = f"    \"enter_file\": \"{input_files[index].filename}\",\n"
-        result_file = f"    \"result_file\": \"{result_files[index].filename}\",\n"
+        enter_file = f"    \"enter_file\": \"data/blocks/{block_name}/{question_name}/{input_files[index].filename}\",\n"
+        result_file = f"    \"result_file\": \"data/blocks/{block_name}/{question_name}/{result_files[index].filename}\",\n"
         puntuation = f"    \"puntuation\": {points[index]}\n"
         end = "  },\n"
         if index == len(input_files) - 1:
@@ -1062,10 +1062,13 @@ def calculate_puntuation_for_user():
         return jsonify({'message': "Error, hay más entradas por parte del usuario, que preguntas creadas"}), 400
     for i in range(len(all_questions_created)): 
         save_tests_current_questions = read_puntuations_regist(block_id, all_questions_created[i])
-        if check_if_the_code_pass_the_test(users_files[i], save_tests_current_questions[i]["enter_file"], save_tests_current_questions[i]["result_file"]):
-            final_puntuation += save_tests_current_questions[i]["puntuation"]
+        for j in range(len(save_tests_current_questions)):
+            temporal_save_enter_file = save_tests_current_questions[j]["enter_file"].split('"')[1]
+            temporal_save_result_file = save_tests_current_questions[j]["result_file"].split('"')[1]
+            if check_if_the_code_pass_the_test(users_files[i], temporal_save_enter_file, temporal_save_result_file):
+                final_puntuation += save_tests_current_questions[j]["puntuation"]
     final_user_time = calculate_total_time(block_id, username)
-    if final_user_time == -1:
+    if final_user_time == -1: 
         return jsonify({'message': "Error inesperado al gestionar el tiempo del usuario"}), 400
     regist_user_puntuation(block_id, username, final_puntuation, final_user_time)
     sort_users_puntuations_file(block_id)

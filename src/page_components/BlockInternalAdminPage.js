@@ -274,6 +274,9 @@ export const BlockInternalAdminPage = () => {
       console.error('Error al intentar corregir', error);
       return false;
     }
+
+    alert("Corrección realizada con éxito. Cuestionario completado!!!")
+    navigate(`/ranking_internal_page/${current_block_name}`)
   }
   
   if ((isAdmin === true) || (isMonitor === true)) {
