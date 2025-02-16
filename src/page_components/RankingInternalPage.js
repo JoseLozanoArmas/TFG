@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Navigate, Route, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './RankingInternalPage.css';
 
 const route_to_server = "http://127.0.0.1:5000/"
@@ -52,8 +52,34 @@ export const RankingInternalPage = () => {
     const getUserInformation = () => {
       let save_slots = []
       for (let i = 0; i < saveJson.length; ++i) {
-        saveJson[i]["id"] = i + 1;
+        saveJson[i]["id"] = `${i + 1}º`;
         save_slots.push(saveJson[i])
+        switch(i) {
+          case 0:
+            saveJson[i]["id_className"] = "slot_id_gold"
+            saveJson[i]["username_className"] = "slot_username_gold"
+            saveJson[i]["puntuation_className"] = "slot_puntuation_gold"
+            saveJson[i]["time_className"] = "slot_time_gold"
+          break;
+          case 1:
+            saveJson[i]["id_className"] = "slot_id_silver"
+            saveJson[i]["username_className"] = "slot_username_silver"
+            saveJson[i]["puntuation_className"] = "slot_puntuation_silver"
+            saveJson[i]["time_className"] = "slot_time_silver"
+          break;
+          case 2:
+            saveJson[i]["id_className"] = "slot_id_copper"
+            saveJson[i]["username_className"] = "slot_username_copper"
+            saveJson[i]["puntuation_className"] = "slot_puntuation_copper"
+            saveJson[i]["time_className"] = "slot_time_copper"
+          break;
+          default:
+            saveJson[i]["id_className"] = "slot_id"
+            saveJson[i]["username_className"] = "slot_username"
+            saveJson[i]["puntuation_className"] = "slot_puntuation"
+            saveJson[i]["time_className"] = "slot_time"
+          break;
+        }
       }
       setUserSlots(save_slots)
     }
@@ -64,7 +90,9 @@ export const RankingInternalPage = () => {
     localStorage.setItem(`user_slots_${id}`, JSON.stringify(userSlots))
   })
 
-  
+  const MoveToFirstPage = () => {
+    navigate('/');
+  }
 
   return (
     <div className="App_ranking_internal_page">
@@ -72,35 +100,36 @@ export const RankingInternalPage = () => {
         <h1>Ranking de puntuaciones del bloque {block_number}</h1>
       </div>
       <div className="user_slot">
-          <div className="slot_id">
+          <div className="slot_id_reference">
             Posición
           </div>
-          <div className="slot_username">
+          <div className="slot_username_reference">
             Usuario
           </div>
-          <div className="slot_puntuation">
+          <div className="slot_puntuation_reference">
             Puntuación
           </div>
-          <div className="slot_time">
+          <div className="slot_time_reference">
             Tiempo total
           </div>
       </div>
       {userSlots.map((slot) => (
         <div key={slot.id} className="user_slot">
-          <div className="slot_id">
+          <div className={slot.id_className}>
             {slot.id}
           </div>
-          <div className="slot_username">
+          <div className={slot.username_className}>
             {slot.username}
           </div>
-          <div className="slot_puntuation">
+          <div className={slot.puntuation_className}>
             {slot.puntuation}
           </div>
-          <div className="slot_time">
+          <div className={slot.time_className}>
             {slot.time}
           </div>
         </div>
       ))}
+      <button className="finish_user" onClick={() => MoveToFirstPage()}> Volver a la página de inicio</button>
     </div>
   )
 }

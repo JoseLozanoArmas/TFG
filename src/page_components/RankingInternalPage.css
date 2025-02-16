@@ -7,7 +7,7 @@
 
 .tittle_ranking_internal_page {
   width: 100%; 
-  border: 2px solid #ffffff; 
+  border: 2px solid white; 
   padding: 20px; 
   background-color: rgba(0, 0, 0, 0.792); 
   color: #ffffff; 
@@ -26,24 +26,201 @@
   width: 95%; 
   padding: 20px; 
   background-color: rgba(0, 0, 0, 0.792); 
-  border: 2px solid #ffffff; 
+  border: 2px solid white; 
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); 
   margin-bottom: 20px; 
   box-sizing: border-box;
+  justify-items: center; 
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr;
 }
 
-.slot_id {
+.slot_id_reference {
+  text-align: center;
+  align-items: center;
+  border: 6px solid lightblue; 
+  background-color: lightblue;
+  border-radius: 6px;
+  font-size: 20px;
+}
 
+.slot_username_reference {
+  text-align: center;
+  align-items: center;
+  border: 6px solid lightblue; 
+  background-color: lightblue;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+.slot_puntuation_reference {
+  text-align: center;
+  align-items: center;
+  border: 6px solid lightblue; 
+  background-color: lightblue;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+.slot_time_reference {
+  text-align: center;
+  align-items: center;
+  border: 6px solid lightblue; 
+  background-color: lightblue;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+.slot_id_gold {
+  text-align: center;
+  align-items: center;
+  border: 6px solid yellow; 
+  background-color: yellow;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+.slot_username_gold {
+  text-align: center;
+  align-items: center;
+  border: 6px solid yellow; 
+  background-color: yellow;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+.slot_puntuation_gold {
+  text-align: center;
+  align-items: center;
+  border: 6px solid yellow; 
+  background-color: yellow;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+.slot_time_gold {
+  text-align: center;
+  align-items: center;
+  border: 6px solid yellow; 
+  background-color: yellow;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+.slot_id_silver {
+  text-align: center;
+  align-items: center;
+  border: 6px solid gray; 
+  background-color: gray;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+.slot_username_silver {
+  text-align: center;
+  align-items: center;
+  border: 6px solid gray; 
+  background-color: gray;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+.slot_puntuation_silver {
+  text-align: center;
+  align-items: center;
+  border: 6px solid gray; 
+  background-color: gray;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+.slot_time_silver {
+  text-align: center;
+  align-items: center;
+  border: 6px solid gray; 
+  background-color: gray;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+.slot_id_copper {
+  text-align: center;
+  align-items: center;
+  border: 6px solid burlywood;
+  background-color: burlywood;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+.slot_username_copper {
+  text-align: center;
+  align-items: center;
+  border: 6px solid burlywood; 
+  background-color: burlywood;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+.slot_puntuation_copper {
+  text-align: center;
+  align-items: center;
+  border: 6px solid burlywood; 
+  background-color: burlywood;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+.slot_time_copper {
+  text-align: center;
+  align-items: center;
+  border: 6px solid burlywood; 
+  background-color: burlywood;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+
+.slot_id {
+  text-align: center;
+  align-items: center;
+  border: 6px solid white; 
+  background-color: white;
+  border-radius: 6px;
+  font-size: 20px;
 }
 
 .slot_username {
-  
+  text-align: center;
+  align-items: center;
+  border: 6px solid white; 
+  background-color: white;
+  border-radius: 6px;
+  font-size: 20px;
 }
 
 .slot_puntuation {
-  
+  text-align: center;
+  align-items: center;
+  border: 6px solid white; 
+  background-color: white;
+  border-radius: 6px;
+  font-size: 20px;
 }
 
 .slot_time {
-  
+  text-align: center;
+  align-items: center;
+  border: 6px solid white; 
+  background-color: white;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+.finish_user {
+  width: 200px; 
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.792); 
+  border: none; 
+  cursor: pointer;
+  color: white;
 }
