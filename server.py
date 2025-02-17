@@ -1208,7 +1208,7 @@ def get_rankins_info():
                 return jsonify({'message': "Error, el archivo está vacío"}), 400
 
     else:
-        return jsonify({'message': f"Error, no se encontró la información de los rankins del {block_id}"}), 400
+        return jsonify({'message': f"Error, no se encontró la información de los rankins del {block_id}"}), 500
 
 
 

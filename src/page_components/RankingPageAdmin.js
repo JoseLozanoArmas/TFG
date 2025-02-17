@@ -57,7 +57,7 @@ export const RankingPageAdmin = () => {
     navigate(`/ranking_internal_page/${id}`)
   }
 
-  localStorage.clear()
+  // localStorage.clear()
 
   return (
     <div className="App_ranking_general_page">

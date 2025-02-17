@@ -38,7 +38,9 @@ export const RankingInternalPage = () => {
         if (response.ok) {
           setSaveJson(JSON.parse(data.data));
         } else {
-          alert(`Error: ${data.message}`);
+          if (response.status !== 500) {
+            alert(`Error: ${data.message}`);
+          }
         }
       } catch (error) {
         alert('Error al conectar con el servidor.');
