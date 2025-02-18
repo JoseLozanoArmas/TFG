@@ -346,47 +346,38 @@ def regist_question_button():
     end_question = "      }"
     end_document = "\n}"
     content = line_block_id + line_question_id + line_label + line_name + end_entry
-    search_block = r"\"block_" + str(block_id) + r"\"\s*:\s*{"
-    search_question = r"\"block_" + str(block_id) + "\"(.|\n)*?\"question_" + str(question_id - 1) + "\"(.|\n)*?}"
+    search_block = r"\"block_" + str(block_id) + "\"(.|\n)*?}\n*\s*}"
 
     first_middle = ""
     second_middle = ""
     final_json = ""
 
     if os.path.exists(route_to_json_buttons_questions):  # Comprueba si el archivo existe en la ruta
-        with open(route_to_json_buttons_questions, 'r') as file:  
+        with open(route_to_json_buttons_questions, 'r') as file:
             lines = file.readlines()
             content = ''.join(lines)
             if lines:
-                find_current_block = re.search(search_block, content)
-                if find_current_block:
-                    find_current_question = re.search(search_question, content)
-                    if find_current_question:
-                        first_middle = content[:find_current_question.end()]
-                        new_content = "\n" + line_question_id + line_label + line_name + end_question
-                        second_middle = content[find_current_question.end():]
-                        final_json = first_middle + "," + new_content + second_middle
-                        with open(route_to_json_buttons_questions, 'w') as file:
-                            file.write(final_json)
-                    else:
-                        new_content = content[:-3]
-                        new_question_line = f"  \"question_" + str(question_id) + "\": {\n" + "        \"id\": " + str(question_id) + ",\n"
-                        new_end_doc = "\n    }\n}"
-                        new_content += new_question_line + line_label + line_name + end_question + new_end_doc
-                        with open(route_to_json_buttons_questions, 'w') as file:
-                            file.write(new_content)
+                find_block = re.search(search_block, content)
+                if find_block:
+                    first_middle = content[:find_block.end() - 6]
+                    new_content = ",\n" + line_question_id + line_label + line_name + end_question
+                    second_middle = content[find_block.end() - 6:]
+                    final_json = first_middle + new_content + second_middle
+                    with open(route_to_json_buttons_questions, "w") as file:
+                       file.write(final_json)
+                    return jsonify({'message': f'Archivo de preguntas actualizado'}), 200
                 else:
                     content = content[:-3]
-                    new_content = "\n" + line_question_id + line_label + line_name + end_question
-                    content += "},\n    \"block_" + str(block_id) + "\": {" + new_content + "\n    }\n}"
-                    with open(route_to_json_buttons_questions, 'w') as file:
+                    content += "},\n"
+                    content += line_block_id + line_question_id + line_label + line_name + end_entry + end_document
+                    with open(route_to_json_buttons_questions, "w") as file:
                         file.write(content)
-                return jsonify({'message': f'Registro de botones de preguntas actualizado'}), 200
+                    return jsonify({'message': f'Archivo de preguntas actualizado'}), 200
     else:
         with open(route_to_json_buttons_questions, 'w') as file:
             new_content = begin_document + content + end_document
             file.write(new_content)
-        return jsonify({'message': f'Archivo de botones de preguntas creado'}), 200
+        return jsonify({'message': f'Archivo creado'}), 200
 
 @app.route('/update-current-question', methods=["POST"])
 def update_current_question():
@@ -653,10 +644,6 @@ def delete_question_button_json():
     data = request.get_json()  
     block_id = data.get('text', '')
     question_id = data.get('question_id', '')
-
-    print(block_id)
-    print(question_id)
-
     search_block = r"\"" + block_id + r"\"\s*:\s*{"
     search_question = r"\"" + block_id + r"\"(.|\n)*?\"question_" + str(question_id) + r"\"(.|\n)*?}"
     search_question_in_cut = r",?\s*\"question_" + str(question_id) + r"\"(.|\n)*?}"
