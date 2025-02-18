@@ -346,7 +346,7 @@ def regist_question_button():
     end_question = "      }"
     end_document = "\n}"
     content = line_block_id + line_question_id + line_label + line_name + end_entry
-    search_block = r"\"block_" + str(block_id) + "\"(.|\n)*?}\n*\s*}"
+    search_block = r"\"block_" + str(block_id) + r"\"(.|\n)*?}\n*\s*}"
 
     first_middle = ""
     second_middle = ""
