@@ -1222,8 +1222,22 @@ def get_rankins_info():
     else:
         return jsonify({'message': f"Error, no se encontró la información de los rankins del {block_id}"}), 500
 
-
-
+@app.route('/get-info-question-test', methods=["POST"])
+def get_info_question_test(): 
+    data = request.get_json()
+    block_id = data.get('text', '')
+    question_name = data.get('question_name')
+    create_route = route_to_puntuations + "/" + block_id + "/" + question_name + "_puntuations.json"
+    if os.path.exists(create_route):
+        with open(create_route, "r") as file:
+            lines = file.read()
+            content = ''.join(lines)
+            if lines:
+                return jsonify({'data': content}), 200
+            else:
+                return jsonify({'message': "Error, el archivo está vacío"}), 400
+    else:
+        return jsonify({'message': f"Error, no se encontró la información de las pruebas"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
