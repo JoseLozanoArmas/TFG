@@ -644,41 +644,47 @@ def delete_question_button_json():
     data = request.get_json()  
     block_id = data.get('text', '')
     question_id = data.get('question_id', '')
-    search_block = r"\"" + block_id + r"\"\s*:\s*{"
-    search_question = r"\"" + block_id + r"\"(.|\n)*?\"question_" + str(question_id) + r"\"(.|\n)*?}"
-    search_question_in_cut = r",?\s*\"question_" + str(question_id) + r"\"(.|\n)*?}"
+    search_only_block = r"(.|\n)*?\"block_" + str(block_id) + r"(.|\n)*?{"
+    search_block_and_question = r"(.|\n)*?\"block_" + str(block_id) + r"(.|\n)*?\"question_" + str(question_id) + r"(.|\n)*?}"
+    search_block_and_question_before = r"(.|\n)*?\"block_" + str(block_id) + r"(.|\n)*?\"question_" + str(question_id - 1) + r"(.|\n)*?}"
     first_middle = ""
     second_middle = ""
     final_json = ""
     if os.path.exists(route_to_json_buttons_questions):  # Comprueba si el archivo existe en la ruta
-        with open(route_to_json_buttons_questions, 'r') as file:  
+        with open(route_to_json_buttons_questions, "r") as file:
             lines = file.readlines()
             content = ''.join(lines)
             if lines:
-                find_current_block = re.search(search_block, content)
-                if find_current_block:
-                    find_current_question = re.search(search_question, content)
-                    if find_current_question:
-                        first_middle = content[:find_current_question.end()]
-                        second_middle = content[find_current_question.end():]
-                        save_block_and_cuestion = find_current_question.group()
-                        find_question_in_cut = re.search(search_question_in_cut, save_block_and_cuestion)
-                        if find_question_in_cut:
-                            first_middle = first_middle[:-len(find_question_in_cut.group())]
+                if question_id != 1:
+                    find_block_and_question = re.search(search_block_and_question, content)
+                    if find_block_and_question:
+                        second_middle = content[find_block_and_question.end():] # NO TOCAR
+                        find_block_and_question_before = re.search(search_block_and_question_before, content)
+                        if find_block_and_question_before:
+                            first_middle = content[:find_block_and_question_before.end()]
                             final_json = first_middle + second_middle
-                            with open(route_to_json_buttons_questions, 'w') as file:
+                            with open(route_to_json_buttons_questions, "w") as file:
                                 file.write(final_json)
-                            return jsonify({'message': f'Botón de la pregunta \"question_{question_id}\" del bloque \"{block_id}\" eliminado'}), 200
+                            return jsonify({'message': f'Última pregunta del eliminada del JSON de registro'}), 200
                         else:
-                            return jsonify({'message': f'Error inesperado al localizar la pregunta a eliminar'}), 400
+                            return jsonify({'message': f'Error inesperado al eliminar botón de pregunta'}), 400
                     else:
-                        return jsonify({'message': f'Error, no se encontró la pregunta a eliminar'}), 400
+                        return jsonify({'message': f'Error inesperado al eliminar botón de pregunta'}), 400
                 else:
-                    return jsonify({'message': f'Error, no se encontró el bloque de la pregunta a eliminar'}), 400
-            else:
-                return jsonify({'message': f'Error, no se encontró contenido a eliminar'}), 400
-    else:
-        return jsonify({'message': f'Error, no se encontró el archivo de registro'}), 400
+                    find_block_and_question = re.search(search_block_and_question, content)
+                    if find_block_and_question:
+                        second_middle = content[find_block_and_question.end():] # NO TOCAR
+                        find_only_block = re.search(search_only_block, content)
+                        if find_only_block:
+                            first_middle = content[:find_only_block.end()]
+                            final_json = first_middle + second_middle
+                            with open(route_to_json_buttons_questions, "w") as file:
+                                file.write(final_json)
+                            return jsonify({'message': f'Última pregunta del eliminada del JSON de registro'}), 200
+                        else:
+                            return jsonify({'message': f'Error inesperado al eliminar botón de pregunta'}), 400
+                    else:
+                        return jsonify({'message': f'Error inesperado al eliminar botón de pregunta'}), 400
 
 @app.route('/update-route-img', methods=["POST"])
 def uptdate_route_img():

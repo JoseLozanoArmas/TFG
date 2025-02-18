@@ -186,7 +186,7 @@ export const BlockInternalAdminPage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          text: current_block_name,
+          text: current_block_name[current_block_name.length - 1],
           question_id: question_id, 
         }),
       });
