@@ -516,6 +516,18 @@ def delete_last_block_folder_admin():
         return jsonify({'message': f'Carpeta eliminada con éxito en {folder_path}'}), 200
     else:
         return jsonify({'message': 'Texto vacío, no se puede eliminar carpeta'}), 400
+    
+@app.route('/delete-last-ranking-block-json', methods=["POST"])
+def delete_last_ranking_block_json():
+    data = request.get_json()  
+    block_name = data.get('text', '') 
+    block_name = "block_" + block_name
+    create_route = route_to_rankings_info + "/" + block_name + ".json"
+    if os.path.exists(create_route):
+        os.unlink(create_route)
+        return jsonify({'message': f'Fichero eliminado con éxito en {create_route}'}), 200
+    else:
+        return jsonify({'message': f'Error, no se encontró fichero a borrar'}), 400
      
 @app.route('/delete-last-student-register', methods=["POST"]) # Eliminar la carpeta del último bloque de preguntas del registro de estudiantes
 def delete_last_student_register():
