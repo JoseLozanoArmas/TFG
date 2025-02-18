@@ -347,6 +347,8 @@ def regist_question_button():
     end_document = "\n}"
     content = line_block_id + line_question_id + line_label + line_name + end_entry
     search_block = r"\"block_" + str(block_id) + r"\"(.|\n)*?}\n*\s*}"
+    search_previos_question = r"\"block_" + str(block_id) + r"(.|\n)*?\"question_" + str(question_id - 1) + r"(.|\n)*?}"
+    search_all_content = r"(.|\n)*?\"block_" + str(block_id) + r"(.|\n)*?{"
 
     first_middle = ""
     second_middle = ""
@@ -359,25 +361,39 @@ def regist_question_button():
             if lines:
                 find_block = re.search(search_block, content)
                 if find_block:
-                    first_middle = content[:find_block.end() - 6]
-                    new_content = ",\n" + line_question_id + line_label + line_name + end_question
-                    second_middle = content[find_block.end() - 6:]
-                    final_json = first_middle + new_content + second_middle
-                    with open(route_to_json_buttons_questions, "w") as file:
-                       file.write(final_json)
-                    return jsonify({'message': f'Archivo de preguntas actualizado'}), 200
+                    find_previous_question = re.search(content, search_previos_question)
+                    if find_previous_question:
+                        first_middle = content[:find_block.end() - 6]
+                        new_content = ",\n" + line_question_id + line_label + line_name + end_question
+                        second_middle = content[find_block.end() - 6:]
+                        final_json = first_middle + new_content + second_middle
+                        with open(route_to_json_buttons_questions, "w") as file:
+                            file.write(final_json)
+                        return jsonify({'message':'Archivo actualizado'}), 200
+                    else:
+                        find_all_content = re.search(search_all_content, content)
+                        if find_all_content:
+                            first_middle = content[:find_all_content.end()]
+                            new_content = "\n" + line_question_id + line_label + line_name + end_question
+                            second_middle = content[find_all_content.end():]
+                            final_json = first_middle + new_content + second_middle
+                            with open(route_to_json_buttons_questions, "w") as file:
+                                file.write(final_json)
+                            return jsonify({'message':'Archivo actualizado'}), 200
+                        else:
+                            return jsonify({'message':'Error inesperado'}), 400
                 else:
                     content = content[:-3]
                     content += "},\n"
                     content += line_block_id + line_question_id + line_label + line_name + end_entry + end_document
                     with open(route_to_json_buttons_questions, "w") as file:
                         file.write(content)
-                    return jsonify({'message': f'Archivo de preguntas actualizado'}), 200
+                    return jsonify({'message':'Archivo actualizado'}), 200
     else:
         with open(route_to_json_buttons_questions, 'w') as file:
             new_content = begin_document + content + end_document
             file.write(new_content)
-        return jsonify({'message': f'Archivo creado'}), 200
+        return jsonify({'message':'Archivo creado'}), 200
 
 @app.route('/update-current-question', methods=["POST"])
 def update_current_question():
