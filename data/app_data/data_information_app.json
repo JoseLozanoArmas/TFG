@@ -24,5 +24,8 @@
 {
     "block_1": {
       "img": "src/img/logo_ull.png"
+    },
+    "block_2": {
+      "img": "src/img/logo_ull.png"
     }
 }

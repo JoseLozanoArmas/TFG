@@ -4,6 +4,28 @@
         "id": 1,
         "label": "Pregunta 1",
         "name": "block_1_question_1"
+      },
+      "question_2": {
+        "id": 2,
+        "label": "Pregunta 2",
+        "name": "block_1_question_2"
+      }
+    },
+    "block_2": {
+      "question_1": {
+        "id": 1,
+        "label": "Pregunta 1",
+        "name": "block_2_question_1"
+      },
+      "question_2": {
+        "id": 2,
+        "label": "Pregunta 2",
+        "name": "block_2_question_2"
+      },
+      "question_3": {
+        "id": 3,
+        "label": "Pregunta 3",
+        "name": "block_2_question_3"
       }
     }
 }
