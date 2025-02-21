@@ -202,6 +202,29 @@ export const BlockInternalAdminPage = () => {
       console.error(error);
     }
 
+    try { // Borramos de data_information_app la pregunta
+      const response = await fetch(route_to_server + 'delete-question-regist-admin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          text: current_block_name[current_block_name.length - 1],
+          question_id: question_id
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        if (response.status !== 500) {
+          alert(`Error: ${data.message}`);
+        }
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error); 
+    }
 
   };
 

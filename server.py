@@ -682,6 +682,53 @@ def delete_last_question_admin():
         return jsonify({'message': f'Última pregunta del bloque block_{block_id} eliminada del JSON de registro'}), 200
     else:
         return jsonify({'message': f'Error, no se pudo encontrar el fichero de registro debido'}), 500
+
+@app.route('/delete-question-regist-admin', methods=["POST"])
+def delete_question_regist_admin():
+    data = request.get_json()  
+    block_id = data.get('text', '')
+    question_id = data.get('question_id', '')
+    search_block = r"(.|\n)*?\"block_" + str(block_id) + r"\"(.|\n)*?}(\n|\s)*?}"
+    previous_id = int(question_id) - 1
+    search_question = r"(.|\n)*?\"block_" + str(block_id) + r"\"(.|\n)*?\"question_" + str(question_id) + r"(.|\n)*?}"
+    search_question_before = r"(.|\n)*?\"block_" + str(block_id) + r"\"(.|\n)*?\"question_" + str(previous_id) + r"(.|\n)*?}"
+    search_img = r"(.|\n)*?\"block_" + str(block_id) + r"\"(.|\n)*?\"img\".*?,"
+    first_middle = ""
+    second_middle = ""
+    final_json = ""
+    if os.path.exists(route_to_data_json_block_and_question):
+        with open(route_to_data_json_block_and_question, "r") as file:
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines:
+                find_block = re.search(search_block, content)
+                if find_block:
+                    find_question = re.search(search_question, content)
+                    if not find_question:
+                        return jsonify({'message': f'Error, no se encontró la pregunta a borrar'}), 500
+                    question_id = int(question_id)
+                    if question_id != 1:
+                        find_question_before = re.search(search_question_before, content)
+                        first_middle = content[:find_question_before.end()]
+                        new_end = "\n    }"
+                        second_middle = content[find_block.end():]
+                        final_json = first_middle + new_end + second_middle
+                        with open(route_to_data_json_block_and_question, "w") as file:
+                            file.write(final_json)
+                        return jsonify({'message': f'Última pregunta eliminada del JSON de registro'}), 200
+                    else:
+                        find_img = re.search(search_img, content)
+                        first_middle = content[:find_img.end() - 1]
+                        new_end = "\n    }"
+                        second_middle = content[find_block.end():]
+                        final_json = first_middle + new_end + second_middle
+                        with open(route_to_data_json_block_and_question, "w") as file:
+                            file.write(final_json)
+                        return jsonify({'message': f'Última pregunta eliminada del JSON de registro'}), 200
+                else:
+                    return jsonify({'message': f'Error, no encontró el bloque'}), 400
+    else:
+        return jsonify({'message': f'Error, no encontró el fichero de registro'}), 400
  
 @app.route('/delete-question-button-json', methods=["POST"])
 def delete_question_button_json():

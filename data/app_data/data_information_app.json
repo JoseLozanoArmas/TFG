@@ -1,25 +1,5 @@
 {
     "block_1": {
-      "img": "src/img/logo_ull.png",
-      "question_1": {
-        "tittle": "pruebar",
-        "description": "pruebar"
-      },
-      "question_2": {
-        "tittle": "f",
-        "description": "f"
-      }
-    },
-    "block_2": {
-      "img": "src/img/logo_ull.png",
-      "question_1": {
-        "tittle": "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-        "description": "frfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffpopopopopopoppop
-hugugugugugugu"
-      },
-      "question_2": {
-        "tittle": "hola",
-        "description": "prueba"
-      }
+      "img": "src/img/logo_ull.png"
     }
 }
