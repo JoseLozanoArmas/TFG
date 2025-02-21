@@ -290,45 +290,73 @@ def regist_question_admin():
     question_id = data.get('question_id', '')
     tittle = data.get('tittle', '')
     description = data.get('description','')
-    search_current_block_and_img = r"\"block_" + str(block_id) + r"\"\s*:\s*{(.|\n)*?\"img\"\s*:\s*\".*\"" # funciona
-    search_last_question = r"\"block_" + str(block_id) + r"\":\s*{\s*\n*.*\n*(.|\n)*?\"question.*" + str(question_id) + "\"(.|\n)*?}"
-    upgrade = int(question_id)
-    upgrade += 1
-    new_question = ",\n      \"question_" + str(upgrade) + "\": {\n"
-    current_question = ",\n      \"question_" + str(question_id) + "\": {\n"
-    new_tittle = "        \"tittle\": \"" + tittle + "\",\n"
-    new_description = "        \"description\": \"" + description + "\"\n"
-    end_question = "      }"
-    new_content = new_question + new_tittle + new_description + end_question
-    first_content = current_question + new_tittle + new_description + end_question
-    first_midle_json = ""
-    second_midle_json = ""
+    search_block = r"(.|\n)*\"block_" + str(block_id) + r"(.|\n)*?}"
+    search_question = r"(.|\n)*\"block_" + str(block_id) + r"(.|\n)*?\"question_" + str(question_id) + r"(.|\n)*?}"
+    previous_id = int(question_id) - 1
+    search_question_before = r"(.|\n)*\"block_" + str(block_id) + r"(.|\n)*?\"question_" + str(previous_id) + r"(.|\n)*?}"
+    search_block_and_img = r"(.|\n)*\"block_" + str(block_id) + r"(.|\n)*?\"img\":.*"
+    question_line = "      \"question_" + str(question_id) + "\": {\n"
+    tittle_line = "        \"tittle\": \"" + tittle + "\",\n"
+    description_line = "        \"description\": \"" + description + "\"\n"
+    end_question = "      }\n"
+    end_updated_question = "      }"
+    first_middle = ""
+    second_middle = ""
     final_json = ""
-
-    if os.path.exists(route_to_data_json_block_and_question):  # Comprueba si el archivo existe en la ruta
-        with open(route_to_data_json_block_and_question, 'r') as file: # Guardamos y leemos el archivo
+    if os.path.exists(route_to_data_json_block_and_question):
+        with open(route_to_data_json_block_and_question, "r") as file:
             lines = file.readlines()
             content = ''.join(lines)
-            if lines: 
-                find_last_question = re.search(search_last_question, content) # Comprobamos que en el bloque que buscamos haya al menos una pregunta
-                if find_last_question:
-                    first_midle_json = content[:find_last_question.end()]
-                    second_midle_json = content[find_last_question.end():]
-                    final_json = first_midle_json + new_content + second_midle_json
-                else:
-                    find_current_block = re.search(search_current_block_and_img, content)
-                    if find_current_block:
-                        first_midle_json = content[:find_current_block.end()]
-                        second_midle_json = content[find_current_block.end():]
-                        final_json = first_midle_json + first_content + second_midle_json
-                    else:
-                        return jsonify({'message': 'Texto vacío, no se puede registrar la pregunta'}), 400
-        with open(route_to_data_json_block_and_question, 'w') as file:
-            file.write(final_json)
-            return jsonify({'message': f'Pregunta registrada con éxito'}), 200
+            if lines:
+                find_question = re.search(search_question, content)
+                if find_question: # Opción para actualizar la pregunta
+                    find_previous_question = re.search(search_question_before, content)
+                    if find_previous_question: # Existe al menos una pregunta
+                        first_middle = content[:find_previous_question.end()]
+                        new_content = ",\n" + question_line + tittle_line + description_line + end_updated_question
+                        second_middle = content[find_question.end():]
+                        final_json = first_middle + new_content + second_middle
+                        with open(route_to_data_json_block_and_question, "w") as file:
+                            file.write(final_json)
+                        return jsonify({'message':'Pregunta actualizada'}), 200
+                    else: # Es la primera pregunta
+                        find_block = re.search(search_block, content)
+                        find_block_img = re.search(search_block_and_img, content)
+                        if find_block and find_block_img:
+                            first_middle = content[:find_block_img.end()]
+                            new_content = "\n" + question_line + tittle_line + description_line + end_updated_question
+                            second_middle = content[find_block.end():]
+                            final_json = first_middle + new_content + second_middle
+                            with open(route_to_data_json_block_and_question, "w") as file:
+                                file.write(final_json)
+                            return jsonify({'message':'Pregunta actualizada'}), 200
+                        else:
+                            return jsonify({'message':'Error, hubo un problema al intentar acceder a los contenidos del bloque'}), 400
+                else: # Opción de añadir la pregunta
+                    find_previous_question = re.search(search_question_before, content)
+                    if find_previous_question: # Existe al menos una pregunta
+                        first_middle = content[:find_previous_question.end()]
+                        new_content = ",\n" + question_line + tittle_line + description_line + end_question
+                        second_middle = content[find_previous_question.end() + 1:]
+                        final_json = first_middle + new_content + second_middle
+                        with open(route_to_data_json_block_and_question, "w") as file:
+                            file.write(final_json)
+                        return jsonify({'message':'Pregunta añadida'}), 200
+                    else: # Primera pregunta
+                        find_block_img = re.search(search_block_and_img, content)
+                        if find_block_img:
+                            first_middle = content[:find_block_img.end()]
+                            new_content = ",\n" + question_line + tittle_line + description_line + end_question
+                            second_middle = content[find_block_img.end() + 1:]
+                            final_json = first_middle + new_content + second_middle
+                            with open(route_to_data_json_block_and_question, "w") as file:
+                                file.write(final_json)
+                            return jsonify({'message':'Pregunta añadida'}), 200
+                        else:
+                            return jsonify({'message':'Error, al intentar añadir nueva entrada'}), 400
     else:
-        # Crear el archivo si no existe
-        return jsonify({'message': 'Error, no se pudo encontrar el fichero de registro debido'}), 400
+        return jsonify({'message':'Error, no se encontró el documento'}), 400
+    
 
 @app.route('/regist-question-button', methods=["POST"])
 def regist_question_button():

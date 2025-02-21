@@ -36,7 +36,6 @@ export const QuestionPageAdmin = () => {
   const content_of_button_admin_enter_file = "Suba una entrada";
   const content_of_button_admin_result_file = "Suba el resultado esperado";
   const content_of_button_user = "Suba su código";
-  let activate_function_update = false
 
   const [buttons, setButtons] = useState(() => {
     const savedButtons = localStorage.getItem(`button_${id}`);
@@ -214,55 +213,29 @@ export const QuestionPageAdmin = () => {
 
     let get_block_id = block_name[block_name.length - 1]
     let get_question_id = question_name[question_name.length - 1]
-    if (activate_function_update === false) {
-      activate_function_update = true
-      try { // Guardamos la info de la pregunta en el JSON de registro
-        const response = await fetch(route_to_server + 'regist-question-admin', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            text: get_block_id,
-            question_id: get_question_id, 
-            tittle: title,
-            description: description
-          }),
-        });
-        const data = await response.json();
-        if (response.ok) {
-          alert(data.message);
-        } else {
-          alert(`Error: ${data.message}`);
-        }
-      } catch (error) {
-        alert('Error al conectar con el servidor.');
-        console.error(error); 
+
+    try { // Guardamos la info de la pregunta en el JSON de registro
+      const response = await fetch(route_to_server + 'regist-question-admin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          text: get_block_id,
+          question_id: get_question_id, 
+          tittle: title,
+          description: description
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert(`Error: ${data.message}`);
       }
-    } else {
-      try { // Guardamos la info de la pregunta en el JSON de registro
-        const response = await fetch(route_to_server + 'update-current-question', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            text: get_block_id,
-            question_id: get_question_id, 
-            tittle: title,
-            description: description
-          }),
-        });
-        const data = await response.json();
-        if (response.ok) {
-          alert(data.message);
-        } else {
-          alert(`Error: ${data.message}`);
-        }
-      } catch (error) {
-        alert('Error al conectar con el servidor.');
-        console.error(error); 
-      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error); 
     }
 
     // Enviar archivos
