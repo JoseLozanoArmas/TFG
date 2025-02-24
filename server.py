@@ -1323,5 +1323,46 @@ def get_info_question_test():
     else:
         return jsonify({'message': f"Error, no se encontró la información de las pruebas"}), 500
 
+@app.route('/get-tittle-and-description', methods=["POST"]) 
+def get_tittle_and_description(): 
+    data = request.get_json()
+    block_id = data.get('text', '')
+    question_id = data.get('question_id', '')
+    search_block = r"\"block_" + str(block_id) + r"\"(.|\n)*?}(\n|\s)*?}"
+    search_question = r"\"question_" + str(question_id) + r"\"(.|\n)*?}"
+    search_tittle = r"\"tittle\":.*"
+    search_description = r"\"description\":.*"
+    begin_object = "{\n"
+    end_object = "}"
+    if os.path.exists(route_to_data_json_block_and_question):
+        with open(route_to_data_json_block_and_question, "r") as file:
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines:
+                find_block = re.search(search_block, content)
+                if find_block:
+                    find_question = re.search(search_question, find_block.group())
+                    if find_question:
+                        find_tittle = re.search(search_tittle, find_question.group())
+                        find_tittle = find_tittle.group()
+                        find_tittle = find_tittle.split(": ")[1]
+                        find_tittle = find_tittle[:-1]
+                        find_description = re.search(search_description, find_question.group())
+                        find_description = find_description.group()
+                        find_description = find_description.split(": ")[1]
+                        save_tittle = find_tittle.split('"')[1]
+                        save_description = find_description.split('"')[1]
+                        tittle_line = "  \"tittle\": \"" + save_tittle + "\",\n"
+                        description_line = "  \"description\": \"" + save_description + "\"\n"
+                        info_question = begin_object + tittle_line + description_line + end_object
+                        return jsonify({'data': info_question}), 200
+                        # meter condición para titulo y pregunta vacía?
+                    else:
+                        return jsonify({'message': "No se encontraron registros"}), 500
+                else:
+                    return jsonify({'message': 'Error, no se localizó el bloque'}), 400
+    else:
+        return jsonify({'message': 'Error, no se encontró el fichero del que tomar la información'}), 400
+
 if __name__ == '__main__':
     app.run(debug=True)

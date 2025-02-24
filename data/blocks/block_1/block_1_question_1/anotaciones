@@ -1,0 +1,3 @@
+Preguntar por la presentación compartida
+Explicarle que el codigo funciona de tal manera que el usuario tiene que imprimir por pantalla lo que se le indique, explicandole que se la idea es pasarle un dato por linea de parametros que será la entrada (es el fichero de entrada de las pruebas ya procesado) y que se comparará con un resultado esperado.
+El resultado cuando se imprima por pantalla NO DEBERÁ TENER SALTOS DE LÍNEA

@@ -13,22 +13,6 @@ export const QuestionPageAdmin = () => {
   const separate = id.split("_");
   const block = separate.slice(0, 2).join("_"); // Guardar el nombre del bloque
 
-  const [title, setTitle] = useState(() => {
-    const savedTittle = localStorage.getItem(`title_${id}`);
-    if (savedTittle) {
-      return JSON.parse(savedTittle);
-    } else {
-      return [];
-    }
-  }); 
-  const [description, setDescription] = useState(() => {
-    const savedDescription = localStorage.getItem(`description_${id}`);
-    if (savedDescription) {
-      return JSON.parse(savedDescription);
-    } else {
-      return [];
-    }
-  });
   const [uploadedFiles, setUploadedFiles] = useState({});
   const [block_name, setBlockName] = useState("");
   const [question_name, setQuestionName] = useState("");
@@ -65,10 +49,46 @@ export const QuestionPageAdmin = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(`title_${id}`, JSON.stringify(title));
-    localStorage.setItem(`description_${id}`, JSON.stringify(description));
     localStorage.setItem(`button_${id}`, JSON.stringify(buttons))
   })
+
+  const [title, setTitle] = useState()
+  const [description, setDescription] = useState()
+
+  useEffect(() => {
+    if (!block_name || !question_name) {
+      return;
+    }
+    const getTittleAndDescription = async () => {
+      try {
+        const response = await fetch(route_to_server + 'get-tittle-and-description', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            text: block_name[block_name.length - 1],
+            question_id: question_name[question_name.length - 1]
+          }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          let save_info = JSON.parse(data.data)
+          console.log(save_info)
+          setTitle(save_info["tittle"])
+          setDescription(save_info["description"])
+        } else {
+          if (response.status !== 500) {
+            alert(`Error: ${data.message}`);
+          }
+        }
+      } catch (error) {
+        alert('Error al conectar con el servidor.');
+        console.error(error); 
+      }
+    }
+    getTittleAndDescription();
+  }, [block_name, question_name])
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value); 
