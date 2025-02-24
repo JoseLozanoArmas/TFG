@@ -159,6 +159,12 @@ def upload_file():
     if file and allowed_file(file.filename):
         folder_path = "users_input/" + user_name + "/" + block_name + "/" + question_name # Carpeta del usuario (CAMBIAR RUTA)
         os.makedirs(folder_path, exist_ok = True)  # Crea el directorio si no existe
+
+        if (os.listdir(folder_path)): # En caso de que el usuario suba más de un código se borra el que ya estaba ahí
+            save_name = os.listdir(folder_path)[0]
+            temporal_path = folder_path + "/" + save_name
+            os.unlink(temporal_path)
+
         file_path = os.path.join(folder_path, file.filename)
         file.save(file_path)
         return jsonify({'message': f'Archivo {file.filename} subido con éxito'}), 200
