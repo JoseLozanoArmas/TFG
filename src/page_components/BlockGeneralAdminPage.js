@@ -395,6 +395,30 @@ export const BlockGeneralAdminPage = () => {
       console.error(error);
     }
 
+
+    try { // Llamamos al método que borra del registro al bloque del json de registro de botones
+      const response = await fetch(route_to_server + '/delete-block-in-question-button-json', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          text: button_id 
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        if (response.status !== 500) {
+          alert(`Error: ${data.message}`);
+        }
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error);
+    }
+
     try { // Eliminar la carpeta del último bloque
       const response = await fetch(route_to_server + 'delete-last-student-register', {
         method: 'POST',

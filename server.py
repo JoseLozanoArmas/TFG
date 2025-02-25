@@ -413,11 +413,18 @@ def regist_question_button():
                            file.write(final_json)
                         return jsonify({'message': f'Botón registrado'}), 200
                 else:
-                    content = content[:-2]
-                    new_content = content + ",\n" + begin_block + begin_question + id_line + label_line + name_line + end_question + end_block + end_doc
-                    with open(route_to_json_buttons_questions, "w") as file:
-                        file.write(new_content)
-                    return jsonify({'message': f'Botón registrado'}), 200
+                    if content == "{\n}":
+                        content = content[:-2]
+                        new_content = content + "\n" + begin_block + begin_question + id_line + label_line + name_line + end_question + end_block + end_doc
+                        with open(route_to_json_buttons_questions, "w") as file:
+                            file.write(new_content)
+                        return jsonify({'message': f'Botón registrado'}), 200
+                    else:
+                        content = content[:-2]
+                        new_content = content + ",\n" + begin_block + begin_question + id_line + label_line + name_line + end_question + end_block + end_doc
+                        with open(route_to_json_buttons_questions, "w") as file:
+                            file.write(new_content)
+                        return jsonify({'message': f'Botón registrado'}), 200
     else:
         new_content = begin_doc + begin_block + begin_question + id_line + label_line + name_line + end_question + end_block + end_doc
         with open(route_to_json_buttons_questions, "w") as file:
@@ -771,6 +778,41 @@ def delete_question_button_json():
                             return jsonify({'message': f'Error al intentar localizar el bloque'}), 400
                 else:
                     return jsonify({'message': f'Error, no se encontró el bloque de donde eliminar'}), 400
+    else:
+        return jsonify({'message': f'Error, no se encontró el archivo de registro'}), 400
+
+@app.route('/delete-block-in-question-button-json', methods=["POST"])
+def delete_block_in_question_button_json():
+    data = request.get_json()  
+    block_id = data.get('text', '')
+    search_block = r"(.|\n)*?\"block_" + str(block_id) + r"\"(.|\n)*?}(\s|\n)*?}"
+    previous_block = int(block_id) - 1
+    search_previous_block = r"(.|\n)*?\"block_" + str(previous_block) + r"\"(.|\n)*?}(\s|\n)*?}"
+    first_middle = ""
+    second_middle = ""
+    final_json = ""
+    if os.path.exists(route_to_json_buttons_questions):
+        with open(route_to_json_buttons_questions, "r") as file:
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines:
+                find_block = re.search(search_block, content)
+                if find_block:
+                    find_previous_block = re.search(search_previous_block, content)
+                    if find_previous_block:
+                        first_middle = content[:find_previous_block.end()]
+                        second_middle = content[find_block.end():]
+                        final_json = first_middle + second_middle
+                        with open(route_to_json_buttons_questions, "w") as file:
+                            file.write(final_json)
+                        return jsonify({'message': f'Último bloque eliminado del registro de botones de pregunta'}), 200
+                    else:
+                        content = "{\n}"
+                        with open(route_to_json_buttons_questions, "w") as file:
+                            file.write(content)
+                        return jsonify({'message': f'Último bloque eliminado del registro de botones de pregunta'}), 200
+                else:
+                    return jsonify({'message': f'Error, no se encontró el bloque a eliminar'}), 500
     else:
         return jsonify({'message': f'Error, no se encontró el archivo de registro'}), 400
 
