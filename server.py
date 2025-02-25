@@ -1431,7 +1431,7 @@ def get_questions_of_internal_block():
                     find_block = re.search(search_block, content)
                     if find_block:
                         save_block_content = find_block.group()
-                        find_begin_block = re.search(search_begin_block, content)
+                        find_begin_block = re.search(search_begin_block, save_block_content)
                         object_info = save_block_content[find_begin_block.end():]
                         object_info = procesate_object_info(object_info)
                         return jsonify({'data': object_info}), 200
