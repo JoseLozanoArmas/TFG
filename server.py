@@ -785,9 +785,8 @@ def delete_question_button_json():
 def delete_block_in_question_button_json():
     data = request.get_json()  
     block_id = data.get('text', '')
-    search_block = r"(.|\n)*?\"block_" + str(block_id) + r"\"(.|\n)*?}(\s|\n)*?}"
-    previous_block = int(block_id) - 1
-    search_previous_block = r"(.|\n)*?\"block_" + str(previous_block) + r"\"(.|\n)*?}(\s|\n)*?}"
+    search_block = r"\"block_" + str(block_id) + r"\"(.|\n)*?}(\s|\n)*?},?"
+    search_empty_block = r"\"block_" + str(block_id) + r"\".*?{(\s|\n)*?},?"
     first_middle = ""
     second_middle = ""
     final_json = ""
@@ -796,23 +795,33 @@ def delete_block_in_question_button_json():
             lines = file.readlines()
             content = ''.join(lines)
             if lines:
-                find_block = re.search(search_block, content)
-                if find_block:
-                    find_previous_block = re.search(search_previous_block, content)
-                    if find_previous_block:
-                        first_middle = content[:find_previous_block.end()]
+                find_empty_block = re.search(search_empty_block, content)
+                if find_empty_block:
+                    first_middle = content[:find_empty_block.start() - 3]
+                    second_middle = content[find_empty_block.end():]
+                    final_json = first_middle + second_middle
+                    save_final = final_json[-3:]
+                    if save_final == ",\n}":
+                        final_json = final_json[:-3]
+                        final_json += "\n}"
+                    with open(route_to_json_buttons_questions, "w") as file:
+                        file.write(final_json)
+                    return jsonify({'message': f'Bloque eliminado del registro de botones de pregunta'}), 200
+                else:
+                    find_block = re.search(search_block, content)
+                    if find_block:
+                        first_middle = content[:find_block.start() - 3]
                         second_middle = content[find_block.end():]
                         final_json = first_middle + second_middle
+                        save_final = final_json[-3:]
+                        if save_final == ",\n}":
+                            final_json = final_json[:-3]
+                            final_json += "\n}"
                         with open(route_to_json_buttons_questions, "w") as file:
                             file.write(final_json)
-                        return jsonify({'message': f'Último bloque eliminado del registro de botones de pregunta'}), 200
+                        return jsonify({'message': f'Bloque eliminado del registro de botones de pregunta'}), 200
                     else:
-                        content = "{\n}"
-                        with open(route_to_json_buttons_questions, "w") as file:
-                            file.write(content)
-                        return jsonify({'message': f'Último bloque eliminado del registro de botones de pregunta'}), 200
-                else:
-                    return jsonify({'message': f'Error, no se encontró el bloque a eliminar'}), 500
+                        return jsonify({'message': f'Error, no se encontró el bloque a eliminar'}), 400
     else:
         return jsonify({'message': f'Error, no se encontró el archivo de registro'}), 400
 
