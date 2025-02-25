@@ -821,7 +821,7 @@ def delete_block_in_question_button_json():
                             file.write(final_json)
                         return jsonify({'message': f'Bloque eliminado del registro de botones de pregunta'}), 200
                     else:
-                        return jsonify({'message': f'Error, no se encontró el bloque a eliminar'}), 400
+                        return jsonify({'message': f'Error, no se encontró el bloque a eliminar'}), 500
     else:
         return jsonify({'message': f'Error, no se encontró el archivo de registro'}), 400
 
@@ -1411,6 +1411,54 @@ def get_tittle_and_description():
                     return jsonify({'message': 'Error, no se localizó el bloque'}), 400
     else:
         return jsonify({'message': 'Error, no se encontró el fichero del que tomar la información'}), 400
+
+@app.route('/get-questions-of-internal-block', methods=["POST"])
+def get_questions_of_internal_block():
+    data = request.get_json()
+    block_id = data.get('text', '')
+    search_begin_block = r"\"block_" + str(block_id) + r"\".*?{"
+    search_block = r"\"block_" + str(block_id) + r"\"(.|\n)*?}(\s|\n)*?}"
+    search_empty_block = r"\"block_" + str(block_id) + r"\".*?{(\s|\n)*?}"
+    if os.path.exists(route_to_json_buttons_questions):
+        with open(route_to_json_buttons_questions, "r") as file:
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines:
+                find_empty_block = re.search(search_empty_block, content)
+                if find_empty_block:
+                    return jsonify({'message': "No se encontró información del bloque"}), 500
+                else:
+                    find_block = re.search(search_block, content)
+                    if find_block:
+                        save_block_content = find_block.group()
+                        find_begin_block = re.search(search_begin_block, content)
+                        object_info = save_block_content[find_begin_block.end():]
+                        object_info = procesate_object_info(object_info)
+                        return jsonify({'data': object_info}), 200
+                    else:
+                        return jsonify({'message': "No se encontró información del bloque"}), 500
+    else:
+        return jsonify({'message': "Error, no se encontró el archivo de registro"}), 400
+
+def procesate_object_info(object_info): 
+    procesate_object = "[\n"
+    counter = 1
+    search_begin_question = r"\"question_" + str(counter) + r"\".*?{"
+    search_total_question = r"\"question_" + str(counter) + r"\"(.|\n)*?}"
+    while(re.search(search_begin_question, object_info)):
+        search_begin_question = r"\"question_" + str(counter) + r"\".*?{"
+        search_total_question = r"\"question_" + str(counter) + r"\"(.|\n)*?}"
+        find_begin_question = re.search(search_begin_question, object_info)
+        if find_begin_question:
+            find_question = re.search(search_total_question, object_info)
+            if find_question:
+                procesate_object += "    {\n"
+                procesate_object += object_info[find_begin_question.end() + 1:find_question.end()]
+                procesate_object += ",\n"
+        counter += 1
+    procesate_object = procesate_object[:-2]
+    procesate_object += "\n]"
+    return procesate_object
 
 if __name__ == '__main__':
     app.run(debug=True)

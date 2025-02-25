@@ -20,6 +20,39 @@ export const BlockInternalAdminPage = () => {
       return logo;
     }
   });
+
+  useEffect(() => {
+    if (!current_block_name) {
+      return;
+    }
+    const getInfoQuestionButtons = async() => {
+      try { // Llamamos al método que crea la carpeta del bloque del usuario
+        const response = await fetch(route_to_server + 'get-questions-of-internal-block', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            text: current_block_name[current_block_name.length - 1]
+          }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          let save_info = data.data
+          alert(save_info);
+        } else {
+          if (response.status !== 500) {
+            alert(`Error: ${data.message}`);
+          }
+        }
+      } catch (error) {
+        alert('Error al conectar con el servidor.');
+        console.error(error);
+      }
+    }
+    getInfoQuestionButtons();
+  },[current_block_name])
+
   const [buttons, setButtons] = useState(() => {
     const savedButtons = localStorage.getItem(`button_${id}`);
     if (savedButtons) {
