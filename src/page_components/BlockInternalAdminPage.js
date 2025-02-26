@@ -38,8 +38,7 @@ export const BlockInternalAdminPage = () => {
         });
         const data = await response.json();
         if (response.ok) {
-          let save_info = data.data
-          alert(save_info);
+          setButtons(JSON.parse(data.data));
         } else {
           if (response.status !== 500) {
             alert(`Error: ${data.message}`);
@@ -53,6 +52,9 @@ export const BlockInternalAdminPage = () => {
     getInfoQuestionButtons();
   },[current_block_name])
 
+  const [buttons, setButtons] = useState([])
+
+  /*
   const [buttons, setButtons] = useState(() => {
     const savedButtons = localStorage.getItem(`button_${id}`);
     if (savedButtons) {
@@ -61,6 +63,7 @@ export const BlockInternalAdminPage = () => {
       return [];
     }
   });
+  */
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [isMonitor, setIsMonitor] = useState(false);
@@ -263,8 +266,7 @@ export const BlockInternalAdminPage = () => {
 
   useEffect(() => {
     localStorage.setItem(`logo_${id}`, JSON.stringify(currentLogo));
-    localStorage.setItem(`button_${id}`, JSON.stringify(buttons));
-  }, [currentLogo, buttons]);
+  }, [currentLogo]);
 
 
   const ChangePermission = () => {
