@@ -365,11 +365,16 @@ export const QuestionPageAdmin = () => {
   
       const data = await regist.json();
       if (regist.ok) {
-        alert(data.data);
-        /*
-        let previous_route = "block_internal_admin_page/" + block_name
-        navigate(`/${previous_route}`)
-        */
+        if (data.data === false) {
+          alert("Error, no se pasaron todas las pruebas, porfavor vuelva a intentarlo");
+        } else{
+          alert("Felicidades ha pasado todas las pruebas!!")
+          alert("PENDIENTE LA FUNCIÓN")
+          /*
+          let previous_route = "block_internal_admin_page/" + block_name
+          navigate(`/${previous_route}`)
+          */
+        }
       } else {
         alert(`Error: ${data.message}`);
       }
