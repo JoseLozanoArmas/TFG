@@ -1039,34 +1039,27 @@ def filter_routes_to_tests_for_questions(block_id, question_id, user_file):
 # P6
 def check_if_the_code_pass_the_test(user_file, admin_enter, admin_result):
     result = ""
-    save_enter = ""
-    save_result = ""
-    with open(admin_enter, 'r') as file:
-        save_enter = file.read()
-    with open(admin_result, 'r') as file:
-        save_result = file.read()
-        
     if os.path.exists(user_file): # Comprobamos que el fichero existe
         files_pattern = r".*\.(py|cc?|rb|js)" # Con esta expresión regular gestionamos los ficheros
         if re.match(files_pattern, user_file): # En caso de que coincida se procede a evaluar las distintas opciones con las que se haya hecho match
             extension = re.findall(files_pattern, user_file)[0]  
             if extension == "py": # Funciona
-                result = subprocess.run(["python3", user_file, save_enter], capture_output = True, text = True)
+                result = subprocess.run(["python3", user_file, admin_enter], capture_output = True, text = True)
                 result = result.stdout
                 result = result[:-1] # Eliminamos el salto de línea que se genera por defect
             elif extension == "rb": # Funciona
-                result = subprocess.run(["ruby", user_file, save_enter], capture_output = True, text = True)
+                result = subprocess.run(["ruby", user_file, admin_enter], capture_output = True, text = True)
                 result = result.stdout
                 result = result[:-1] # Eliminamos el salto de línea que se genera por defect
             elif extension == "js": # Funciona
-                result = subprocess.run(["node", user_file, save_enter], capture_output = True, text = True)
+                result = subprocess.run(["node", user_file, admin_enter], capture_output = True, text = True)
                 result = result.stdout
                 result = result[:-1] # Eliminamos el salto de línea que se genera por defect
             elif extension == "c": # Funciona
                 executable_name = "a.out"
                 correct_compilation = subprocess.run(["g++", user_file, "-o", executable_name], capture_output = True)
                 if correct_compilation.returncode == 0: # En caso de que se haya podido compilar ejecutamos el resultado
-                    result = subprocess.run([f"./{executable_name}", save_enter], capture_output = True, text = True)
+                    result = subprocess.run([f"./{executable_name}", admin_enter], capture_output = True, text = True)
                     result = result.stdout
                     result = result[:-1] # Eliminamos el salto de línea que se genera por defecto
                 else:
@@ -1075,11 +1068,11 @@ def check_if_the_code_pass_the_test(user_file, admin_enter, admin_result):
                 executable_name = "a.out"
                 correct_compilation = subprocess.run(["g++", user_file, "-o", executable_name], capture_output = True)
                 if correct_compilation.returncode == 0: # En caso de que se haya podido compilar ejecutamos el resultado
-                    result = subprocess.run([f"./{executable_name}", save_enter], capture_output = True, text = True)
+                    result = subprocess.run([f"./{executable_name}", admin_enter], capture_output = True, text = True)
                     result = result.stdout
                 else:
                     return False
-            if result == save_result:
+            if result == admin_result:
                 return True
             else:
                 return False
@@ -1323,22 +1316,21 @@ def sort_users_puntuations_file(block_id): # REVISAR???
 def correct_user_enter():
     data = request.get_json()  
     username = data.get('text', '')
-    block_id = data.get('block_id', '')
+    block_name = data.get('block_name', '')
     question_id = data.get('question_id', '')
     question_name = data.get('question_name', '')
-    users_file = get_user_file(username, block_id, question_name)
+    users_file = get_user_file(username, block_name, question_name)
     if len(users_file) == 0:
         return jsonify({'message': "Error, no se encontró la entrada del usuario"}), 400
-    save_tests_current_question = read_puntuations_regist(block_id, question_name)
+    save_tests_current_question = read_puntuations_regist(block_name, question_name)
     if len(save_tests_current_question) == 0:
         return jsonify({'message': "Error, no se encontraron pruebas"}), 400
     for i in range(len(save_tests_current_question)):
         temporal_save_enter_file = save_tests_current_question[i]["enter_file"].split('"')[1]
         temporal_save_result_file = save_tests_current_question[i]["result_file"].split('"')[1]
-        if check_if_the_code_pass_the_test(users_file, temporal_save_enter_file, temporal_save_result_file):
-            return jsonify({'data': True}), 200
-        else:
+        if check_if_the_code_pass_the_test(users_file, temporal_save_enter_file, temporal_save_result_file) == False:
             return jsonify({'data': False}), 200
+    return jsonify({'data': True}), 200
 
  
 # Lecturas de JSON

@@ -347,6 +347,8 @@ export const QuestionPageAdmin = () => {
       console.error(error);
     }
 
+    navigate(`/${question_name}`)
+
     try {
       const regist = await fetch(route_to_server + 'correct-user-enter', {
         method: 'POST',
@@ -355,7 +357,7 @@ export const QuestionPageAdmin = () => {
         },
         body: JSON.stringify({ 
           text: userName,
-          block_id: block_name[block_name.length - 1],
+          block_name: block_name,
           question_id: question_name[question_name.length - 1],
           question_name: question_name
         }),
@@ -363,7 +365,7 @@ export const QuestionPageAdmin = () => {
   
       const data = await regist.json();
       if (regist.ok) {
-        alert(data.message);
+        alert(data.data);
         /*
         let previous_route = "block_internal_admin_page/" + block_name
         navigate(`/${previous_route}`)
