@@ -1,7 +1,7 @@
 [
   {
-    "enter_file": "data/blocks/block_1/block_1_question_1/unnamed.jpg",
-    "result_file": "data/blocks/block_1/block_1_question_1/unnamed.jpg",
+    "enter_file": "data/blocks/block_1/block_1_question_1/fichero_entrada.txt",
+    "result_file": "data/blocks/block_1/block_1_question_1/fichero_resultado.txt",
     "puntuation": 1
   }
 ]

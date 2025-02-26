@@ -1007,6 +1007,7 @@ def get_user_file(user_name, block_id, question_name):
     create_route_files = route_to_users_input + "/" + user_name + "/" + block_id + "/" + question_name # Comprobamos que la dirección del usuario existe
     if os.path.exists(create_route_files): 
         users_file = os.listdir(create_route_files)[0]
+        users_file = create_route_files + "/" + users_file
     else:
         return jsonify({'message': 'Hubo un error durante el procesado de los datos, vuelva a intentarlo'}), 400     
     return users_file
@@ -1036,50 +1037,7 @@ def filter_routes_to_tests_for_questions(block_id, question_id, user_file):
             tests_to_use.append(save_route_to_test[i])
     return tests_to_use
 
-# P6
-def check_if_the_code_pass_the_test(user_file, admin_enter, admin_result):
-    result = ""
-    if os.path.exists(user_file): # Comprobamos que el fichero existe
-        files_pattern = r".*\.(py|cc?|rb|js)" # Con esta expresión regular gestionamos los ficheros
-        if re.match(files_pattern, user_file): # En caso de que coincida se procede a evaluar las distintas opciones con las que se haya hecho match
-            extension = re.findall(files_pattern, user_file)[0]  
-            if extension == "py": # Funciona
-                result = subprocess.run(["python3", user_file, admin_enter], capture_output = True, text = True)
-                result = result.stdout
-                result = result[:-1] # Eliminamos el salto de línea que se genera por defect
-            elif extension == "rb": # Funciona
-                result = subprocess.run(["ruby", user_file, admin_enter], capture_output = True, text = True)
-                result = result.stdout
-                result = result[:-1] # Eliminamos el salto de línea que se genera por defect
-            elif extension == "js": # Funciona
-                result = subprocess.run(["node", user_file, admin_enter], capture_output = True, text = True)
-                result = result.stdout
-                result = result[:-1] # Eliminamos el salto de línea que se genera por defect
-            elif extension == "c": # Funciona
-                executable_name = "a.out"
-                correct_compilation = subprocess.run(["g++", user_file, "-o", executable_name], capture_output = True)
-                if correct_compilation.returncode == 0: # En caso de que se haya podido compilar ejecutamos el resultado
-                    result = subprocess.run([f"./{executable_name}", admin_enter], capture_output = True, text = True)
-                    result = result.stdout
-                    result = result[:-1] # Eliminamos el salto de línea que se genera por defecto
-                else:
-                    return False
-            elif extension == "cc": # Funciona
-                executable_name = "a.out"
-                correct_compilation = subprocess.run(["g++", user_file, "-o", executable_name], capture_output = True)
-                if correct_compilation.returncode == 0: # En caso de que se haya podido compilar ejecutamos el resultado
-                    result = subprocess.run([f"./{executable_name}", admin_enter], capture_output = True, text = True)
-                    result = result.stdout
-                else:
-                    return False
-            if result == admin_result:
-                return True
-            else:
-                return False
-        else: # Si no coincide se retorna como falso (no está admitido)
-            return False
-    else: # En caso de que el fichero no exista mandamos aviso
-        return jsonify({'message': "Error inesperado"}), 400
+
 
 def read_puntuations_regist(block_id, question_id): 
     create_route_to_file = "data/puntuations/" + block_id + "/" + question_id + "_puntuations.json"
@@ -1331,6 +1289,58 @@ def correct_user_enter():
         if check_if_the_code_pass_the_test(users_file, temporal_save_enter_file, temporal_save_result_file) == False:
             return jsonify({'data': False}), 200
     return jsonify({'data': True}), 200
+
+
+# P6
+def check_if_the_code_pass_the_test(user_file, admin_enter, admin_result):
+    save_result = ""
+    with open(admin_result, "r") as file:
+        save_result = file.readlines()
+        save_result = ''.join(save_result)
+    result = ""
+    if os.path.exists(user_file): # Comprobamos que el fichero existe
+        files_pattern = r".*\.(py|cc?|rb|js)" # Con esta expresión regular gestionamos los ficheros
+        if re.match(files_pattern, user_file): # En caso de que coincida se procede a evaluar las distintas opciones con las que se haya hecho match
+            extension = re.findall(files_pattern, user_file)[0]  
+            if extension == "py": # Funciona
+                result = subprocess.run(["python3", user_file, admin_enter], capture_output = True, text = True)
+                result = result.stdout
+                result = result[:-1] # Eliminamos el salto de línea que se genera por defect
+            elif extension == "rb": # Funciona
+                result = subprocess.run(["ruby", user_file, admin_enter], capture_output = True, text = True)
+                result = result.stdout
+                result = result[:-1] # Eliminamos el salto de línea que se genera por defect
+            elif extension == "js": # Funciona
+                result = subprocess.run(["node", user_file, admin_enter], capture_output = True, text = True)
+                result = result.stdout
+                result = result[:-1] # Eliminamos el salto de línea que se genera por defect
+            elif extension == "c": # Funciona
+                executable_name = "a.out"
+                correct_compilation = subprocess.run(["g++", user_file, "-o", executable_name], capture_output = True)
+                if correct_compilation.returncode == 0: # En caso de que se haya podido compilar ejecutamos el resultado
+                    result = subprocess.run([f"./{executable_name}", admin_enter], capture_output = True, text = True)
+                    result = result.stdout
+                    result = result[:-1] # Eliminamos el salto de línea que se genera por defecto
+                else:
+                    return False
+            elif extension == "cc": # Funciona
+                executable_name = "a.out"
+                correct_compilation = subprocess.run(["g++", user_file, "-o", executable_name], capture_output = True)
+                if correct_compilation.returncode == 0: # En caso de que se haya podido compilar ejecutamos el resultado
+                    result = subprocess.run([f"./{executable_name}", admin_enter], capture_output = True, text = True)
+                    result = result.stdout
+                    result = result[:-1]
+                else:
+                    return False
+        else: # Si no coincide se retorna como falso (no está admitido)
+            return False
+
+        if result == save_result:
+            return True
+        else:
+            return False
+    else: # En caso de que el fichero no exista mandamos aviso
+        return jsonify({'message': "Error inesperado"}), 400
 
  
 # Lecturas de JSON
