@@ -1,6 +1,10 @@
 {
     "block_1": {
-      "img": "src/img/logo_ull.png"
+      "img": "src/img/logo_ull.png",
+      "question_1": {
+        "tittle": "hy",
+        "description": "h"
+      }
     },
     "block_2": {
       "img": "src/img/logo_ull.png"

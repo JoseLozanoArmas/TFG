@@ -335,8 +335,39 @@ export const QuestionPageAdmin = () => {
       const data = await response.json();
       if (response.ok) {
         alert(data.message);
+        /*
         let previous_route = "block_internal_admin_page/" + block_name
         navigate(`/${previous_route}`)
+        */
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor.');
+      console.error(error);
+    }
+
+    try {
+      const regist = await fetch(route_to_server + 'correct-user-enter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          text: userName,
+          block_id: block_name[block_name.length - 1],
+          question_id: question_name[question_name.length - 1],
+          question_name: question_name
+        }),
+      });
+  
+      const data = await regist.json();
+      if (regist.ok) {
+        alert(data.message);
+        /*
+        let previous_route = "block_internal_admin_page/" + block_name
+        navigate(`/${previous_route}`)
+        */
       } else {
         alert(`Error: ${data.message}`);
       }

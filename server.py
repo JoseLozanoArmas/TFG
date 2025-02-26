@@ -1002,6 +1002,15 @@ def save_all_user_routes_files(user_name, block_id):
     users_files.sort()
     return users_files
 
+def get_user_file(user_name, block_id, question_name): 
+    users_file = ""
+    create_route_files = route_to_users_input + "/" + user_name + "/" + block_id + "/" + question_name # Comprobamos que la dirección del usuario existe
+    if os.path.exists(create_route_files): 
+        users_file = os.listdir(create_route_files)[0]
+    else:
+        return jsonify({'message': 'Hubo un error durante el procesado de los datos, vuelva a intentarlo'}), 400     
+    return users_file
+
 # P5
 def localize_all_questions(block_id):
     all_questions = []
@@ -1309,6 +1318,28 @@ def sort_users_puntuations_file(block_id): # REVISAR???
                 file.write(end_doc)
     else:
         return jsonify({'message': "Error, no se encontró el documento"}), 400
+
+@app.route('/correct-user-enter', methods=["POST"])
+def correct_user_enter():
+    data = request.get_json()  
+    username = data.get('text', '')
+    block_id = data.get('block_id', '')
+    question_id = data.get('question_id', '')
+    question_name = data.get('question_name', '')
+    users_file = get_user_file(username, block_id, question_name)
+    if len(users_file) == 0:
+        return jsonify({'message': "Error, no se encontró la entrada del usuario"}), 400
+    save_tests_current_question = read_puntuations_regist(block_id, question_name)
+    if len(save_tests_current_question) == 0:
+        return jsonify({'message': "Error, no se encontraron pruebas"}), 400
+    for i in range(len(save_tests_current_question)):
+        temporal_save_enter_file = save_tests_current_question[i]["enter_file"].split('"')[1]
+        temporal_save_result_file = save_tests_current_question[i]["result_file"].split('"')[1]
+        if check_if_the_code_pass_the_test(users_file, temporal_save_enter_file, temporal_save_result_file):
+            return jsonify({'data': True}), 200
+        else:
+            return jsonify({'data': False}), 200
+
  
 # Lecturas de JSON
 @app.route('/get-data-blocks-buttons-json', methods=["GET"])
