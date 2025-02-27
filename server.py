@@ -1025,6 +1025,27 @@ def localize_all_questions(block_id):
     all_questions.sort()
     return all_questions
 
+@app.route('/localize-all-questions-server', methods=["POST"])
+def localize_all_questions_server():
+    data = request.get_json()
+    block_name = data.get('text', '')
+    final_json = "[\n"
+    all_questions = []
+    route_to_tests = route_to_admins_and_monitors_tests + "/" + block_name # Guardamos la dirección a los tests
+    if os.path.exists(route_to_tests): 
+        save_route_to_questions = os.listdir(route_to_tests)
+        for i in range(len(save_route_to_questions)):
+            all_questions.append(save_route_to_questions[i])
+        all_questions.sort()
+        for i in range(len(all_questions)):
+            new_entrance = "  {\n    \"question_id\": \"Pregunta " + str(all_questions[i][-1]) + "\"\n  },\n"
+            final_json += new_entrance  
+        final_json = final_json[:-2]
+        final_json += "\n]" 
+        return jsonify({'data': final_json}), 200    
+    else:
+        return jsonify({'message': "Error, no se pudo localizar las preguntas"}), 400
+
 def filter_routes_to_tests_for_questions(block_id, question_id, user_file):
     route_to_test = route_to_admins_and_monitors_tests + "/" + block_id + "/" + question_id + "/"
     save_route_to_test = os.listdir(route_to_test)
@@ -1036,8 +1057,6 @@ def filter_routes_to_tests_for_questions(block_id, question_id, user_file):
         if aux_extension[1] == save_users_code_extension:
             tests_to_use.append(save_route_to_test[i])
     return tests_to_use
-
-
 
 def read_puntuations_regist(block_id, question_id): 
     create_route_to_file = "data/puntuations/" + block_id + "/" + question_id + "_puntuations.json"

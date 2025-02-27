@@ -10,6 +10,7 @@ export const RankingInternalPage = () => {
 
 
   const [saveJson, setSaveJson] = useState(null);
+  const [saveQuestions, setSaveQuestions] = useState(null);
   const block_id = id
   const block_number = block_id[block_id.length - 1]
   
@@ -21,6 +22,33 @@ export const RankingInternalPage = () => {
       return [];
     }
   });
+
+  useEffect(() => {
+    const getAllQuestions = async() => {
+      try { 
+        const response = await fetch(route_to_server + 'localize-all-questions-server', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            text: block_id 
+          }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setSaveQuestions(JSON.parse(data.data));
+        } else {
+          alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        alert('Error al conectar con el servidor.');
+        console.error(error);
+      }
+    };
+    getAllQuestions();
+    console.log(saveQuestions)
+  },[]);
 
   useEffect(() => {
     const getJsonData = async() => {
@@ -95,8 +123,29 @@ export const RankingInternalPage = () => {
 
   const MoveToFirstPage = () => {
     navigate('/');
-  }
+  } 
 
+  return (
+    <div className="App_ranking_internal_page">
+      <div className="tittle_ranking_internal_page">
+        <h1>Ranking de puntuaciones del bloque {block_number}</h1>
+      </div>
+      <div className="user_slot">
+          <div className="slot_id_reference">
+            LOGO BLOQUE, TODAVIA PENDIENTE
+          </div>
+          {saveQuestions && saveQuestions.map((question) => (
+            <div>
+              {question.question_id}
+            </div>
+          ))}
+      </div>
+      <button className="finish_user" onClick={() => MoveToFirstPage()}> Volver a la página de inicio</button>
+    </div>
+  )
+
+  /*
+  //VERSION ANTIGUA
   return (
     <div className="App_ranking_internal_page">
       <div className="tittle_ranking_internal_page">
@@ -135,4 +184,5 @@ export const RankingInternalPage = () => {
       <button className="finish_user" onClick={() => MoveToFirstPage()}> Volver a la página de inicio</button>
     </div>
   )
+    */
 }
