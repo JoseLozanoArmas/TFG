@@ -96,6 +96,7 @@ def regist_user():
     block_name = data.get('block_name', '')
     block_name = "block_" + block_name
     create_route = route_to_student_register + "/" + block_name + "/" + "student_register.json"
+    search_user = r"\"username\":.*?\"" + username + "\""
     begin_doc = "[\n"
     begin_new_entry = "  {\n"
     line_user = "    \"username\": \"" + username + "\"\n"
@@ -105,8 +106,11 @@ def regist_user():
     if os.path.exists(create_route):  # Comprueba si el archivo existe en la ruta
         with open(create_route, "r") as file:
             lines = file.read()
-            lines = lines[:-3]
             content = ''.join(lines)
+            content = content[:-3]
+            find_user = re.search(search_user, content)
+            if find_user: # Para evitar duplicados en caso estar el estudiante registrado se evita continuar
+                return jsonify({'message': f'El usuario volvió a entrar'}), 500
             with open(create_route, "w") as file:
                 file.write(content)
                 file.write(end_new_entry)

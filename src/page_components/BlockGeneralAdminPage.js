@@ -276,7 +276,9 @@ export const BlockGeneralAdminPage = () => {
         if (response.ok) {
           alert(data.message);
         } else {
-          alert(`Error: ${data.message}`);
+          if (response.status !== 500) {
+            alert(`Error: ${data.message}`);
+          }
         }
       } catch (error) {
         alert('Error al conectar con el servidor.');
