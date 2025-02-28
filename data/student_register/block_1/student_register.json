@@ -1,30 +1,9 @@
 [
   {
     "username": "a",
-    "begin_time": "2025-02-26 14:40:11.447353"
-  },
-  {
-    "username": "a",
-    "begin_time": "2025-02-26 15:40:58.845954"
-  },
-  {
-    "username": "a",
-    "begin_time": "2025-02-26 16:22:54.969117"
-  },
-  {
-    "username": "a",
-    "begin_time": "2025-02-26 19:30:42.544503"
-  },
-  {
-    "username": "a",
-    "begin_time": "2025-02-26 19:32:45.044048"
-  },
-  {
-    "username": "a",
-    "begin_time": "2025-02-26 20:26:36.293664"
-  },
-  {
-    "username": "a",
-    "begin_time": "2025-02-26 21:26:48.962300"
+    "question_1": {
+      "points": 1,
+      "time": "No resuelto"
+    }
   }
 ]

@@ -96,11 +96,9 @@ def regist_user():
     block_name = data.get('block_name', '')
     block_name = "block_" + block_name
     create_route = route_to_student_register + "/" + block_name + "/" + "student_register.json"
-    time = str(datetime.now())
     begin_doc = "[\n"
     begin_new_entry = "  {\n"
-    line_user = "    \"username\": \"" + username + "\",\n"
-    begin_time_line = "    \"begin_time\": \"" + time + "\"\n"
+    line_user = "    \"username\": \"" + username + "\"\n"
     end_entry = "  }\n"
     end_new_entry = "},\n"
     end_doc = "]"
@@ -114,7 +112,6 @@ def regist_user():
                 file.write(end_new_entry)
                 file.write(begin_new_entry)
                 file.write(line_user)
-                file.write(begin_time_line)
                 file.write(end_entry)
                 file.write(end_doc)
             return jsonify({'message': f'Documento actualizado con éxito'}), 200
@@ -123,7 +120,6 @@ def regist_user():
             file.write(begin_doc)
             file.write(begin_new_entry)
             file.write(line_user)
-            file.write(begin_time_line)
             file.write(end_entry)
             file.write(end_doc)
             return jsonify({'message': f'Carpeta creada con éxito en {create_route}'}), 200
@@ -1296,6 +1292,7 @@ def correct_user_enter():
     block_name = data.get('block_name', '')
     question_id = data.get('question_id', '')
     question_name = data.get('question_name', '')
+    total_points = 0
     users_file = get_user_file(username, block_name, question_name)
     if len(users_file) == 0:
         return jsonify({'message': "Error, no se encontró la entrada del usuario"}), 400
@@ -1305,10 +1302,110 @@ def correct_user_enter():
     for i in range(len(save_tests_current_question)):
         temporal_save_enter_file = save_tests_current_question[i]["enter_file"].split('"')[1]
         temporal_save_result_file = save_tests_current_question[i]["result_file"].split('"')[1]
+        temporal_save_points = save_tests_current_question[i]["puntuation"]
+        total_points += temporal_save_points
         if check_if_the_code_pass_the_test(users_file, temporal_save_enter_file, temporal_save_result_file) == False:
+            regist_question_correct_time(block_name, question_id, username, total_points, False)
             return jsonify({'data': False}), 200
+    regist_question_correct_time(block_name, question_id, username, total_points, True)
     return jsonify({'data': True}), 200
 
+def regist_question_correct_time(block_id, question_id, user, points, question_is_correct):
+    create_route = route_to_student_register + "/" + block_id + "/" + "student_register.json"
+    search_user = r"(.|\n)*?{\n\s*\"username\": \"" + user + r".*"
+    search_not_questions = r"(.|\n)*?{\n\s*\"username\": \"" + user + r".*(\s|\n)*?}"
+    search_question = r"(.|\n)*?{\n\s*\"username\": \"" + user + r"\"(.|\n)*?\"question_" + str(question_id) + r"\"(.|\n)*?}"
+    search_beggining_question = r"(.|\n)*?{\n\s*\"username\": \"" + user + r"\"(.|\n)*?\"question_" + str(question_id) + r"\"(.|\n)*?{"
+    search_last_question_user = r"(.|\n)*?{\n\s*\"username\": \"" + user + r"\"(.|\n)*?\"question_(.|\n)*?}(\s|\n)*?}"
+    first_middle = ""
+    second_middle = ""
+    final_json = ""
+    if os.path.exists(create_route): # Comprobamos que el fichero existe
+        with open(create_route, "r") as file:
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines: # En caso de tener el contenido verificamos que el usuario existe
+                find_user = re.search(search_user, content)
+                if find_user: # El usuario existe
+                    find_not_question = re.search(search_not_questions, content) # buscamos que no haya registros del usuario para añadir el primero
+                    if find_not_question: # añadir la primera entrada
+                        if question_is_correct:
+                            time = str(datetime.now())
+                            first_middle = content[:find_not_question.end() - 4]
+                            new_question = ",\n    \"question_" + str(question_id) + "\": {\n"
+                            new_points = "      \"points\": " + str(points) + ",\n"
+                            new_time = "      \"time\": \"" + time + "\"\n"
+                            new_end_question = "    }"
+                            second_middle = content[find_not_question.end() - 4:]
+                            final_json = first_middle + new_question + new_points + new_time + new_end_question + second_middle
+                            with open(create_route, "w") as file:
+                                file.write(final_json)
+                        else:
+                            time = str(datetime.now())
+                            first_middle = content[:find_not_question.end() - 4]
+                            new_question = ",\n    \"question_" + str(question_id) + "\": {\n"
+                            new_points = "      \"points\": " + str(points) + ",\n"
+                            new_time = "      \"time\": \"" + "No resuelto" + "\"\n"
+                            new_end_question = "    }"
+                            second_middle = content[find_not_question.end() - 4:]
+                            final_json = first_middle + new_question + new_points + new_time + new_end_question + second_middle
+                            with open(create_route, "w") as file:
+                                file.write(final_json)
+                    else: # Actualizar o añadir más entradas
+                        find_last_question = re.search(search_last_question_user, content)
+                        save_content = find_last_question.group()
+                        find_question = re.search(search_question, save_content)
+                        if find_question: # Actualizar
+                            find_only_beggining = re.search(search_beggining_question, content)
+                            if question_is_correct:
+                                time = str(datetime.now())
+                                first_middle = content[:find_only_beggining.end()]
+                                new_points = "\n      \"points\": " + str(points) + ",\n"
+                                new_time = "      \"time\": \"" + time + "\"\n"
+                                new_end_question = "    }"
+                                second_middle = content[find_question.end():]
+                                final_json = first_middle + new_points + new_time + new_end_question + second_middle
+                                with open(create_route, "w") as file:
+                                    file.write(final_json)
+                            else:
+                                first_middle = content[:find_only_beggining.end()]
+                                new_points = "\n      \"points\": " + str(points) + ",\n"
+                                new_time = "      \"time\": \"" + "No resuelto" + "\"\n"
+                                new_end_question = "    }"
+                                second_middle = content[find_question.end():]
+                                final_json = first_middle + new_points + new_time + new_end_question + second_middle
+                                with open(create_route, "w") as file:
+                                    file.write(final_json)
+                        else: # Añadir
+                            if find_last_question: # Se busca la última pregunta y se añade la misma
+                                if question_is_correct:
+                                    time = str(datetime.now())
+                                    first_middle = content[:find_last_question.end() - 4]
+                                    new_question = ",\n    \"question_" + str(question_id) + "\": {\n"
+                                    new_points = "      \"points\": " + str(points) + ",\n"
+                                    new_time = "      \"time\": \"" + time + "\"\n"
+                                    new_end_question = "    }"
+                                    second_middle = content[find_last_question.end() - 4:]
+                                    final_json = first_middle + new_question + new_points + new_time + new_end_question + second_middle
+                                    with open(create_route, "w") as file:
+                                        file.write(final_json)
+                                else:
+                                    time = str(datetime.now())
+                                    first_middle = content[:find_user.end() - 4]
+                                    new_question = ",\n    \"question_" + str(question_id) + "\": {\n"
+                                    new_points = "      \"points\": " + str(points) + ",\n"
+                                    new_time = "      \"time\": \"" + "No resuelto" + "\"\n"
+                                    new_end_question = "    }"
+                                    second_middle = content[find_user.end() - 4:]
+                                    final_json = first_middle + new_question + new_points + new_time + new_end_question + second_middle
+                                    with open(create_route, "w") as file:
+                                        file.write(final_json)
+                            else:
+                                return jsonify({'message': "Error inesperado"}), 400
+                else:
+                    return jsonify({'message': "Error, no se encontró al usuario"}), 400
+    else:
+        return jsonify({'message': "Error, no se encontró el archivo de registro"}), 400
 
 # P6
 def check_if_the_code_pass_the_test(user_file, admin_enter, admin_result):
