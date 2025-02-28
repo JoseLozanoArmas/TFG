@@ -464,6 +464,14 @@ export const BlockGeneralAdminPage = () => {
     }
   }
 
+  const MoveToUserLogin = () => {
+    navigate('/');
+  };
+
+  const MoveToAdminLogin = () => {
+    navigate('/admin_page_user');
+  };
+
   return (
     <div className="App3">
       <div className="tittle_block_general_page">
@@ -493,9 +501,19 @@ export const BlockGeneralAdminPage = () => {
           Probar cómo usuario
         </button>
       )}
-      {buttons.length > 1 && (isTemporalyUser == true) && (
+      {buttons.length > 1 && (isTemporalyUser === true) && (
         <button className="button_change_to_admin_or_monitor_activated" onClick={ChangePermission}>
           Volver al rol anterior
+        </button>
+      )}
+      {((isAdmin === true) || (isMonitor === true) || (isTemporalyUser === true)) && (
+        <button className="button_move_previous_page" onClick={MoveToAdminLogin}>
+          Volver a la página anterior
+        </button>
+      )}
+      {((isAdmin === false) && (isMonitor === false) && (isTemporalyUser === false)) && (
+        <button className="button_move_previous_page" onClick={MoveToUserLogin}>
+          Volver a la página anterior
         </button>
       )}
     </div>

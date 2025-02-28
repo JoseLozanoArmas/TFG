@@ -370,10 +370,8 @@ export const QuestionPageAdmin = () => {
         } else{
           alert("Felicidades ha pasado todas las pruebas!!")
           alert("PENDIENTE LA FUNCIÓN")
-          /*
           let previous_route = "block_internal_admin_page/" + block_name
           navigate(`/${previous_route}`)
-          */
         }
       } else {
         alert(`Error: ${data.message}`);
@@ -383,6 +381,10 @@ export const QuestionPageAdmin = () => {
       console.error(error);
     }
   }
+
+  const MoveToPreviousPage = () => {
+    navigate(`/block_internal_admin_page/${block_name}`);
+  };
   
   if ((isAdmin === true) || (isMonitor === true)) {
     return (
@@ -419,6 +421,9 @@ export const QuestionPageAdmin = () => {
         {buttons.length >= 1 && (
           <button className="button_change_to_admin_or_monitor_activated" onClick={ChangePermission}>Probar cómo usuario</button>
         )}
+        <button className="button_move_previous_page" onClick={MoveToPreviousPage}>
+          Volver a la página anterior
+        </button>
       </div>
     );
   } else if (isTemporalyUser === true) {
@@ -441,6 +446,9 @@ export const QuestionPageAdmin = () => {
         <button className="button_change_to_admin_or_monitor_activated" onClick={ChangePermission}>
           Volver al rol anterior
         </button>
+        <button className="button_move_previous_page" onClick={MoveToPreviousPage}>
+          Volver a la página anterior
+        </button>
       </div>
     )
   } else {
@@ -460,6 +468,9 @@ export const QuestionPageAdmin = () => {
         <div className="user_submit_code">
           <button className="button_submit_code" onClick={SendFileUser}>Confirmar</button>
         </div>
+        <button className="button_move_previous_page" onClick={MoveToPreviousPage}>
+          Volver a la página anterior
+        </button>
       </div>
     )
   }

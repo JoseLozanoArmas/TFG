@@ -288,6 +288,10 @@ export const BlockInternalAdminPage = () => {
     }
   }
 
+  const MoveToPreviousPage = () => {
+    navigate('/block_general_admin_page');
+  };
+
   const MakeCorrection = async () => {
     try {
       const response = await fetch(route_to_server + 'check_is_possible_to_correct', {
@@ -367,6 +371,9 @@ export const BlockInternalAdminPage = () => {
             Probar cómo usuario
           </button>
         )}
+        <button className="button_move_previous_page" onClick={MoveToPreviousPage}>
+            Volver a la página anterior
+        </button>
       </div>
     );
   } else if(isTemporalyUser === true) {
@@ -384,6 +391,9 @@ export const BlockInternalAdminPage = () => {
         <button className="button_change_to_admin_or_monitor_activated" onClick={ChangePermission}>
           Volver al rol anterior
         </button>
+        <button className="button_move_previous_page" onClick={MoveToPreviousPage}>
+            Volver a la página anterior
+        </button>
       </div>
     );
   } else {
@@ -399,6 +409,9 @@ export const BlockInternalAdminPage = () => {
             </button>
           ))}
           <button className="button_correct_code" onClick={() => MakeCorrection()}>Finalizar intento</button>
+          <button className="button_move_previous_page" onClick={MoveToPreviousPage}>
+            Volver a la página anterior
+          </button>
         </div>
       );
   }
