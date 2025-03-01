@@ -47,7 +47,6 @@ export const RankingInternalPage = () => {
       }
     };
     getAllQuestions();
-    console.log(saveQuestions)
   },[]);
 
   useEffect(() => {
@@ -79,12 +78,11 @@ export const RankingInternalPage = () => {
   }, []);
 
   useEffect(() => {
-    if (!saveJson) { return; }
+    if (!saveJson || !saveQuestions) return;
     const getUserInformation = () => {
       let save_slots = []
       for (let i = 0; i < saveJson.length; ++i) {
         saveJson[i]["id"] = `${i + 1}º`;
-        save_slots.push(saveJson[i])
         switch(i) {
           case 0:
             saveJson[i]["id_className"] = "slot_id_gold"
@@ -111,6 +109,15 @@ export const RankingInternalPage = () => {
             saveJson[i]["time_className"] = "slot_time"
           break;
         }
+        for (let j = 0; j < saveQuestions.length; ++j) {
+          if (!saveJson[i][`question_${j + 1}`]) {
+            saveJson[i][`question_${j + 1}`] = {points: 0};
+            console.log("no está") // TENDRIA QUE DECIR QUE EN ESTA PREGUNTA EL USUARIO TIENE 0 PUNTOS Y NO PONER EL TIEMPO
+          } else{
+            console.log(saveJson[i][`question_${j + 1}`]) // TENDRIA QUE PONER LOS PUNTOS Y EL TIEMPO SI ES QUE TUVIESE
+          }
+        }
+        save_slots.push(saveJson[i]);
       }
       setUserSlots(save_slots)
     }
@@ -152,7 +159,10 @@ export const RankingInternalPage = () => {
             {slot.username}
           </div>
           <div className={slot.username_className}>
-            {slot.question}
+            {slot.question_1.points}
+          </div>
+          <div className={slot.username_className}>
+            {slot.question_2.points}
           </div>
         </div>
       ))}
