@@ -31,8 +31,7 @@
   margin-bottom: 20px; 
   box-sizing: border-box;
   justify-items: center; 
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr 1fr;
+ 
 }
 
 .slot_id_reference {

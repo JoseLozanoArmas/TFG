@@ -53,7 +53,7 @@ export const RankingInternalPage = () => {
   useEffect(() => {
     const getJsonData = async() => {
       try { 
-        const response = await fetch(route_to_server + 'get-rankings-info', {
+        const response = await fetch(route_to_server + 'get-info-student-register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -132,14 +132,30 @@ export const RankingInternalPage = () => {
       </div>
       <div className="user_slot">
           <div className="slot_id_reference">
-            LOGO BLOQUE, TODAVIA PENDIENTE
+            Posición
+          </div>
+          <div className="slot_username_reference">
+            Usuario
           </div>
           {saveQuestions && saveQuestions.map((question) => (
-            <div>
+            <div className="slot_id_reference">
               {question.question_id}
             </div>
           ))}
       </div>
+      {userSlots.map((slot) => (
+        <div key={slot.id} className="user_slot">
+          <div className={slot.id_className}>
+            {slot.id}
+          </div>
+          <div className={slot.username_className}>
+            {slot.username}
+          </div>
+          <div className={slot.username_className}>
+            {slot.question}
+          </div>
+        </div>
+      ))}
       <button className="finish_user" onClick={() => MoveToFirstPage()}> Volver a la página de inicio</button>
     </div>
   )

@@ -1504,7 +1504,6 @@ def get_rankins_info():
                 return jsonify({'data': content}), 200
             else:
                 return jsonify({'message': "Error, el archivo está vacío"}), 400
-
     else:
         return jsonify({'message': f"Error, no se encontró la información de los rankins del {block_id}"}), 500
 
@@ -1524,6 +1523,23 @@ def get_info_question_test():
                 return jsonify({'message': "Error, el archivo está vacío"}), 400
     else:
         return jsonify({'message': f"Error, no se encontró la información de las pruebas"}), 500
+ 
+
+@app.route('/get-info-student-register', methods=["POST"])
+def get_info_student_register():
+    data = request.get_json()
+    block_name = data.get('text', '')
+    create_route = route_to_student_register + "/" + block_name + "/" + "student_register.json"
+    if os.path.exists(route_to_data_json_block_and_question):
+        with open(create_route, "r") as file:
+            lines = file.read()
+            content = ''.join(lines)
+            if lines:
+                return jsonify({'data': content}), 200
+            else:
+                return jsonify({'message': "Error, el archivo está vacío"}), 400
+    else:
+        return jsonify({'message': f"Error, no se encontró la información de los rankins del {block_id}"}), 500
 
 @app.route('/get-tittle-and-description', methods=["POST"]) 
 def get_tittle_and_description(): 
