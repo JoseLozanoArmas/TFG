@@ -1345,11 +1345,11 @@ def regist_question_correct_time(block_id, question_id, user, points, question_i
                             with open(create_route, "w") as file:
                                 file.write(final_json)
                         else:
-                            time = str(datetime.now())
+                            time = str(datetime(9000, 12, 31, 23, 59, 59))
                             first_middle = content[:find_not_question.end() - 4]
                             new_question = ",\n    \"question_" + str(question_id) + "\": {\n"
                             new_points = "      \"points\": " + str(points) + ",\n"
-                            new_time = "      \"time\": \"" + "No resuelto" + "\"\n"
+                            new_time = "      \"time\": \"" + time + "\"\n"
                             new_end_question = "    }"
                             second_middle = content[find_not_question.end() - 4:]
                             final_json = first_middle + new_question + new_points + new_time + new_end_question + second_middle
@@ -1372,9 +1372,10 @@ def regist_question_correct_time(block_id, question_id, user, points, question_i
                                 with open(create_route, "w") as file:
                                     file.write(final_json)
                             else:
+                                time = str(datetime(9000, 12, 31, 23, 59, 59))
                                 first_middle = content[:find_only_beggining.end()]
                                 new_points = "\n      \"points\": " + str(points) + ",\n"
-                                new_time = "      \"time\": \"" + "No resuelto" + "\"\n"
+                                new_time = "      \"time\": \"" + time + "\"\n"
                                 new_end_question = "    }"
                                 second_middle = content[find_question.end():]
                                 final_json = first_middle + new_points + new_time + new_end_question + second_middle
@@ -1394,11 +1395,11 @@ def regist_question_correct_time(block_id, question_id, user, points, question_i
                                     with open(create_route, "w") as file:
                                         file.write(final_json)
                                 else:
-                                    time = str(datetime.now())
+                                    time = str(datetime(9000, 12, 31, 23, 59, 59))
                                     first_middle = content[:find_user.end() - 4]
                                     new_question = ",\n    \"question_" + str(question_id) + "\": {\n"
                                     new_points = "      \"points\": " + str(points) + ",\n"
-                                    new_time = "      \"time\": \"" + "No resuelto" + "\"\n"
+                                    new_time = "      \"time\": \"" + time + "\"\n"
                                     new_end_question = "    }"
                                     second_middle = content[find_user.end() - 4:]
                                     final_json = first_middle + new_question + new_points + new_time + new_end_question + second_middle
