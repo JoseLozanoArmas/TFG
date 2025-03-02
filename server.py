@@ -555,10 +555,18 @@ def delete_last_block_folder_admin():
         route = 'data/blocks/'
         folder_path = os.path.join(route, block_dir)
         if os.path.isdir(folder_path):
-            shutil.rmtree(folder_path)  # Eliminar carpeta
+            shutil.rmtree(folder_path)
+            remove_block_folder_from_users(block_dir) 
         return jsonify({'message': f'Carpeta eliminada con éxito en {folder_path}'}), 200
     else:
         return jsonify({'message': 'Texto vacío, no se puede eliminar carpeta'}), 400
+
+def remove_block_folder_from_users(block_name): # Función que elimina al carperta de ese mismo bloque de todos los usuarios
+    save_route_users = os.listdir(route_to_users_input)
+    for i in range(len(save_route_users)):
+        create_route = route_to_users_input + "/" + save_route_users[i] + "/" + block_name
+        if os.path.exists(create_route):
+            shutil.rmtree(create_route)
     
 @app.route('/delete-last-ranking-block-json', methods=["POST"])
 def delete_last_ranking_block_json():
@@ -661,9 +669,17 @@ def delete_question_folder_admin():
         try:
             if os.path.isdir(folder_path):
                 shutil.rmtree(folder_path) 
+                remove_question_folder_from_users(block_name, question_name)
             return jsonify({'message': f'Carpeta de pregunta {question_name} eliminada con éxito'}), 200
         except Exception as e:
             return jsonify({'message': f'Error al eliminar contenido: {str(e)}'}), 500
+        
+def remove_question_folder_from_users(block_name, question_name):
+    save_route_users = os.listdir(route_to_users_input)
+    for i in range(len(save_route_users)):
+        create_route = route_to_users_input + "/" + save_route_users[i] + "/" + block_name + "/" + question_name
+        if os.path.exists(create_route):
+            shutil.rmtree(create_route)
 
 @app.route('/delete-last-question-admin', methods=["POST"])
 def delete_last_question_admin():
@@ -1532,14 +1548,14 @@ def get_info_student_register():
     create_route = route_to_student_register + "/" + block_name + "/" + "student_register.json"
     if os.path.exists(route_to_data_json_block_and_question):
         with open(create_route, "r") as file:
-            lines = file.read()
+            lines = file.readlines()
             content = ''.join(lines)
             if lines:
                 return jsonify({'data': content}), 200
             else:
                 return jsonify({'message': "Error, el archivo está vacío"}), 400
     else:
-        return jsonify({'message': f"Error, no se encontró la información de los rankins del {block_id}"}), 500
+        return jsonify({'message': f"Error, no se encontró la información de los rankins del {block_name}"}), 500
 
 @app.route('/get-tittle-and-description', methods=["POST"]) 
 def get_tittle_and_description(): 

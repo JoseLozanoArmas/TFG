@@ -42,10 +42,5 @@
     }
   },
   "block_2": {
-    "question_1": {
-      "id": 1,
-      "label": "Pregunta 1",
-      "name": "block_2_question_1"
-    }
   }
 }
