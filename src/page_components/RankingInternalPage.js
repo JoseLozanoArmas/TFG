@@ -14,14 +14,7 @@ export const RankingInternalPage = () => {
   const block_id = id
   const block_number = block_id[block_id.length - 1]
   
-  const [userSlots, setUserSlots] = useState(() => {
-    const savedUserSlots = localStorage.getItem(`user_slots_${id}`);
-    if (savedUserSlots) {
-      return JSON.parse(savedUserSlots);
-    } else {
-      return [];
-    }
-  });
+  const [userSlots, setUserSlots] = useState([]);
 
   useEffect(() => {
     const getAllQuestions = async() => {
@@ -110,11 +103,15 @@ export const RankingInternalPage = () => {
           break;
         }
         for (let j = 0; j < saveQuestions.length; ++j) {
-          if (!saveJson[i][`question_${j + 1}`]) {
+          if (!saveJson[i][`question_${j + 1}`]) { // En caso de que la pregunta no exista
             saveJson[i][`question_${j + 1}`] = {points: 0};
             console.log("no está") // TENDRIA QUE DECIR QUE EN ESTA PREGUNTA EL USUARIO TIENE 0 PUNTOS Y NO PONER EL TIEMPO
           } else{
-            console.log(saveJson[i][`question_${j + 1}`]) // TENDRIA QUE PONER LOS PUNTOS Y EL TIEMPO SI ES QUE TUVIESE
+            if (saveJson[i][`question_${j + 1}`].time !== "9000-12-31 23:59:59") {
+              saveJson[i]["class_time"] = "correct_time";
+            } else {
+              saveJson[i]["class_time"] = "not_done_time";
+            }
           }
         }
         save_slots.push(saveJson[i]);
@@ -123,10 +120,6 @@ export const RankingInternalPage = () => {
     }
     getUserInformation();
   }, [saveJson])
-
-  useEffect(() => {
-    localStorage.setItem(`user_slots_${id}`, JSON.stringify(userSlots))
-  })
 
   const MoveToFirstPage = () => {
     navigate('/');
@@ -158,12 +151,14 @@ export const RankingInternalPage = () => {
           <div className={slot.username_className}>
             {slot.username}
           </div>
-          <div className={slot.username_className}>
-            {slot.question_1.points}
-          </div>
-          <div className={slot.username_className}>
-            {slot.question_2.points}
-          </div>
+          {saveQuestions.map((question, index) => (
+            <div key={index} className={slot.username_className}>
+              <div>{slot[`question_${index + 1}`].points}</div>
+              {slot.class_time !== "not_done_time" && (
+                <div className={slot.class_time}>{slot[`question_${index + 1}`].time}</div>
+              )}
+            </div>
+          ))}
         </div>
       ))}
       <button className="finish_user" onClick={() => MoveToFirstPage()}> Volver a la página de inicio</button>

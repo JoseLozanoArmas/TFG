@@ -223,3 +223,13 @@
   cursor: pointer;
   color: white;
 }
+
+.correct_time {
+  font-size: 0.8em;
+  color: green;
+}
+
+.not_done_time {
+  font-size: 0.8em;
+  color: red;
+}
