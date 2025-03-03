@@ -125,26 +125,45 @@ export const RankingInternalPage = () => {
     navigate('/');
   } 
 
-  return (
-    <div className="App_ranking_internal_page">
-      <div className="tittle_ranking_internal_page">
-        <h1>Ranking de puntuaciones del bloque {block_number}</h1>
-      </div>
-      <div className="user_slot">
+  if (!saveQuestions) {
+    return (
+      <div className="App_ranking_internal_page">
+        <div className="tittle_ranking_internal_page">
+          <h1>Ranking de puntuaciones del bloque {block_number}</h1>
+        </div>
+        <div className="user_slot">
           <div className="slot_id_reference">
             Posición
           </div>
           <div className="slot_username_reference">
             Usuario
           </div>
-          {saveQuestions && saveQuestions.map((question) => (
-            <div className="slot_id_reference">
-              {question.question_id}
-            </div>
-          ))}
+          <button className="finish_user" onClick={() => MoveToFirstPage()}> Volver a la página de inicio</button>
+        </div>  
+      </div>  
+    );
+  }
+
+  return (
+    <div className="App_ranking_internal_page">
+      <div className="tittle_ranking_internal_page">
+        <h1>Ranking de puntuaciones del bloque {block_number}</h1>
+      </div>
+      <div className="user_slot_2" style={{ gridTemplateColumns: `repeat(${saveQuestions.length + 2}, 1fr)` }}>
+        <div className="slot_id_reference">
+          Posición
+        </div>
+        <div className="slot_username_reference">
+          Usuario
+        </div>
+        {saveQuestions && saveQuestions.map((question) => (
+          <div className="slot_id_reference">
+            {question.question_id}
+          </div>
+        ))}
       </div>
       {userSlots.map((slot) => (
-        <div key={slot.id} className="user_slot">
+        <div key={slot.id} className="user_slot_2" style={{ gridTemplateColumns: `repeat(${saveQuestions.length + 2}, 1fr)` }}>
           <div className={slot.id_className}>
             {slot.id}
           </div>
