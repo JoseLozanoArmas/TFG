@@ -292,52 +292,7 @@ export const BlockInternalAdminPage = () => {
     navigate('/block_general_admin_page');
   };
 
-  const MakeCorrection = async () => {
-    try {
-      const response = await fetch(route_to_server + 'check_is_possible_to_correct', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: userName,
-          block_id: current_block_name,
-        }),
-      });
-      const data = await response.json();
-      if (data.data === true) {
-
-        const regist = await fetch(route_to_server + 'regist-final-time', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            text: userName,
-            block_id: current_block_name,
-          }),
-        });
-
-        const response = await fetch(route_to_server + 'calculate-puntuation-for-user', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            text: userName,
-            block_id: current_block_name,
-          }),
-        });
-      } else {
-        alert("No se han enviado todas las respuestas")
-        return;
-      }
-    } catch (error) {
-      console.error('Error al intentar corregir', error);
-      return false;
-    }
-
-    alert("Corrección realizada con éxito. Cuestionario completado!!!")
+  const MoveToRanking = async () => {
     navigate(`/ranking_internal_page/${current_block_name}`)
   }
   
@@ -408,7 +363,7 @@ export const BlockInternalAdminPage = () => {
               {button.label}
             </button>
           ))}
-          <button className="button_correct_code" onClick={() => MakeCorrection()}>Finalizar intento</button>
+          <button className="button_correct_code" onClick={() => MoveToRanking()}>Finalizar intento</button>
           <button className="button_move_previous_page" onClick={MoveToPreviousPage}>
             Volver a la página anterior
           </button>

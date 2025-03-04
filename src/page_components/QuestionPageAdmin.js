@@ -368,10 +368,9 @@ export const QuestionPageAdmin = () => {
         if (data.data === false) {
           alert("Error, no se pasaron todas las pruebas, porfavor vuelva a intentarlo");
         } else{
-          alert("Felicidades ha pasado todas las pruebas!!")
-          alert("PENDIENTE LA FUNCIÓN")
-          let previous_route = "block_internal_admin_page/" + block_name
-          navigate(`/${previous_route}`)
+          alert("Felicidades ha pasado todas las pruebas!!");
+          let previous_route = "block_internal_admin_page/" + block_name;
+          navigate(`/${previous_route}`);
         }
       } else {
         alert(`Error: ${data.message}`);

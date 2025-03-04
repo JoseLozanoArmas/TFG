@@ -1326,8 +1326,10 @@ def correct_user_enter():
         total_points += temporal_save_points
         if check_if_the_code_pass_the_test(users_file, temporal_save_enter_file, temporal_save_result_file) == False:
             regist_question_correct_time(block_name, question_id, username, total_points, False)
+            sort_users_questions_by_points_and_time(block_name)
             return jsonify({'data': False}), 200
     regist_question_correct_time(block_name, question_id, username, total_points, True)
+    sort_users_questions_by_points_and_time(block_name)
     return jsonify({'data': True}), 200
 
 def regist_question_correct_time(block_id, question_id, user, points, question_is_correct):
@@ -1427,6 +1429,61 @@ def regist_question_correct_time(block_id, question_id, user, points, question_i
                     return jsonify({'message': "Error, no se encontró al usuario"}), 400
     else:
         return jsonify({'message': "Error, no se encontró el archivo de registro"}), 400
+
+def sort_users_questions_by_points_and_time(block_name):
+    create_route = route_to_student_register + "/" + block_name + "/" + "student_register.json"
+    search_only_user_enter = r"{(\s|\n)*?\"username\":.*(\s|\n)*?}" # busca bien cuando solo hay un nombre
+    search_complete_enters = r"{(\s|\n)*?\"username\"(.|\n)*?}(\s|\n)*?}" # busca bien cuando es la entrada completa
+    search_points = r"\"points\".*"
+    search_time = r"\"time\".*"
+    procesate_non_info_users = []
+    regist_to_order = []
+    ordered_json = "[\n"
+    if os.path.exists(create_route):
+        with open(create_route, "r") as file:
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines:
+                for enter in re.finditer(search_only_user_enter, content): # guardamos los usuarios que no tengan info registrada
+                    save_enter = enter.group()
+                    procesate_non_info_users.append(save_enter)
+                for enter in re.finditer(search_complete_enters, content): # Localizamos cada entrada de los usuarios con info registrada
+                    save_enter = enter.group()
+                    aux_points = 0
+                    minimun_time = None
+                    save_time = ""
+                    for points in re.finditer(search_points, save_enter): # Calculamos el total de puntos
+                        get_points = points.group()
+                        get_points = get_points[:-1].split(": ")[1]
+                        aux_points += int(get_points)
+                    for time in re.finditer(search_time, save_enter): # Calculamos el total de puntos
+                        get_time = time.group()
+                        get_time = get_time.split(": ")[1]
+                        get_time = get_time[1:].split(".")[0] # quitamos los microsegundos y las "" iniciales
+                        if get_time[-1] == "\"":
+                            get_time = get_time[:-1]
+                        save_time = datetime.strptime(get_time, '%Y-%m-%d %H:%M:%S')
+                        if minimun_time is None or save_time < minimun_time:
+                            minimun_time = save_time
+                    regist_to_order.append([save_enter, aux_points, minimun_time])
+        regist_to_order.sort(key=lambda x: (-x[1], x[2])) # Ordenamos en base a los mismos
+
+        for i in range(len(regist_to_order)):
+            ordered_json += "  " + regist_to_order[i][0] + ",\n"
+
+        if len(procesate_non_info_users) == 0: # En caso de no haber, se establece el final del JSON
+            ordered_json = ordered_json[:-2]
+            ordered_json += "\n]"
+        else: # si si hay se procesa toda la información
+            for i in range(len(procesate_non_info_users)):
+                if i != len(procesate_non_info_users) - 1:
+                    ordered_json += "  " + procesate_non_info_users[i] + ",\n"
+                else:
+                    ordered_json += "  " + procesate_non_info_users[i] + "\n]"
+        with open(create_route, "w") as file: # registramos la información final ordenada por puntos
+            file.write(ordered_json)
+    else:
+        return jsonify({'message': "Error, no se localizó el archivo"}), 400
 
 # P6
 def check_if_the_code_pass_the_test(user_file, admin_enter, admin_result):
