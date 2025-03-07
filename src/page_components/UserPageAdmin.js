@@ -78,7 +78,7 @@ export const UserPageAdmin = () => {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={require("../img/user_img.png")} alt="User" className="user-image" />
+          <img src={require("../img/user_img.png")} className="user-image" />
             {"Login"}
             <div className="input-box">
               <textarea className="textarea_user_page_admin_username" value={user_name} onChange={(e) => setTexto(e.target.value)} placeholder="Inserte nombre de usuario..."></textarea>
@@ -89,7 +89,7 @@ export const UserPageAdmin = () => {
                 </button>
               </div>
               <button onClick={SaveUser}>Iniciar</button>
-              <button class="admin_button" onClick={GoToUserPage}>¿Entrar cómo usuario?</button>
+              <button className="admin_button" onClick={GoToUserPage}>¿Entrar cómo usuario?</button>
             </div>
         </header>
     </div>

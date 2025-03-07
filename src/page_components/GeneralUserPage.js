@@ -18,6 +18,27 @@ export const GeneralUserPage = () => {
     setIsAdmin(userRole === 'admin');
   }, []);
 
+  const [saveJson, setSaveJson] = useState();
+
+  useEffect(() => {
+    const getJsonData = async () => {
+      try {
+        const response = await fetch(route_to_server + 'get-info-users-json');
+        const data = await response.json();
+        if (response.ok) {
+          setSaveJson(JSON.parse(data.data));  // Guardamos el contenido en el estado
+        } else {
+          console.error(`Error: ${data.error}`);
+        }
+      } catch (error) {
+        console.error('Error al obtener los datos del servidor', error);
+      }
+    };
+    getJsonData();
+  }, []);
+
+  console.log(saveJson)
+
   const [users, setUsers] = useState(() => {
     const saveUsers = localStorage.getItem(`users_${id}`);
     if (saveUsers) {
