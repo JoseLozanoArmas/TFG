@@ -97,6 +97,8 @@ export const GeneralUserPage = () => {
       ...prevUsers.map((user) => (user.id === id ? updatedUser : user)),
       newUser,
     ]);    
+
+    navigate(`/creation_user/${newUser.id}`);
   };
 
   const removeLastUser = async () => {    
