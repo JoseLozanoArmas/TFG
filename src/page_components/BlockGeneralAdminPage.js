@@ -56,12 +56,7 @@ export const BlockGeneralAdminPage = () => {
       save_buttons.push({ id: 1, positionX: 0, positionY: 0, type: "boton_mas", block_name: "default"});
     }
     setButtons(save_buttons);
-    
   }, [saveJson]); 
-
-  console.log(buttons);
-
-
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [isMonitor, setIsMonitor] = useState(false);
@@ -94,10 +89,11 @@ export const BlockGeneralAdminPage = () => {
       positionY = clickedButton.positionY;
     }
 
+    // Guardamos el nombre del bloque actual
     let block_name = `block_${buttons.length}`;
     localStorage.setItem('current_block_name', block_name);
   
-    // Agregar el nuevo botón
+    // Datos del nuevo botón
     const newButton = {
       id: buttons.length + 1,
       positionX: clickedButton.positionX,
@@ -278,7 +274,6 @@ export const BlockGeneralAdminPage = () => {
       }
 
     }
-
     navigate(`/block_internal_admin_page/block_${id}`);
   };
 
@@ -489,7 +484,7 @@ export const BlockGeneralAdminPage = () => {
       )}
       {((isAdmin === true) || (isMonitor === true) || (isTemporalyUser === true)) && (
         <button className="button_move_previous_page" onClick={MoveToAdminLogin}>
-          Volver a la página anterior
+          Volver a la página de Inicio
         </button>
       )}
       {((isAdmin === false) && (isMonitor === false) && (isTemporalyUser === false)) && (
