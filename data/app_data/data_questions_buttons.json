@@ -4,43 +4,6 @@
       "id": 1,
       "label": "Pregunta 1",
       "name": "block_1_question_1"
-    },
-    "question_2": {
-      "id": 2,
-      "label": "Pregunta 2",
-      "name": "block_1_question_2"
-    },
-    "question_3": {
-      "id": 3,
-      "label": "Pregunta 3",
-      "name": "block_1_question_3"
-    },
-    "question_4": {
-      "id": 4,
-      "label": "Pregunta 4",
-      "name": "block_1_question_4"
-    },
-    "question_5": {
-      "id": 5,
-      "label": "Pregunta 5",
-      "name": "block_1_question_5"
-    },
-    "question_6": {
-      "id": 6,
-      "label": "Pregunta 6",
-      "name": "block_1_question_6"
-    },
-    "question_7": {
-      "id": 7,
-      "label": "Pregunta 7",
-      "name": "block_1_question_7"
-    },
-    "question_8": {
-      "id": 8,
-      "label": "Pregunta 8",
-      "name": "block_1_question_8"
     }
-  },
-  "block_2": {
   }
 }

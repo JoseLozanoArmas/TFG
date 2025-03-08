@@ -28,26 +28,40 @@ export const BlockGeneralAdminPage = () => {
     getJsonData();
   }, []);
 
-
   // localStorage.clear();
 
-  const [buttons, setButtons] = useState(() => {
-    const savedButtons = localStorage.getItem('buttons');
-    if (savedButtons) {
-      return JSON.parse(savedButtons);
-    } else {
-      return [{ id: 1, positionX: 0, positionY: 0, type: "boton_mas", block_name: "default"}];
-    }
-  });
+  const [buttons, setButtons] = useState([]);
 
-  const [botonMasHistory, setBotonMasHistory] = useState(() => {
-    const savedHistory = localStorage.getItem('botonMasHistory');
-    if (savedHistory) {
-      return JSON.parse(savedHistory);
+  useEffect(() => {
+    if (!saveJson) { return; }
+    let save_buttons = [];
+    if (saveJson.length !== 0) {
+      save_buttons = saveJson;
+      let lastButton = save_buttons[save_buttons.length - 1];
+      const newPositionX = lastButton.positionX + 200;
+      let positionX = 0;
+      if (newPositionX >= maxPageWidth) {
+        positionX = 0;
+      } else {
+        positionX = newPositionX;
+      }
+      let positionY = 0;
+      if (newPositionX >= maxPageWidth) {
+        positionY = lastButton.positionY + buttonHeight;
+      } else {
+        positionY = lastButton.positionY;
+      }
+      save_buttons.push({ id: lastButton.id + 1, positionX: positionX, positionY: positionY, type: "boton_mas", block_name: "default"});
     } else {
-      return [];
+      save_buttons.push({ id: 1, positionX: 0, positionY: 0, type: "boton_mas", block_name: "default"});
     }
-  });
+    setButtons(save_buttons);
+    
+  }, [saveJson]); 
+
+  console.log(buttons);
+
+
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [isMonitor, setIsMonitor] = useState(false);
@@ -64,22 +78,15 @@ export const BlockGeneralAdminPage = () => {
     setSaveRol(userRole);
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('buttons', JSON.stringify(buttons));
-    localStorage.setItem('botonMasHistory', JSON.stringify(botonMasHistory));
-  }, [buttons, botonMasHistory]);
-
   const handlePlusButtonClick = async (id) => {
-    const clickedButton = buttons.find((button) => button.id === id);
-    
-    const newPositionX = clickedButton.positionX + 200;
+    const clickedButton = buttons.find((button) => button.id === id); // Confirmamos que es el botón que estamos pulsando
+    const newPositionX = clickedButton.positionX + 200; // Miramos si se puede avanzar más del límite de la pantalla
     let positionX = 0;
     if (newPositionX >= maxPageWidth) {
       positionX = 0;
     } else {
       positionX = newPositionX;
     }
-
     let positionY = 0;
     if (newPositionX >= maxPageWidth) {
       positionY = clickedButton.positionY + buttonHeight;
@@ -87,21 +94,10 @@ export const BlockGeneralAdminPage = () => {
       positionY = clickedButton.positionY;
     }
 
-    const updatedButton = { ...clickedButton, positionX, positionY,};
-  
-    // Registra el historial
-    setBotonMasHistory((prevHistory) => [
-      ...prevHistory,
-      { positionX: clickedButton.positionX, positionY: clickedButton.positionY },
-    ]);
-
     let block_name = `block_${buttons.length}`;
-
-  
     localStorage.setItem('current_block_name', block_name);
-     
   
-    // Agrega el nuevo botón
+    // Agregar el nuevo botón
     const newButton = {
       id: buttons.length + 1,
       positionX: clickedButton.positionX,
@@ -110,12 +106,6 @@ export const BlockGeneralAdminPage = () => {
       block_name: block_name,
       default_image: "./img/logo_ull.png"
     };
-  
-    // Actualiza el estado de los botones
-    setButtons((prevButtons) => [
-      ...prevButtons.map((button) => (button.id === id ? updatedButton : button)),
-      newButton,
-    ]);
   
     // Crea el bloque en el servidor
     const newBlock = `block_${newButton.id - 1}`;
@@ -206,6 +196,8 @@ export const BlockGeneralAdminPage = () => {
       alert('Error al conectar con el servidor.');
       console.error(error);
     }
+
+    window.location.reload();
   };
 
   const handleNewPageButtonClick = async (id) => {
@@ -287,7 +279,7 @@ export const BlockGeneralAdminPage = () => {
 
     }
 
-    navigate(`/block_internal_admin_page/block_${id - 1}`);
+    navigate(`/block_internal_admin_page/block_${id}`);
   };
 
   const removeLastButton = async () => {
@@ -310,18 +302,6 @@ export const BlockGeneralAdminPage = () => {
         alert(`Error: ${data.message}`);
         return; 
       }
-
-      setBotonMasHistory((prevHistory) => {
-        if (prevHistory.length === 0) { return prevHistory; }
-        const lastPosition = prevHistory[prevHistory.length - 1];
-        setButtons((prevButtons) =>
-          prevButtons.map((button) =>
-            button.type === 'boton_mas' ? { ...button, ...lastPosition } : button
-          )
-        );
-        return prevHistory.slice(0, -1);
-      });
-      setButtons((prevButtons) => prevButtons.slice(0, -1));
     } catch (error) {
       alert('Error al conectar con el servidor.');
       console.error(error);
@@ -443,6 +423,7 @@ export const BlockGeneralAdminPage = () => {
       console.error(error);
     }
 
+    window.location.reload();
   };
 
   const ChangePermission = () => {

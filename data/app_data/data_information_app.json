@@ -2,11 +2,8 @@
     "block_1": {
       "img": "src/img/logo_ull.png",
       "question_1": {
-        "tittle": "d",
-        "description": " d"
+        "tittle": "prueba",
+        "description": "sssss"
       }
-    },
-    "block_2": {
-      "img": "src/img/logo_ull.png"
     }
 }
