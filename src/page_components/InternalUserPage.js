@@ -7,6 +7,9 @@ const route_to_server = "http://127.0.0.1:5000/"
 
 export const InternalUserPage = () => {
   const navigate = useNavigate();
+  const maxPageWidth = window.innerWidth - 100;
+  const userHeight = 155;
+  const offsetX = 200;
   const { id } = useParams();
   const [currentLogo, setCurrentLogo] = useState(() => {
     const savedLogo = localStorage.getItem(`logo_${id}`);
@@ -109,7 +112,10 @@ export const InternalUserPage = () => {
         body: JSON.stringify({
           text: userName,
           password: password,
-          rol: rol
+          rol: rol,
+          offsetX: offsetX,
+          offsetY: userHeight,
+          limit_position: maxPageWidth
         }),
       });
       const data = await response.json();
