@@ -925,41 +925,88 @@ def add_new_user():
     username = data.get('text', '')  
     password = data.get('password', '')
     rol = data.get('rol', '')
+    offsetX = data.get('offsetX', '')
+    offsetY = data.get('offsetY', '')
+    limit_position = data.get('limit_position', '')
     begin_doc = "[\n"
-    first_line = "    },\n"
+    first_line = ",\n"
     username_line = "    {\n      \"username\": \"" + username + "\",\n"
     password_line = "      \"password\": \"" + password + "\",\n"
-    rol_line = "      \"rol\": \"" + rol + "\"\n"
+    rol_line = "      \"rol\": \"" + rol + "\",\n"
     end_line = "    }\n]"
     search_user = r"\"username\":\s*\"" + username + r"\""
+    search_if_is_the_user_admin = r"admin"
+    search_last_enter = r"{(.|\n)*?}"
+    search_positionX = r"\"positionX.*"
+    search_positionY = r"\"positionY.*"
+    search_id = r"\"id.*"
     if os.path.exists(route_to_info_users_json):
         with open(route_to_info_users_json, 'r') as file:
             lines = file.readlines()
-            lines = lines[:-2]
             content = ''.join(lines)
             if lines:
                 find_if_user_exist = re.search(search_user, content)
                 if find_if_user_exist:
-                    return jsonify({'message': 'El usuario ya estaba registrado'}), 400
-                else:     
-                    with open(route_to_info_users_json, 'w') as file:
-                        file.write(content)  # Escribimos las líneas originales menos las 2 últimas
-                        file.write(first_line)  # Añadimos el comienzo del objeto
-                        file.write(username_line)
-                        file.write(password_line)
-                        file.write(rol_line)
-                        file.write(end_line)  # Añadimos el final del documento
-                        return jsonify({'message': 'Usuario registrado con éxito'}), 200
+                    save_user = find_if_user_exist.group()
+                    find_if_is_admin_user = re.search(search_if_is_the_user_admin, save_user)
+                    if find_if_is_admin_user:
+                        return jsonify({'message': "Error, por motivos de seguridad no se podrá modificar ni el nombre, ni el rol de este usuario"}), 400
+                    else:
+                        return jsonify({'message': "Error, el usuario ya estaba registrado"}), 400
+                else: 
+                    find_last_enter = re.search(search_last_enter, content)
+                    if find_last_enter:
+                        save_last_enter = ""
+                        for match in re.finditer(search_last_enter, content):
+                            save_last_enter = match.group()
+                        find_positionX = re.search(search_positionX, save_last_enter)
+                        save_position_X = find_positionX.group()
+                        save_position_X = int(save_position_X[:-1].split(": ")[1])
+                        find_positionY = re.search(search_positionY, save_last_enter)
+                        save_position_Y = find_positionY.group()
+                        save_position_Y = int(save_position_Y.split(": ")[1])
+                        find_id = re.search(search_id, save_last_enter)
+                        save_id = find_id.group()
+                        save_id = int(save_id[:-1].split(": ")[1])
+                        save_id += 1
+                        if (save_position_X + offsetX) > limit_position:
+                            save_position_X = 0
+                            save_position_Y += offsetY
+                        else:
+                            save_position_X += offsetX
+                        id_line = "      \"id\": " + str(save_id) + ",\n"
+                        position_x_line = "      \"positionX\": " + str(save_position_X) + ",\n"
+                        position_y_line = "      \"positionY\": " + str(save_position_Y) + "\n"
+                        content = content[:-2]
+                        with open(route_to_info_users_json, 'w') as file:
+                            file.write(content)  # Escribimos las líneas originales menos las 2 últimas
+                            file.write(first_line)  # Añadimos el comienzo del objeto
+                            file.write(username_line)
+                            file.write(password_line)
+                            file.write(rol_line)
+                            file.write(id_line)
+                            file.write(position_x_line)
+                            file.write(position_y_line)
+                            file.write(end_line)  # Añadimos el final del documento
+                        return jsonify({'message': "Usuario registrado con éxito"}), 200
+                    else:
+                        return jsonify({'message': "Error inesperado"}), 400
             else:
-                return jsonify({'message': 'Texto vacío'}), 400
+                return jsonify({'message': "Error, documento vacío"}), 400
     else:
+        id_line = "      \"id\": 0,\n"
+        position_x_line = "      \"positionX\": 0,\n"
+        position_y_line = "      \"positionY\": 0\n"
         with open(route_to_info_users_json, 'w') as file:
             file.write(begin_doc)  # Añadimos el comienzo del objeto
             file.write(username_line)
             file.write(password_line)
             file.write(rol_line)
+            file.write(id_line)
+            file.write(position_x_line)
+            file.write(position_y_line)
             file.write(end_line)  # Añadimos el final del documento
-            return jsonify({'message': 'Archivo de registro de usuarios creado'}), 200
+            return jsonify({'message': "Archivo de registro de usuarios creado"}), 200
  
 @app.route('/remove-last-user', methods=['POST']) # Eliminar el último usuario ya sea administrador o monitor
 def remove_last_user():

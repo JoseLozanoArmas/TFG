@@ -2,6 +2,9 @@
     {
       "username": "admin",
       "password": "1234",
-      "rol": "ADMIN"
+      "rol": "ADMIN",
+      "id": 0,
+      "positionX": 0,
+      "positionY": 0
     }
 ]

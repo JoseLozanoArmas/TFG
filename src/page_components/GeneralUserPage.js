@@ -37,30 +37,34 @@ export const GeneralUserPage = () => {
     getJsonData();
   }, []);
 
-  console.log(saveJson)
 
-  const [users, setUsers] = useState(() => {
-    const saveUsers = localStorage.getItem(`users_${id}`);
-    if (saveUsers) {
-      return JSON.parse(saveUsers);
-    } else {
-      return [{ id: 1, positionX: 0, positionY: 0, type: 'button_plus' }];
-    }
-  });
-
-  const [userHistory, setUserHistory] = useState(() => {
-    const savedHistory = localStorage.getItem(`userHistory_${id}`);
-    if (savedHistory) {
-      return JSON.parse(savedHistory);
-    } else {
-      return [];
-    }
-  });
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem(`users_${id}`, JSON.stringify(users));
-    localStorage.setItem(`userHistory_${id}`, JSON.stringify(userHistory));
-  }, [users, userHistory]);
+    if (!saveJson) { return; }
+    let save_users = [];
+    if (saveJson.length !== 0) {
+      save_users = saveJson;
+      let lastUser = save_users[save_users.length - 1];
+      const newPositionX = lastUser.positionX + 200;
+      let positionX = 0;
+      if (newPositionX >= maxPageWidth) {
+        positionX = 0;
+      } else {
+        positionX = newPositionX;
+      }
+      let positionY = 0;
+      if (newPositionX >= maxPageWidth) {
+        positionY = lastUser.positionY + userHeight;
+      } else {
+        positionY = lastUser.positionY;
+      }
+      save_users.push({ id: lastUser.id + 1, positionX: positionX, positionY: positionY, type: "button_plus"});
+    } else {
+      save_users.push({ id: 0, positionX: 0, positionY: 0, type: "button_plus"});
+    }
+    setUsers(save_users);
+  }, [saveJson]); 
 
   const handleButtonPlusClick = async (id) => {
     const clickedUser = users.find((user) => user.id === id);
@@ -82,9 +86,6 @@ export const GeneralUserPage = () => {
     } else {
       positionY = clickedUser.positionY;
     }
-
-    const updatedUser = { ...clickedUser, positionX, positionY,};
-    setUserHistory((prevHistory) => [...prevHistory, { positionX: clickedUser.positionX, positionY: clickedUser.positionY },]);
   
     const newUser = {
       id: users.length + 1,
@@ -92,23 +93,11 @@ export const GeneralUserPage = () => {
       positionY: clickedUser.positionY,
       type: 'user',
     };
-  
-    setUsers((prevUsers) => [
-      ...prevUsers.map((user) => (user.id === id ? updatedUser : user)),
-      newUser,
-    ]);    
 
     navigate(`/creation_user/${newUser.id}`);
   };
 
-  const removeLastUser = async () => {    
-    setUserHistory((prevHistory) => {
-      if (prevHistory.length === 0) { return prevHistory; }
-      const lastPosition = prevHistory[prevHistory.length - 1];
-      setUsers((prevButtons) => prevButtons.map((user) => user.type === 'button_plus' ? { ...user, ...lastPosition } : user));
-      return prevHistory.slice(0, -1);
-    });
-    setUsers((prevButtons) => prevButtons.slice(0, -1));
+  const removeLastUser = async () => {
     try {
       const response = await fetch(route_to_server + 'remove-last-user', {
         method: 'POST',
@@ -127,6 +116,7 @@ export const GeneralUserPage = () => {
       alert('Error al conectar con el servidor.');
       console.error(error);
     }
+    window.location.reload();
   };
 
   const handleButtonUserClick = async (id) => {
