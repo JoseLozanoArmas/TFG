@@ -22,32 +22,38 @@ export const InternalUserPage = () => {
 
   // localStorage.clear();
 
-  const [userName, setUserName] = useState(() => {
-    const savedUserName = localStorage.getItem(`userName_${id}`);
-    if (savedUserName) {
-      return JSON.parse(savedUserName);
-    } else {
-      return "";
-    }
-  }); 
+  const [userName, setUserName] = useState(""); 
+  const [password, setPassword] = useState(""); 
+  const [rol, setRol] = useState(""); 
 
-  const [password, setPassword] = useState(() => {
-    const savedPassword = localStorage.getItem(`password_${id}`);
-    if (savedPassword) {
-      return JSON.parse(savedPassword);
-    } else {
-      return "";
-    }
-  }); 
-
-  const [rol, setRol] = useState(() => {
-    const savedRol = localStorage.getItem(`rol_${id}`);
-    if (savedRol) {
-      return JSON.parse(savedRol);
-    } else {
-      return "";
-    }
-  }); 
+  useEffect(() => {
+    const getJsonData = async () => {
+      try {
+        const response = await fetch(route_to_server + 'get-user-information', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            text: id
+          }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          let save_info = JSON.parse(data.data)
+          setUserName(save_info["username"]);
+          setPassword(save_info["password"]);
+          setRol(save_info["rol"]);
+        } else {
+          alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        alert('Error al conectar con el servidor.');
+        console.error(error); 
+      }
+    };
+    getJsonData();
+  }, []);
 
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -56,12 +62,6 @@ export const InternalUserPage = () => {
     const userRole = localStorage.getItem('user_role');
     setIsAdmin(userRole === 'admin');
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem(`userName_${id}`, JSON.stringify(userName));
-    localStorage.setItem(`password_${id}`, JSON.stringify(password));
-    localStorage.setItem(`rol_${id}`, JSON.stringify(rol));
-  })
 
   const handleLogoChange = (event) => {
     const file = event.target.files[0];

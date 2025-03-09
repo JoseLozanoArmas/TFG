@@ -142,7 +142,7 @@ export const GeneralUserPage = () => {
         </button>
         ) : null
       ))} 
-      {users.length > 1 && isAdmin && (
+      {users.length > 2 && isAdmin && (
         <button className="button_remove_last" onClick={removeLastUser}>
           Deshacer último usuario
         </button>

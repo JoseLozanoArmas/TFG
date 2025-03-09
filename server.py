@@ -1661,6 +1661,43 @@ def get_info_student_register():
     else:
         return jsonify({'message': f"Error, no se encontró la información de los rankins del {block_name}"}), 500
 
+@app.route('/get-user-information', methods=["POST"])
+def get_user_information():
+    data = request.get_json()
+    id = data.get('text', '')
+    search_enter = r"{(.|\n)*?}"
+    search_id = r"\"id\": " + str(id)
+    search_name = r"\"username\".*"
+    search_password = r"\"password\".*"
+    search_rol = r"\"rol\".*"
+    line_begin_info = "{\n"
+    empty_user_line = "  \"username\": \"\",\n"
+    empty_password_line = "  \"password\": \"\",\n"
+    empty_rol_line = "  \"rol\": \"\""
+    line_end_info = "\n}"
+    if os.path.exists(route_to_info_users_json):
+        with open(route_to_info_users_json, "r") as file:
+            lines = file.readlines()
+            content = ''.join(lines)
+            if lines:
+                for enter in re.finditer(search_enter, content):
+                    save_enter = enter.group()
+                    find_id = re.search(search_id, save_enter)
+                    find_name = re.search(search_name, save_enter)
+                    find_password = re.search(search_password, save_enter)
+                    find_rol = re.search(search_rol, save_enter)
+                    if find_id:
+                        save_name = find_name.group()
+                        save_password = find_password.group()
+                        save_rol = find_rol.group()
+                        save_rol = save_rol[:-1]
+                        object_info = line_begin_info + "  " + save_name + "\n  " + save_password + "\n  " + save_rol + line_end_info
+                        return jsonify({'data': object_info}), 200
+                object_info = line_begin_info + empty_user_line + empty_password_line + empty_rol_line + line_end_info 
+                return jsonify({'data': object_info}), 200
+    else:
+        return jsonify({'message': 'Error, no se encontró el archivo de registro'}), 400
+
 @app.route('/get-tittle-and-description', methods=["POST"]) 
 def get_tittle_and_description(): 
     data = request.get_json()
