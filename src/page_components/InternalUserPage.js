@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './InternalUserPage.css';
 import default_user_image from '../img/user_img.png';
-
-const route_to_server = "http://127.0.0.1:5000/"
+import { route_to_server } from '../App';
 
 export const InternalUserPage = () => {
   const navigate = useNavigate();

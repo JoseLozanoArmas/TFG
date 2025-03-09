@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Navigate, Route, useNavigate, useParams } from 'react-router-dom';
 import './QuestionPageAdmin.css';
 import icon from '../img/icon_plus.png';
-
-const route_to_server = "http://127.0.0.1:5000/"
+import { route_to_server } from '../App';
 
 export const QuestionPageAdmin = () => {
   // localStorage.clear();

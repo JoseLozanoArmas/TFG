@@ -3,8 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import './BlockInternalAdminPage.css';
 import logo from '../img/logo_ull.png';
 import icon from '../img/icon_plus.png';
-
-const route_to_server = "http://127.0.0.1:5000/"
+import { route_to_server } from '../App';
 
 export const BlockInternalAdminPage = () => {
   const navigate = useNavigate();
