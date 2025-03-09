@@ -1592,21 +1592,25 @@ def check_if_the_code_pass_the_test(user_file, admin_enter, admin_result):
                 result = result.stdout
                 result = result[:-1] # Eliminamos el salto de línea que se genera por defect
             elif extension == "c": # Funciona
-                executable_name = "a.out"
+                delete_file_name = user_file.split("/")[:-1]
+                executable_name = '/'.join(delete_file_name) + "/a.out"
                 correct_compilation = subprocess.run(["g++", user_file, "-o", executable_name], capture_output = True)
                 if correct_compilation.returncode == 0: # En caso de que se haya podido compilar ejecutamos el resultado
                     result = subprocess.run([f"./{executable_name}", admin_enter], capture_output = True, text = True)
                     result = result.stdout
                     result = result[:-1] # Eliminamos el salto de línea que se genera por defecto
+                    os.unlink(executable_name) # Eliminamos el ejecutable resultante
                 else:
                     return False
             elif extension == "cc": # Funciona
-                executable_name = "a.out"
+                delete_file_name = user_file.split("/")[:-1]
+                executable_name = '/'.join(delete_file_name) + "/a.out"
                 correct_compilation = subprocess.run(["g++", user_file, "-o", executable_name], capture_output = True)
                 if correct_compilation.returncode == 0: # En caso de que se haya podido compilar ejecutamos el resultado
                     result = subprocess.run([f"./{executable_name}", admin_enter], capture_output = True, text = True)
                     result = result.stdout
                     result = result[:-1]
+                    os.unlink(executable_name) # Eliminamos el ejecutable resultante
                 else:
                     return False
         else: # Si no coincide se retorna como falso (no está admitido)
