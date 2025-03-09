@@ -139,6 +139,7 @@ export const GeneralUserPage = () => {
           }
         } className="image-button" style={{transform: `translate(${user.positionX}px, ${user.positionY}px)`}}>
         <img src={require(user.type === 'button_plus' ? '../img/icon_plus.png' : '../img/user_img.png')} className="user-image"/>
+        <span className="label-name"> {user.username} </span>
         </button>
         ) : null
       ))} 
