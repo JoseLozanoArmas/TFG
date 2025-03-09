@@ -9,10 +9,18 @@
     },
     {
       "username": "prueba",
-      "password": "1234",
-      "rol": "MONITOR",
+      "password": "1234567",
+      "rol": "ADMIN",
       "id": 1,
       "positionX": 200,
+      "positionY": 0
+    },
+    {
+      "username": "monitor",
+      "password": "1234",
+      "rol": "MONITOR",
+      "id": 2,
+      "positionX": 400,
       "positionY": 0
     }
 ]

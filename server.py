@@ -937,9 +937,14 @@ def add_new_user():
     search_user = r"\"username\":\s*\"" + username + r"\""
     search_if_is_the_user_admin = r"admin"
     search_last_enter = r"{(.|\n)*?}"
+    search_enter = r"{\n\s*?\"username\": \"" + username + r"\"(.|\n)*?}"
     search_positionX = r"\"positionX.*"
     search_positionY = r"\"positionY.*"
     search_id = r"\"id.*"
+    search_rol = r"\"rol.*"
+    first_middle = ""
+    second_middle = ""
+    final_json = ""
     if os.path.exists(route_to_info_users_json):
         with open(route_to_info_users_json, 'r') as file:
             lines = file.readlines()
@@ -950,9 +955,40 @@ def add_new_user():
                     save_user = find_if_user_exist.group()
                     find_if_is_admin_user = re.search(search_if_is_the_user_admin, save_user)
                     if find_if_is_admin_user:
-                        return jsonify({'message': "Error, por motivos de seguridad no se podrá modificar ni el nombre, ni el rol de este usuario"}), 400
+                        find_enter = re.search(search_enter, content)
+                        save_enter = find_enter.group()
+                        find_rol = re.search(search_rol, save_enter)
+                        save_rol = find_rol.group()[:-1].split(": ")[1].split('"')[1]
+                        if rol != save_rol:
+                            return jsonify({'message': "Por motivos de seguridad no se podrá modificar el rol de este usuario"}), 400
+                        find_id = re.search(search_id, find_enter.group())
+                        find_position_X = re.search(search_positionX, find_enter.group())
+                        find_position_Y = re.search(search_positionY, find_enter.group())
+                        new_line_id = "      " + find_id.group() + "\n"
+                        new_line_positionX = "      " + find_position_X.group() + "\n"
+                        new_line_positionY = "      " + find_position_Y.group() + "\n    }"
+                        first_middle = content[:find_enter.start() - 4]
+                        new_content = username_line + password_line + rol_line + new_line_id + new_line_positionX + new_line_positionY
+                        second_middle = content[find_enter.end():]
+                        final_json = first_middle + new_content + second_middle
+                        with open(route_to_info_users_json, "w") as file:
+                            file.write(final_json)
+                        return jsonify({'message': "Usuario actualizado"}), 200
                     else:
-                        return jsonify({'message': "Error, el usuario ya estaba registrado"}), 400
+                        find_enter = re.search(search_enter, content)
+                        find_id = re.search(search_id, find_enter.group())
+                        find_position_X = re.search(search_positionX, find_enter.group())
+                        find_position_Y = re.search(search_positionY, find_enter.group())
+                        new_line_id = "      " + find_id.group() + "\n"
+                        new_line_positionX = "      " + find_position_X.group() + "\n"
+                        new_line_positionY = "      " + find_position_Y.group() + "\n    }"
+                        first_middle = content[:find_enter.start() - 4]
+                        new_content = username_line + password_line + rol_line + new_line_id + new_line_positionX + new_line_positionY
+                        second_middle = content[find_enter.end():]
+                        final_json = first_middle + new_content + second_middle
+                        with open(route_to_info_users_json, "w") as file:
+                            file.write(final_json)
+                        return jsonify({'message': "Usuario actualizado"}), 200
                 else: 
                     find_last_enter = re.search(search_last_enter, content)
                     if find_last_enter:
