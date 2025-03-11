@@ -907,17 +907,29 @@ def reset_blocks_data():
 
 @app.route('/reset-users-registered-data', methods=['POST']) # Eliminar todos los usuarios registrados, ya sean administradores o monitores
 def reset_users_registered_data():
-    folder_path = 'data/users_registered'
-    try:
-        for filename in os.listdir(folder_path):
-            file_path = os.path.join(folder_path, filename)
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)  # Eliminar archivo o enlace
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)  # Eliminar carpeta
+    folder_path = 'data/users_registered/info_users.json'
+    default_begin_doc = "[\n    {\n"
+    default_username = "      \"username\": \"admin\",\n"
+    default_password = "      \"password\": \"1234\",\n"
+    default_rol = "      \"rol\": \"ADMIN\",\n"
+    default_id = "      \"id\": 0,\n"
+    default_position_x = "      \"positionX\": 0,\n"
+    default_position_y = "      \"positionY\": 0\n"
+    default_end_doc = "    }\n]"
+
+    if os.path.exists(folder_path):
+        with open(folder_path, "w") as file:
+            file.write(default_begin_doc)
+            file.write(default_username)
+            file.write(default_password)
+            file.write(default_rol)
+            file.write(default_id)
+            file.write(default_position_x)
+            file.write(default_position_y)
+            file.write(default_end_doc)
         return jsonify({'message': 'Información de usuarios registrados eliminada con éxito'}), 200
-    except Exception as e:
-        return jsonify({'message': f'Error al eliminar contenido: {str(e)}'}), 500
+    else:
+        return jsonify({'message': 'No se localizó el archivo de registro de usuarios'}), 500
 
 @app.route('/add-new-user', methods=['POST']) # Añadir un nuevo usuario ya sea administrador o monitor
 def add_new_user():
