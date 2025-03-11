@@ -463,6 +463,7 @@ export const BlockGeneralAdminPage = () => {
           }
         } className="image-button" style={{transform: `translate(${button.positionX}px, ${button.positionY}px)`}}>
         <img src={require(button.type === 'boton_mas' ? '../img/icon_plus.png' : '../img/logo_ull.png')} className="user-image"/>
+        {button.type !== "boton_mas" && (<span className="label-name"> Bloque {button.id} </span>)}
         </button>
         ) : null
       ))}

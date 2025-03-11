@@ -137,8 +137,8 @@ export const RankingInternalPage = () => {
           <div className="slot_username_reference">
             Usuario
           </div>
-          <button className="finish_user" onClick={() => MoveToFirstPage()}> Volver a la página de inicio</button>
         </div>  
+        <button className="finish_user" onClick={() => MoveToFirstPage()}> Volver a la página de inicio</button>
       </div>  
     );
   }

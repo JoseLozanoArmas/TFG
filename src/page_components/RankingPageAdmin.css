@@ -31,3 +31,11 @@
   transition: transform 0.3s ease; 
   margin-left: 10px;
 }
+
+.label-name {
+  font-size: 20px;
+  color: black;
+  text-align: center;
+  display: block;
+  font-weight: bold;
+}

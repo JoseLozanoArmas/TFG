@@ -1155,7 +1155,7 @@ def localize_all_questions_server():
         final_json += "\n]" 
         return jsonify({'data': final_json}), 200    
     else:
-        return jsonify({'message': "Error, no se pudo localizar las preguntas"}), 400
+        return jsonify({'message': "No se han creado preguntas para este ranking"}), 500
 
 def filter_routes_to_tests_for_questions(block_id, question_id, user_file):
     route_to_test = route_to_admins_and_monitors_tests + "/" + block_id + "/" + question_id + "/"

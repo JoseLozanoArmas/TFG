@@ -67,6 +67,7 @@ export const RankingPageAdmin = () => {
         <button key={button.id} className="image-button" style={{transform: `translate(${button.positionX}px, ${button.positionY}px)`}}
           onClick={() => MoveToRankingPage(button.block_name)}>
           <img src={require("../img/logo_ull.png")} className="user-image"/>
+          <span className="label-name"> Bloque {button.id} </span>
         </button>
       ))}
     </div>
