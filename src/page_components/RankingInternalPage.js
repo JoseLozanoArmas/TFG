@@ -182,46 +182,4 @@ export const RankingInternalPage = () => {
       <button className="finish_user" onClick={() => MoveToFirstPage()}> Volver a la página de inicio</button>
     </div>
   )
-
-  /*
-  //VERSION ANTIGUA
-  return (
-    <div className="App_ranking_internal_page">
-      <div className="tittle_ranking_internal_page">
-        <h1>Ranking de puntuaciones del bloque {block_number}</h1>
-      </div>
-      <div className="user_slot">
-          <div className="slot_id_reference">
-            Posición
-          </div>
-          <div className="slot_username_reference">
-            Usuario
-          </div>
-          <div className="slot_puntuation_reference">
-            Puntuación
-          </div>
-          <div className="slot_time_reference">
-            Tiempo total
-          </div>
-      </div>
-      {userSlots.map((slot) => (
-        <div key={slot.id} className="user_slot">
-          <div className={slot.id_className}>
-            {slot.id}
-          </div>
-          <div className={slot.username_className}>
-            {slot.username}
-          </div>
-          <div className={slot.puntuation_className}>
-            {slot.puntuation}
-          </div>
-          <div className={slot.time_className}>
-            {slot.time}
-          </div>
-        </div>
-      ))}
-      <button className="finish_user" onClick={() => MoveToFirstPage()}> Volver a la página de inicio</button>
-    </div>
-  )
-    */
 }

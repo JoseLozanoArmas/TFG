@@ -1690,7 +1690,7 @@ def get_info_student_register():
     data = request.get_json()
     block_name = data.get('text', '')
     create_route = route_to_student_register + "/" + block_name + "/" + "student_register.json"
-    if os.path.exists(route_to_data_json_block_and_question):
+    if os.path.exists(create_route):
         with open(create_route, "r") as file:
             lines = file.readlines()
             content = ''.join(lines)
