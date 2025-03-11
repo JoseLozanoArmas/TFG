@@ -8,15 +8,6 @@ export const RankingPageAdmin = () => {
   const { id } = useParams();
   const [saveJson, setSaveJson] = useState();
 
-  const [blockButtons, setblockButtons] = useState(() => {
-    const savedblockButtons = localStorage.getItem(`block_buttons_${id}`);
-    if (savedblockButtons) {
-      return JSON.parse(savedblockButtons);
-    } else {
-      return [];
-    }
-  });
-
   useEffect(() => {
     const getJsonData = async () => {
       try {
@@ -35,6 +26,9 @@ export const RankingPageAdmin = () => {
   }, []);
 
 
+  const [blockButtons, setblockButtons] = useState([]);
+
+
   useEffect(() => {
     if (!saveJson) { return; }
     const getUserInformation = () => {
@@ -45,18 +39,11 @@ export const RankingPageAdmin = () => {
       setblockButtons(save_buttons)
     }
     getUserInformation();
-  }, [saveJson])
-
-
-  useEffect(() => {
-    localStorage.setItem(`block_buttons_${id}`, JSON.stringify(blockButtons))
-  })
+  }, [saveJson]);
 
   const MoveToRankingPage = (id) => {
     navigate(`/ranking_internal_page/${id}`)
   }
-
-  // localStorage.clear()
 
   return (
     <div className="App_ranking_general_page">
