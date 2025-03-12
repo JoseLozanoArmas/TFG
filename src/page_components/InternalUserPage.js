@@ -28,7 +28,7 @@ export const InternalUserPage = () => {
   useEffect(() => {
     const getJsonData = async () => {
       try {
-        const response = await fetch(route_to_server + 'get-user-information', {
+        const response = await fetch(route_to_server + 'get-user-information', { // Recibimos la información del usuario en cuestión
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ export const InternalUserPage = () => {
     setRol(event.target.value); 
   };
 
-  const checkAllInformation = async () => {
+  const checkAllInformation = async () => { // Comprobamos que todo sea correcto para poder añadir un usuario
     if (!userName.trim()) { 
       alert("Por favor introduzca un nombre al usuario");
       return;
@@ -103,7 +103,7 @@ export const InternalUserPage = () => {
     }
 
     try {
-      const response = await fetch(route_to_server + 'add-new-user', {
+      const response = await fetch(route_to_server + 'add-new-user', { // Añadir nuevos usuarios
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

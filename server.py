@@ -9,10 +9,7 @@ from datetime import date, time, datetime
 app = Flask(__name__)
 CORS(app)
 
-UPLOAD_FOLDER = 'src/users_input'
 ALLOWED_EXTENSIONS = {'py', 'c', 'cc', 'rb', 'js'} 
-
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Rutas a los ficheros de registro de información
 route_to_data_json_block_and_question = "data/app_data/data_information_app.json" # RUTA AL JSON QUE REGISTRA LOS BLOQUES Y PREGUNTAS (INFO)
@@ -34,19 +31,6 @@ def allowed_file(filename): # Función para comprobar que los ficheros tienen la
     if extension not in ALLOWED_EXTENSIONS: 
         return False
     return True
-
-# Funciones que se deberían borrar una vez comprobadas
-@app.route('/save-text', methods=['POST'])
-def save_text():
-    data = request.get_json()  
-    text = data.get('text', '')  
-    if text:
-        with open('src/users_input/entrada.py', 'w') as file: # Si le pongo la opción 'w' sobreescribe con 'a' añado
-            file.write(text + '\n')
-        return jsonify({'message': 'Texto guardado con éxito'}), 200
-    else:
-        return jsonify({'message': 'Texto vacío'}), 400
-
 
 # Funciones de usuario    
 @app.route('/save-user-name', methods=['POST']) # Crear una carpeta con el nombre del estudiante
@@ -75,7 +59,7 @@ def create_block_folder_user():
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
 
-@app.route('/create-register-folder-user', methods=["POST"])
+@app.route('/create-register-folder-user', methods=["POST"]) # Función que crea la carpeta de registro del usuario
 def create_register_folder_user():
     data = request.get_json()
     block_name = data.get('block_name', '')
@@ -89,7 +73,7 @@ def create_register_folder_user():
         os.makedirs(folder_path, exist_ok = True)
         return jsonify({'message': 'Carpeta de registro creada'}), 200
 
-@app.route('/regist-user', methods=["POST"])
+@app.route('/regist-user', methods=["POST"]) # Función que permite registrar al usuario en el registro de un bloque
 def regist_user(): 
     data = request.get_json()
     username = data.get('text', '')
@@ -128,7 +112,7 @@ def regist_user():
             file.write(end_doc)
             return jsonify({'message': f'Carpeta creada con éxito en {create_route}'}), 200
     
-@app.route('/create-question-folder-user', methods=["POST"])
+@app.route('/create-question-folder-user', methods=["POST"]) # Función para crear la carpeta de preguntas del usuario
 def create_question_folder_user():
     data = request.get_json()  
     user_name = data.get('text', '')
@@ -185,7 +169,7 @@ def create_block_folder_admin():
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
      
-@app.route('/create-block-folder-admin-for-puntuations', methods=["POST"])
+@app.route('/create-block-folder-admin-for-puntuations', methods=["POST"]) # Creación de la carpeta de puntuaciones
 def create_block_folder_admin_for_puntuations():
     data = request.get_json()  
     block_name = data.get('text', '') 
@@ -197,7 +181,7 @@ def create_block_folder_admin_for_puntuations():
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
     
-@app.route('/regist-block-admin', methods=["POST"])
+@app.route('/regist-block-admin', methods=["POST"]) # Función para registrar un bloque
 def regist_block_admin():
     data = request.get_json()
     block_id = data.get('text', '')
@@ -233,7 +217,7 @@ def regist_block_admin():
                 file.write(end_doc)
         return jsonify({'message': f'Archivo de registro creado'}), 200
 
-@app.route('/regist-block-button', methods=["POST"])
+@app.route('/regist-block-button', methods=["POST"]) # Función para registrar el botón de un bloque
 def regist_block_button():
     data = request.get_json()
     button_id = data.get('text', '')
@@ -289,7 +273,7 @@ def create_question_block_folder_admin():
     else:
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
     
-@app.route('/regist-question-admin', methods=["POST"])
+@app.route('/regist-question-admin', methods=["POST"]) # Función para registrar una pregunta
 def regist_question_admin():
     data = request.get_json()  
     block_id = data.get('text', '')
@@ -364,7 +348,7 @@ def regist_question_admin():
         return jsonify({'message':'Error, no se encontró el documento'}), 400
     
 
-@app.route('/regist-question-button', methods=["POST"])
+@app.route('/regist-question-button', methods=["POST"]) # Función para registrar un botón de pregunta
 def regist_question_button():
     data = request.get_json()  
     block_id = data.get('text', '')
@@ -1080,10 +1064,7 @@ def remove_last_user():
     return jsonify({'message': 'Usuario eliminado con éxito'}), 200
 
 
-# Funciones de corrección de código
-
-# FALTA ADAPTARLAS CON EL RESTO DE FUNCIONES
-# P3    
+# Funciones de corrección de código  
 @app.route('/check_is_possible_to_correct', methods = ["POST"])
 def check_is_possible_to_correct():
     data = request.get_json()  
@@ -1095,8 +1076,6 @@ def check_is_possible_to_correct():
         return jsonify({'data': False}), 200
     return jsonify({'data': True}), 200
 
- 
-# P4
 def save_all_user_routes_files(user_name, block_id): 
     users_files = []
     create_route_files = route_to_users_input + "/" + user_name + "/" + block_id # Comprobamos que la dirección del usuario existe
@@ -1123,7 +1102,6 @@ def get_user_file(user_name, block_id, question_name):
         return jsonify({'message': 'Hubo un error durante el procesado de los datos, vuelva a intentarlo'}), 400     
     return users_file
 
-# P5
 def localize_all_questions(block_id):
     all_questions = []
     route_to_tests = route_to_admins_and_monitors_tests + "/" + block_id # Guardamos la dirección a los tests
@@ -1136,7 +1114,7 @@ def localize_all_questions(block_id):
     all_questions.sort()
     return all_questions
 
-@app.route('/localize-all-questions-server', methods=["POST"])
+@app.route('/localize-all-questions-server', methods=["POST"]) # Función para localizar todas las preguntas creadas
 def localize_all_questions_server():
     data = request.get_json()
     block_name = data.get('text', '')
@@ -1350,7 +1328,7 @@ def procesate_object(string_to_procesate):
         second_half = float(second_half)
     return second_half
 
-def sort_users_puntuations_file(block_id): # REVISAR???
+def sort_users_puntuations_file(block_id): 
     create_route = route_to_rankings_info + "/" + block_id + ".json"
     search_entrace = r"{(.|\n)*?}"
     search_user = r"\"username\".*?,"
@@ -1400,7 +1378,7 @@ def sort_users_puntuations_file(block_id): # REVISAR???
     else:
         return jsonify({'message': "Error, no se encontró el documento"}), 400
 
-@app.route('/correct-user-enter', methods=["POST"])
+@app.route('/correct-user-enter', methods=["POST"]) # Función para corregir la entrada de un usuario
 def correct_user_enter():
     data = request.get_json()  
     username = data.get('text', '')
@@ -1427,7 +1405,7 @@ def correct_user_enter():
     sort_users_questions_by_points_and_time(block_name)
     return jsonify({'data': True}), 200
 
-def regist_question_correct_time(block_id, question_id, user, points, question_is_correct):
+def regist_question_correct_time(block_id, question_id, user, points, question_is_correct): # Función para registrar la información de un usuario en el "student_register"
     create_route = route_to_student_register + "/" + block_id + "/" + "student_register.json"
     search_user = r"(.|\n)*?{\n\s*\"username\": \"" + user + r".*"
     search_not_questions = r"(.|\n)*?{\n\s*\"username\": \"" + user + r".*(\s|\n)*?}"
@@ -1525,7 +1503,7 @@ def regist_question_correct_time(block_id, question_id, user, points, question_i
     else:
         return jsonify({'message': "Error, no se encontró el archivo de registro"}), 400
 
-def sort_users_questions_by_points_and_time(block_name):
+def sort_users_questions_by_points_and_time(block_name): # Función para ordenar las preguntas de un JSON de registro
     create_route = route_to_student_register + "/" + block_name + "/" + "student_register.json"
     search_only_user_enter = r"{(\s|\n)*?\"username\":.*(\s|\n)*?}" # busca bien cuando solo hay un nombre
     search_complete_enters = r"{(\s|\n)*?\"username\"(.|\n)*?}(\s|\n)*?}" # busca bien cuando es la entrada completa
@@ -1580,8 +1558,7 @@ def sort_users_questions_by_points_and_time(block_name):
     else:
         return jsonify({'message': "Error, no se localizó el archivo"}), 400
 
-# P6
-def check_if_the_code_pass_the_test(user_file, admin_enter, admin_result):
+def check_if_the_code_pass_the_test(user_file, admin_enter, admin_result): # Función que ejecuta las entradas de los usuarios para comprobar si son correctas
     save_result = ""
     with open(admin_result, "r") as file:
         save_result = file.readlines()
@@ -1637,7 +1614,7 @@ def check_if_the_code_pass_the_test(user_file, admin_enter, admin_result):
 
  
 # Lecturas de JSON
-@app.route('/get-data-blocks-buttons-json', methods=["GET"])
+@app.route('/get-data-blocks-buttons-json', methods=["GET"]) # Recuperamos la información del archivo de registro de los botones de bloque
 def get_data_blocks_buttons_json():
     if os.path.exists(route_to_json_buttons_blocks): 
         with open(route_to_json_buttons_blocks, 'r') as file:
@@ -1650,7 +1627,7 @@ def get_data_blocks_buttons_json():
     else:
         pass
 
-@app.route('/get-info-users-json', methods=["GET"])
+@app.route('/get-info-users-json', methods=["GET"]) # Recuperamos la información del archivo de registro de usuarios
 def get_info_users_json():
     if os.path.exists(route_to_info_users_json): 
         with open(route_to_info_users_json, 'r') as file:
@@ -1663,7 +1640,7 @@ def get_info_users_json():
     else:
         pass
 
-@app.route('/get-rankings-info', methods=["POST"])
+@app.route('/get-rankings-info', methods=["POST"]) # Recuperamos la información de los archivos de registro de los rankings
 def get_rankins_info():
     data = request.get_json()
     block_id = data.get('text', '')
@@ -1679,7 +1656,7 @@ def get_rankins_info():
     else:
         return jsonify({'message': f"Error, no se encontró la información de los rankins del {block_id}"}), 500
 
-@app.route('/get-info-question-test', methods=["POST"])
+@app.route('/get-info-question-test', methods=["POST"]) # Recuperamos la información de los archivos con las pruebas
 def get_info_question_test(): 
     data = request.get_json()
     block_id = data.get('text', '')
@@ -1697,7 +1674,7 @@ def get_info_question_test():
         return jsonify({'message': f"Error, no se encontró la información de las pruebas"}), 500
  
 
-@app.route('/get-info-student-register', methods=["POST"])
+@app.route('/get-info-student-register', methods=["POST"]) # Recuperamos los JSONs de registro de los rankings
 def get_info_student_register():
     data = request.get_json()
     block_name = data.get('text', '')
@@ -1713,7 +1690,7 @@ def get_info_student_register():
     else:
         return jsonify({'message': f"Error, no se encontró la información de los rankins del {block_name}"}), 500
 
-@app.route('/get-user-information', methods=["POST"])
+@app.route('/get-user-information', methods=["POST"]) # Función para recibir la información de un usuario
 def get_user_information():
     data = request.get_json()
     id = data.get('text', '')
@@ -1750,7 +1727,7 @@ def get_user_information():
     else:
         return jsonify({'message': 'Error, no se encontró el archivo de registro'}), 400
 
-@app.route('/get-tittle-and-description', methods=["POST"]) 
+@app.route('/get-tittle-and-description', methods=["POST"]) # Función para recibir el título y descripción de una pregunta
 def get_tittle_and_description(): 
     data = request.get_json()
     block_id = data.get('text', '')
@@ -1791,7 +1768,7 @@ def get_tittle_and_description():
     else:
         return jsonify({'message': 'Error, no se encontró el fichero del que tomar la información'}), 400
 
-@app.route('/get-questions-of-internal-block', methods=["POST"])
+@app.route('/get-questions-of-internal-block', methods=["POST"]) # Función para recibir todas las preguntas asociadas a un bloque
 def get_questions_of_internal_block():
     data = request.get_json()
     block_id = data.get('text', '')
@@ -1819,7 +1796,7 @@ def get_questions_of_internal_block():
     else:
         return jsonify({'message': "Error, no se encontró el archivo de registro"}), 400
 
-def procesate_object_info(object_info): 
+def procesate_object_info(object_info): # Función para procesar la información obtenida de la pregunta
     procesate_object = "[\n"
     counter = 1
     search_begin_question = r"\"question_" + str(counter) + r"\".*?{"

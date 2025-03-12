@@ -12,8 +12,8 @@ export const BlockGeneralAdminPage = () => {
 
   useEffect(() => {
     const getJsonData = async () => {
-      try {
-        const response = await fetch(route_to_server + 'get-data-blocks-buttons-json');
+      try { // Recibimos los datos de registro de los bloques
+        const response = await fetch(route_to_server + 'get-data-blocks-buttons-json'); 
         const data = await response.json();
         if (response.ok) {
           setSaveJson(JSON.parse(data.data));  // Guardamos el contenido en el estado
@@ -27,11 +27,9 @@ export const BlockGeneralAdminPage = () => {
     getJsonData();
   }, []);
 
-  // localStorage.clear();
-
   const [buttons, setButtons] = useState([]);
 
-  useEffect(() => {
+  useEffect(() => { // Procesamos los botones en base a la información registrada
     if (!saveJson) { return; }
     let save_buttons = [];
     if (saveJson.length !== 0) {
@@ -124,7 +122,7 @@ export const BlockGeneralAdminPage = () => {
       console.error(error);
     }
 
-    try {
+    try { // Crea el bloque para almacenar las puntuaciones
       const response = await fetch(route_to_server + 'create-block-folder-admin-for-puntuations', {
         method: 'POST',
         headers: {
@@ -223,7 +221,7 @@ export const BlockGeneralAdminPage = () => {
         console.error(error);
       }
 
-      try { // Llamamos al método que crea la carpeta del bloque del usuario
+      try { // Llamamos al método que crea la carpeta de registro del usuario
         const response = await fetch(route_to_server + 'create-register-folder-user', {
           method: 'POST',
           headers: {
@@ -246,7 +244,7 @@ export const BlockGeneralAdminPage = () => {
         console.error(error);
       }
 
-      try { // Llamamos al método que crea la carpeta del bloque del usuario
+      try { // Llamamos al método que añade al usuario al "student_register" del bloque
         const response = await fetch(route_to_server + 'regist-user', {
           method: 'POST',
           headers: {

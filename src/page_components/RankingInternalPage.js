@@ -18,7 +18,7 @@ export const RankingInternalPage = () => {
   useEffect(() => {
     const getAllQuestions = async() => {
       try { 
-        const response = await fetch(route_to_server + 'localize-all-questions-server', {
+        const response = await fetch(route_to_server + 'localize-all-questions-server', { // Localizamos todas las preguntas creadas en el bloque
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ export const RankingInternalPage = () => {
   useEffect(() => {
     const getJsonData = async() => {
       try { 
-        const response = await fetch(route_to_server + 'get-info-student-register', {
+        const response = await fetch(route_to_server + 'get-info-student-register', { // Accedemos la información de los rankings de un bloque
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ export const RankingInternalPage = () => {
 
   useEffect(() => {
     if (!saveJson || !saveQuestions) return;
-    const getUserInformation = () => {
+    const getUserInformation = () => { // Creamos el ranking dando las posiciones, puntuaciones y el tiempo en caso de superar todas las pruebas
       let save_slots = []
       for (let i = 0; i < saveJson.length; ++i) {
         saveJson[i]["id"] = `${i + 1}º`;
@@ -104,7 +104,6 @@ export const RankingInternalPage = () => {
         for (let j = 0; j < saveQuestions.length; ++j) {
           if (!saveJson[i][`question_${j + 1}`]) { // En caso de que la pregunta no exista
             saveJson[i][`question_${j + 1}`] = {points: 0};
-            console.log("no está") // TENDRIA QUE DECIR QUE EN ESTA PREGUNTA EL USUARIO TIENE 0 PUNTOS Y NO PONER EL TIEMPO
           } else{
             if (saveJson[i][`question_${j + 1}`].time !== "9000-12-31 23:59:59") {
               saveJson[i]["class_time"] = "correct_time";
@@ -124,7 +123,7 @@ export const RankingInternalPage = () => {
     navigate('/');
   } 
 
-  if (!saveQuestions) {
+  if (!saveQuestions) { // En caso de acceder al ranking y no haber preguntas creadas
     return (
       <div className="App_ranking_internal_page">
         <div className="tittle_ranking_internal_page">
@@ -143,7 +142,7 @@ export const RankingInternalPage = () => {
     );
   }
 
-  return (
+  return ( // Se muestra toda la información de los usuarios en base al ranking
     <div className="App_ranking_internal_page">
       <div className="tittle_ranking_internal_page">
         <h1>Ranking de puntuaciones del bloque {block_number}</h1>

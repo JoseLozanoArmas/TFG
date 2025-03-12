@@ -15,7 +15,7 @@ export const UserPageAdmin = () => {
   useEffect(() => {
     const getJsonData = async () => {
       try {
-        const response = await fetch(route_to_server + 'get-info-users-json');
+        const response = await fetch(route_to_server + 'get-info-users-json'); // Recibimos los usuarios registrados
         const data = await response.json();
         if (response.ok) {
           setSaveJson(JSON.parse(data.data));  // Guardamos el contenido en el estado
@@ -38,11 +38,11 @@ export const UserPageAdmin = () => {
     navigate('/');
   };
 
-  const togglePasswordVisibility = () => {
+  const togglePasswordVisibility = () => { // Gestionamos la visibilidad de la contraseña
     setShowPassword(!showPassword);
   };
 
-  const comprobate_user = (user, password) => {
+  const comprobate_user = (user, password) => { // Comprobamos los permisos de usuario
     for (let i = 0; i < saveJson.length; ++i) {
       if ((user === saveJson[i].username) && (password === saveJson[i].password)) {
         if (saveJson[i].rol === "ADMIN") { localStorage.setItem("user_role","admin"); }
@@ -53,7 +53,7 @@ export const UserPageAdmin = () => {
     return false;
   }
 
-  const SaveUser = async () => {
+  const SaveUser = async () => { // Comprobamos el registro de usuario
     if (!user_name.trim()) { 
       alert('Por favor introduzca un nombre de usuario.');
       return;

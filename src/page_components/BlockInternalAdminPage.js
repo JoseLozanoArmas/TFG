@@ -24,9 +24,9 @@ export const BlockInternalAdminPage = () => {
     if (!current_block_name) {
       return;
     }
-    const getInfoQuestionButtons = async() => {
-      try { // Llamamos al método que crea la carpeta del bloque del usuario
-        const response = await fetch(route_to_server + 'get-questions-of-internal-block', {
+    const getInfoQuestionButtons = async() => { 
+      try { 
+        const response = await fetch(route_to_server + 'get-questions-of-internal-block', { // recibimos los registros de las preguntas creadas
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -51,18 +51,7 @@ export const BlockInternalAdminPage = () => {
     getInfoQuestionButtons();
   },[current_block_name])
 
-  const [buttons, setButtons] = useState([])
-
-  /*
-  const [buttons, setButtons] = useState(() => {
-    const savedButtons = localStorage.getItem(`button_${id}`);
-    if (savedButtons) {
-      return JSON.parse(savedButtons);
-    } else {
-      return [];
-    }
-  });
-  */
+  const [buttons, setButtons] = useState([]);
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [isMonitor, setIsMonitor] = useState(false);
@@ -91,7 +80,7 @@ export const BlockInternalAdminPage = () => {
     if ((isAdmin === false) && (isMonitor === false)) {
       let block_name = current_block_name[current_block_name.length - 1]
       block_name = String(block_name)
-      try { // Llamamos al método que crea la carpeta del bloque del usuario
+      try { // Llamamos al método que crea la carpeta de la pregunta
         const response = await fetch(route_to_server + 'create-question-folder-user', {
           method: 'POST',
           headers: {
@@ -123,9 +112,8 @@ export const BlockInternalAdminPage = () => {
     document.getElementById("file-input").click();
   };
 
-  const addNewButton = async () => {
+  const addNewButton = async () => { // Añadimos nuevos botones
     if (buttons.length < 8) {
-      // ANTES EN NAME ESTABA question_${buttons.length + 1} LO DE AHORA ES UN EXPERIMENTO
       let new_question_name = current_block_name + `_question_${buttons.length + 1}`
       const newButton = {
         id: buttons.length + 1,
@@ -137,7 +125,7 @@ export const BlockInternalAdminPage = () => {
 
       setButtons((prevButtons) => [...prevButtons, newButton]);
       try {
-        const response = await fetch(route_to_server + 'create-question-block-folder-admin', {
+        const response = await fetch(route_to_server + 'create-question-block-folder-admin', { // Creamos la carpeta de la pregunta
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -160,7 +148,7 @@ export const BlockInternalAdminPage = () => {
       }
 
       try {
-        const response = await fetch(route_to_server + 'regist-question-button', {
+        const response = await fetch(route_to_server + 'regist-question-button', { // Registramos la información del bóton
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -192,7 +180,7 @@ export const BlockInternalAdminPage = () => {
     let question_id = buttons[buttons.length - 1].id
     setButtons((prevButtons) => prevButtons.slice(0,-1));
     try {
-      const response = await fetch(route_to_server + 'delete-question-folder-admin', {
+      const response = await fetch(route_to_server + 'delete-question-folder-admin', { // Eliminamos la carpeta de la pregunta
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -215,7 +203,7 @@ export const BlockInternalAdminPage = () => {
     }
 
     try {
-      const response = await fetch(route_to_server + 'delete-question-button-json', {
+      const response = await fetch(route_to_server + 'delete-question-button-json', { // Eliminamos la pregunta del JSON de registro
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

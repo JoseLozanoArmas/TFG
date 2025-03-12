@@ -9,7 +9,7 @@ export const RankingPageAdmin = () => {
   const [saveJson, setSaveJson] = useState();
 
   useEffect(() => {
-    const getJsonData = async () => {
+    const getJsonData = async () => { // Guardamos las posiciones de los botones
       try {
         const response = await fetch(route_to_server + 'get-data-blocks-buttons-json');
         const data = await response.json();
@@ -31,7 +31,7 @@ export const RankingPageAdmin = () => {
 
   useEffect(() => {
     if (!saveJson) { return; }
-    const getUserInformation = () => {
+    const getUserInformation = () => { // Guardamos los datos de registro de los usuarios
       let save_buttons = []
       for (let i = 0; i < saveJson.length; ++i) {
         save_buttons.push(saveJson[i]);

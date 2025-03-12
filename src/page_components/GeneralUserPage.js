@@ -22,7 +22,7 @@ export const GeneralUserPage = () => {
   useEffect(() => {
     const getJsonData = async () => {
       try {
-        const response = await fetch(route_to_server + 'get-info-users-json');
+        const response = await fetch(route_to_server + 'get-info-users-json'); // Recibir la información del JSON de registro
         const data = await response.json();
         if (response.ok) {
           setSaveJson(JSON.parse(data.data));  // Guardamos el contenido en el estado
@@ -39,7 +39,7 @@ export const GeneralUserPage = () => {
 
   const [users, setUsers] = useState([]);
 
-  useEffect(() => {
+  useEffect(() => { // Establecer las entradas de los usuarios en base a la información recibida por parte del JSON
     if (!saveJson) { return; }
     let save_users = [];
     if (saveJson.length !== 0) {
@@ -65,7 +65,7 @@ export const GeneralUserPage = () => {
     setUsers(save_users);
   }, [saveJson]); 
 
-  const handleButtonPlusClick = async (id) => {
+  const handleButtonPlusClick = async (id) => { // Crear nuevos usuarios
     const clickedUser = users.find((user) => user.id === id);
     if (!clickedUser) {
       console.error('Botón no encontrado.');
@@ -98,7 +98,7 @@ export const GeneralUserPage = () => {
 
   const removeLastUser = async () => {
     try {
-      const response = await fetch(route_to_server + 'remove-last-user', {
+      const response = await fetch(route_to_server + 'remove-last-user', { // Eliminar el último usuario registrado
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

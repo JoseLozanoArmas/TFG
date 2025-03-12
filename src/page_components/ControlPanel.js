@@ -19,7 +19,7 @@ export const ControlPanel = () => {
   };
 
   const MoveToRanking = () => {
-    navigate('/ranking'); // ESTO ANTES ESTABA CON ranking PERO LO CAMBIÉ PARA HACER PRUEBAS
+    navigate('/ranking');
   };
 
   const MoveToSettings = () => {

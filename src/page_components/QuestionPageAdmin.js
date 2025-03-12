@@ -60,7 +60,7 @@ export const QuestionPageAdmin = () => {
     }
     const getTittleAndDescription = async () => {
       try {
-        const response = await fetch(route_to_server + 'get-tittle-and-description', {
+        const response = await fetch(route_to_server + 'get-tittle-and-description', { // Recibir el título y descripción de la pregunta al acceder a la misma
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -89,15 +89,15 @@ export const QuestionPageAdmin = () => {
     getTittleAndDescription();
   }, [block_name, question_name])
 
-  const handleTitleChange = (event) => {
+  const handleTitleChange = (event) => { // Gestionar los cambios en el título
     setTitle(event.target.value); 
   };
 
-  const handleDescriptionChange = (event) => {
+  const handleDescriptionChange = (event) => { // Gestionar los cambios en la descripciónn
     setDescription(event.target.value);
   };
 
-  const handlePuntuationChange = (event, key) => {
+  const handlePuntuationChange = (event, key) => { // Gestionar los cambios en la puntuación
     const value = event.target.value;
     setButtons((prevButtons) =>
       prevButtons.map((button) =>
@@ -106,7 +106,7 @@ export const QuestionPageAdmin = () => {
     );
   }
 
-  const handleFileUpload = (event, key) => {
+  const handleFileUpload = (event, key) => { // Gestionar la subida de archivos de entrada
     const file = event.target.files[0];
     if (key === "fileUser") {
       setUploadedFiles((lastFiles) => ({ ...lastFiles, fileUser: file.name }));
@@ -119,7 +119,7 @@ export const QuestionPageAdmin = () => {
     }
   };
 
-  const handleResultFileUpload = (event, key) => {
+  const handleResultFileUpload = (event, key) => { // Gestionar la subida de archivos de resultado esperado
     const file = event.target.files[0];
     if (key === "fileUser") {
       setUploadedFiles((lastFiles) => ({ ...lastFiles, fileUser: file.name }));
@@ -136,7 +136,7 @@ export const QuestionPageAdmin = () => {
     document.getElementById(id).click();
   }
 
-  const addNewButton = async () => {
+  const addNewButton = async () => { // Generar nuevos botones para pruebas
     const newButton = {
       id: buttons.length + 1,
       name: `prueba_${buttons.length + 1}`,
@@ -147,13 +147,13 @@ export const QuestionPageAdmin = () => {
     setButtons((prevButtons) => [...prevButtons, newButton]);
   };
 
-  const removeCurrentButton = async (id) => {
+  const removeCurrentButton = async (id) => { // Eliminar el último botón
     const buttonToRemove = buttons.find((button) => button.id === id);
     let save_enter_test_name = buttonToRemove.file;
     let save_result_test_name = buttonToRemove.result_file;
     if (buttonToRemove.file !== null) {     
       try { // Guardamos la info de la pregunta en el JSON de registro
-        const response = await fetch(route_to_server + 'delete-selected-test', {
+        const response = await fetch(route_to_server + 'delete-selected-test', { // ELiminar la información del tests asociado
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -234,7 +234,7 @@ export const QuestionPageAdmin = () => {
     let get_question_id = question_name[question_name.length - 1]
 
     try { // Guardamos la info de la pregunta en el JSON de registro
-      const response = await fetch(route_to_server + 'regist-question-admin', {
+      const response = await fetch(route_to_server + 'regist-question-admin', { // Registrar la información de la pregunta
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -262,7 +262,7 @@ export const QuestionPageAdmin = () => {
     formData.append('text', block_name);
     formData.append('question_name', question_name);
 
-    buttons.forEach((button) => {
+    buttons.forEach((button) => { // Procesar todos los ficheros de entrada, resultado esperado y los puntos
       const fileInput = document.getElementById(`fileInput_${button.id}`).files[0];
       if (fileInput) {
         formData.append('files', fileInput);
@@ -311,7 +311,7 @@ export const QuestionPageAdmin = () => {
     navigate(`/${previous_route}`)  
   };
 
-  const SendFileUser = async () => {
+  const SendFileUser = async () => { // Gestionar el envío de archivos del usuario
     if (uploadedFiles.fileUser === null) {
       alert("Error. No se ha subido ninguna entrada")
       return;
@@ -325,7 +325,7 @@ export const QuestionPageAdmin = () => {
     formData.append('questionName', question_name);
 
     try {
-      const response = await fetch(route_to_server + 'upload-file-user', {
+      const response = await fetch(route_to_server + 'upload-file-user', { // Subir el archivo del usuario
         method: 'POST',
         body: formData,
         userNameData: JSON.stringify({ text: userName }),
@@ -334,10 +334,6 @@ export const QuestionPageAdmin = () => {
       const data = await response.json();
       if (response.ok) {
         alert(data.message);
-        /*
-        let previous_route = "block_internal_admin_page/" + block_name
-        navigate(`/${previous_route}`)
-        */
       } else {
         alert(`Error: ${data.message}`);
       }
@@ -349,7 +345,7 @@ export const QuestionPageAdmin = () => {
     navigate(`/${question_name}`)
 
     try {
-      const regist = await fetch(route_to_server + 'correct-user-enter', {
+      const regist = await fetch(route_to_server + 'correct-user-enter', { // Corregir la entrada del usuario
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -364,9 +360,9 @@ export const QuestionPageAdmin = () => {
   
       const data = await regist.json();
       if (regist.ok) {
-        if (data.data === false) {
+        if (data.data === false) { // En caso de no pasar todas las pruebas se mantiene al usuario en el registro
           alert("Error, no se pasaron todas las pruebas, porfavor vuelva a intentarlo");
-        } else{
+        } else { // Se redirige al usuario a bloque de preguntas interno
           alert("Felicidades ha pasado todas las pruebas!!");
           let previous_route = "block_internal_admin_page/" + block_name;
           navigate(`/${previous_route}`);
@@ -384,7 +380,7 @@ export const QuestionPageAdmin = () => {
     navigate(`/block_internal_admin_page/${block_name}`);
   };
   
-  if ((isAdmin === true) || (isMonitor === true)) {
+  if ((isAdmin === true) || (isMonitor === true)) { // Distinguimos el caso de los docentes
     return (
       <div className="App_question_page_admin">
         <div className="tittle_question_page_admin">
@@ -424,7 +420,7 @@ export const QuestionPageAdmin = () => {
         </button>
       </div>
     );
-  } else if (isTemporalyUser === true) {
+  } else if (isTemporalyUser === true) { // Con el caso de los usuarios (Ya sean temporales o no)
     return(
       <div className="App_question_page_user">
         <div className="tittle_question_page_admin">

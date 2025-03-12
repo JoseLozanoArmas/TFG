@@ -8,7 +8,7 @@ export const DeleteOptions = () => {
 
   const resetUsers = async () => {
     try {
-      const response = await fetch(route_to_server + 'reset-users', {
+      const response = await fetch(route_to_server + 'reset-users', { // Elimina toda la información de los usuarios
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ export const DeleteOptions = () => {
 
   const resetBlocksData = async () => {
     try {
-      const response = await fetch(route_to_server + 'reset-blocks-data', {
+      const response = await fetch(route_to_server + 'reset-blocks-data', { // Elimina toda la información de los bloques de usuario
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export const DeleteOptions = () => {
   
   const resetUsersRegisteredData = async () => {
     try {
-      const response = await fetch(route_to_server + 'reset-users-registered-data', {
+      const response = await fetch(route_to_server + 'reset-users-registered-data', { // Elimina todo los usuarios registrados, a excepción de "admin"
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
