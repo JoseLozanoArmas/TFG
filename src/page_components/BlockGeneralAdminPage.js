@@ -212,7 +212,7 @@ export const BlockGeneralAdminPage = () => {
         const data = await response.json();
     
         if (response.ok) {
-          alert(data.message);
+        //  alert(data.message);
         } else {
           alert(`Error: ${data.message}`);
         }
@@ -235,7 +235,7 @@ export const BlockGeneralAdminPage = () => {
         const data = await response.json();
     
         if (response.ok) {
-          alert(data.message);
+         // alert(data.message);
         } else {
           alert(`Error: ${data.message}`);
         }
@@ -259,7 +259,7 @@ export const BlockGeneralAdminPage = () => {
         const data = await response.json();
     
         if (response.ok) {
-          alert(data.message);
+         // alert(data.message);
         } else {
           if (response.status !== 500) {
             alert(`Error: ${data.message}`);

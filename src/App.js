@@ -46,7 +46,7 @@ const Home = () => {
       const data = await response.json();
   
       if (response.ok) {
-        alert(data.message);
+        //alert(data.message);
         localStorage.setItem("user_role", "user"); 
         localStorage.setItem("name_user", user_name);
         GoToQuestionPageUser();
