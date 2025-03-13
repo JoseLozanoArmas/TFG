@@ -16,8 +16,7 @@ route_to_data_json_block_and_question = "data/app_data/data_information_app.json
 route_to_json_buttons_blocks = "data/app_data/data_blocks_buttons.json" # RUTA AL JSON QUE REGISTRA LA INFO DE LOS BOTONES DE BLOQUES
 route_to_json_buttons_questions = "data/app_data/data_questions_buttons.json" # RUTA AL JSON QUE REGISTRA LA INFO DE LOS BOTONES DE QUESTIONS
 route_to_info_users_json = "data/users_registered/info_users.json" # RUTA AL JSON QUE GESTIONA LOS USUARIOS
-route_to_rankings_info = "data/rankings_info"
-route_to_puntuations = "data/puntuations"
+route_to_puntuations = "data/puntuations" # RUTA AL JSON QUE GESTIONA LAS PUNTUACIONES
 route_to_student_register = "data/student_register" # RUTA al registro del tiempo de los usuarios
 # Rutas a las carpetas donde se subiran los códigos
 route_to_users_input = "users_input"
@@ -414,44 +413,6 @@ def regist_question_button():
         with open(route_to_json_buttons_questions, "w") as file:
             file.write(new_content)
         return jsonify({'message': f'Archivo creado'}), 200
-
-@app.route('/update-current-question', methods=["POST"])
-def update_current_question():
-    data = request.get_json()  
-    block_id = data.get('text', '')
-    question_id = data.get('question_id', '')
-    tittle = data.get('tittle', '')
-    description = data.get('description','')
-    search_block_and_last_question = r"\"block_" + str(block_id) + r"\":\s*{\s*\n*.*\n*(.|\n)*?\"question.*" + str(question_id) + r"\"(.|\n)*?}"
-    search_current_block_and_img = r"\"block_" + str(block_id) + r"\"\s*:\s*{(.|\n)*?\"img\"\s*:\s*\".*\""
-    current_question = ",\n      \"question_" + str(question_id) + "\": {\n"
-    new_tittle = "        \"tittle\": \"" + tittle + "\",\n"
-    new_description = "        \"description\": \"" + description + "\"\n"
-    end_question = "      }"
-    new_content = current_question + new_tittle + new_description + end_question
-
-    first_midle_json = ""
-    second_midle_json = ""
-    final_json = ""
-
-    if os.path.exists(route_to_data_json_block_and_question):  # Comprueba si el archivo existe en la ruta
-        with open(route_to_data_json_block_and_question, 'r') as file: # Guardamos y leemos el archivo
-            lines = file.readlines()
-            content = ''.join(lines)
-            if lines: 
-                find_cuestion_to_change = re.search(search_block_and_last_question, content)
-                find_route_to_img = re.search(search_current_block_and_img, content)
-                if find_cuestion_to_change and find_route_to_img:
-                    first_midle_json = content[:find_route_to_img.end()]
-                    second_midle_json = content[find_cuestion_to_change.end():]
-                    final_json = first_midle_json + new_content + second_midle_json
-                else:
-                    return jsonify({'message': 'Error. No se encontró la ruta a la pregunta'}), 400
-        with open(route_to_data_json_block_and_question, 'w') as file:
-           file.write(final_json)
-        return jsonify({'message': f'Pregunta actualizada con éxito'}), 200
-    else:
-        return jsonify({'message': 'Error, no se pudo encontrar el fichero de registro debido'}), 400
  
 @app.route('/regist-question-test-information', methods=["POST"])
 def regist_question_test_information():
@@ -507,7 +468,7 @@ def upload_admin_test_to_question_folder():
         return jsonify({'message': 'Texto vacío, no se puede crear carpeta'}), 400
 
 @app.route('/delete-selected-test', methods=["POST"]) # Eliminar una prueba en concreto de una pregunta de los administradores/monitores
-def delete_selected_test(): # AÑADIR FUNCIONALIDAD EN LA PARTE NO SERVIDOR
+def delete_selected_test(): 
     data = request.get_json()
     block_name = data.get('text', '')
     question_name = data.get('question_name', '')
@@ -527,8 +488,6 @@ def delete_selected_test(): # AÑADIR FUNCIONALIDAD EN LA PARTE NO SERVIDOR
         return jsonify({'message': f'Prueba eliminada con éxito'}), 200
     else:
         return jsonify({'message': f'No se pudo eliminar la prueba {enter_test_name}'}), 400
-
-
     
 @app.route('/delete-last-block-folder-admin', methods=["POST"]) # Eliminar la carpeta del último bloque de preguntas de los administradores/monitores
 def delete_last_block_folder_admin():
@@ -545,24 +504,12 @@ def delete_last_block_folder_admin():
     else:
         return jsonify({'message': 'Texto vacío, no se puede eliminar carpeta'}), 400
 
-def remove_block_folder_from_users(block_name): # Función que elimina al carperta de ese mismo bloque de todos los usuarios
+def remove_block_folder_from_users(block_name): # Función que elimina la carpeta de ese mismo bloque de todos los usuarios
     save_route_users = os.listdir(route_to_users_input)
     for i in range(len(save_route_users)):
         create_route = route_to_users_input + "/" + save_route_users[i] + "/" + block_name
         if os.path.exists(create_route):
             shutil.rmtree(create_route)
-    
-@app.route('/delete-last-ranking-block-json', methods=["POST"])
-def delete_last_ranking_block_json():
-    data = request.get_json()  
-    block_name = data.get('text', '') 
-    block_name = "block_" + block_name
-    create_route = route_to_rankings_info + "/" + block_name + ".json"
-    if os.path.exists(create_route):
-        os.unlink(create_route)
-        return jsonify({'message': f'Fichero eliminado con éxito en {create_route}'}), 200
-    else:
-        return jsonify({'message': f'Error, no se encontró fichero a borrar'}), 400
      
 @app.route('/delete-last-student-register', methods=["POST"]) # Eliminar la carpeta del último bloque de preguntas del registro de estudiantes
 def delete_last_student_register():
@@ -600,7 +547,6 @@ def delete_last_block_json():
     search_block = r"\s*\"block_" + str(block_id) + r"\":\s*{(.|\n)*"
     before_deleted_part = ""
     final_content = ""
-
     # Comprobar si el archivo existe
     if os.path.exists(route_to_data_json_block_and_question):  # Comprueba si el archivo existe en la ruta
         with open(route_to_data_json_block_and_question, 'r') as file:  
@@ -664,32 +610,6 @@ def remove_question_folder_from_users(block_name, question_name):
         create_route = route_to_users_input + "/" + save_route_users[i] + "/" + block_name + "/" + question_name
         if os.path.exists(create_route):
             shutil.rmtree(create_route)
-
-@app.route('/delete-last-question-admin', methods=["POST"])
-def delete_last_question_admin():
-    data = request.get_json()  
-    block_id = data.get('text', '')
-    question_id = data.get('question_name', '')
-    search_block_and_last_question = r"\"block_" + str(block_id) + r"\":\s*{\s*\n*.*\n*(.|\n)*?\"question.*" + str(question_id) + r"\"(.|\n)*?}"
-    search_only_last_question = r"\"question_" + str(question_id) + r"\"(.|\n)*?}"
-    if os.path.exists(route_to_data_json_block_and_question):  # Comprueba si el archivo existe en la ruta
-        with open(route_to_data_json_block_and_question, 'r') as file: # Guardamos y leemos el archivo
-            lines = file.readlines()
-            content = ''.join(lines)
-            if lines: 
-                find_last_question = re.search(search_block_and_last_question, content)
-                if find_last_question:
-                    content_before_remove_question = content[:find_last_question.end()]
-                    rest_file = content[find_last_question.end():]
-                    find_only_last_question = re.search(search_only_last_question, content_before_remove_question) # Localizamos la pregunta en si y calculamos el recorte
-                    cut_lenght = find_only_last_question.end() - find_only_last_question.start()
-                    cut_last_question = content_before_remove_question[:-cut_lenght]
-                    final_json = cut_last_question + rest_file # Juntamos todo
-        with open(route_to_data_json_block_and_question, 'w') as file:
-            file.write(final_json)
-        return jsonify({'message': f'Última pregunta del bloque block_{block_id} eliminada del JSON de registro'}), 200
-    else:
-        return jsonify({'message': f'Error, no se pudo encontrar el fichero de registro debido'}), 500
 
 @app.route('/delete-question-regist-admin', methods=["POST"])
 def delete_question_regist_admin():
@@ -824,40 +744,6 @@ def delete_block_in_question_button_json():
                         return jsonify({'message': f'Error, no se encontró el bloque a eliminar'}), 500
     else:
         return jsonify({'message': f'Error, no se encontró el archivo de registro'}), 400
-
-@app.route('/update-route-img', methods=["POST"])
-def uptdate_route_img():
-    data = request.get_json()  
-    block_id = data.get('text', '')
-    route_img = data.get('route_img', '')
-    search_current_block_and_img = r"\"block_" + str(block_id) + r"\":\s*{(.|\n)*?\"img\":\s*\".*?\",?" # funciona
-    search_only_img = r"\"img\":.*"
-    new_img = "\"img\": " + route_img
-    content_before_change_old_img = ""
-    final_json = ""
-    if os.path.exists(route_to_data_json_block_and_question):
-        with open(route_to_data_json_block_and_question, 'r') as file: # Guardamos y leemos el archivo
-            lines = file.readlines()
-            content = ''.join(lines)
-            if lines: 
-                find_old_img = re.search(search_current_block_and_img, content) # Comprobamos que en el bloque que buscamos haya al menos una pregunta
-                if find_old_img:
-                    content_before_change_old_img = content[:find_old_img.end()] # Recortar hasta encontrar la ruta de la img
-                    save_possible_comma = content_before_change_old_img[-1] # Comprobamos si tiene o no ","
-                    rest_file = content[find_old_img.end():] # Guardamos el resto del fichero antes de la img
-                    find_only_img_route = re.search(search_only_img, content_before_change_old_img) # Localizamos en si la img y calculamos cuanto mide para sustituir por la nueva
-                    cut_lenght = find_only_img_route.end() - find_only_img_route.start()
-                    cut_old_route = content_before_change_old_img[:-cut_lenght]
-                    if (save_possible_comma == ","): # En caso de haber coma se la añadimos a la ruta nueva
-                        new_img = new_img + ","
-                    final_json = cut_old_route + new_img + rest_file # Juntamos todo
-                else:
-                    return jsonify({'message': f'Error, no se pudo encontrar la imagen'}), 500
-        with open(route_to_data_json_block_and_question, 'w') as file:
-            file.write(final_json)
-        return jsonify({'message': f'Imágen actualizada con éxito'}), 200
-    else:
-        return jsonify({'message': f'Error, no se pudo encontrar el fichero de registro debido'}), 500
 
 # Funciones de settings
 @app.route('/reset-users', methods=['POST']) # Eliminar todos los registros de los estudiantes (administrador)
@@ -1065,17 +951,6 @@ def remove_last_user():
 
 
 # Funciones de corrección de código  
-@app.route('/check_is_possible_to_correct', methods = ["POST"])
-def check_is_possible_to_correct():
-    data = request.get_json()  
-    userName = data.get('text', '')
-    block_id = data.get('block_id', '') 
-    get_total_user_entrances = save_all_user_routes_files(userName, block_id)
-    get_all_questions = localize_all_questions(block_id)
-    if len(get_total_user_entrances) != len(get_all_questions):
-        return jsonify({'data': False}), 200
-    return jsonify({'data': True}), 200
-
 def save_all_user_routes_files(user_name, block_id): 
     users_files = []
     create_route_files = route_to_users_input + "/" + user_name + "/" + block_id # Comprobamos que la dirección del usuario existe
@@ -1092,7 +967,7 @@ def save_all_user_routes_files(user_name, block_id):
     users_files.sort()
     return users_files
 
-def get_user_file(user_name, block_id, question_name): 
+def get_user_file(user_name, block_id, question_name): # Función que devuelve el archivo del usuario
     users_file = ""
     create_route_files = route_to_users_input + "/" + user_name + "/" + block_id + "/" + question_name # Comprobamos que la dirección del usuario existe
     if os.path.exists(create_route_files): 
@@ -1101,18 +976,6 @@ def get_user_file(user_name, block_id, question_name):
     else:
         return jsonify({'message': 'Hubo un error durante el procesado de los datos, vuelva a intentarlo'}), 400     
     return users_file
-
-def localize_all_questions(block_id):
-    all_questions = []
-    route_to_tests = route_to_admins_and_monitors_tests + "/" + block_id # Guardamos la dirección a los tests
-    if os.path.exists(route_to_tests): 
-        save_route_to_questions = os.listdir(route_to_tests)
-        for i in range(len(save_route_to_questions)):
-            all_questions.append(save_route_to_questions[i])    
-    else:
-        return jsonify({'message': "Error, no se pudo localizar las preguntas"}), 400    
-    all_questions.sort()
-    return all_questions
 
 @app.route('/localize-all-questions-server', methods=["POST"]) # Función para localizar todas las preguntas creadas
 def localize_all_questions_server():
@@ -1135,19 +998,7 @@ def localize_all_questions_server():
     else:
         return jsonify({'message': "No se han creado preguntas para este ranking"}), 500
 
-def filter_routes_to_tests_for_questions(block_id, question_id, user_file):
-    route_to_test = route_to_admins_and_monitors_tests + "/" + block_id + "/" + question_id + "/"
-    save_route_to_test = os.listdir(route_to_test)
-    save_users_code_extension = os.path.splitext(user_file)
-    save_users_code_extension = save_users_code_extension[1]
-    tests_to_use = []
-    for i in range(len(save_route_to_test)):
-        aux_extension = os.path.splitext(save_route_to_test[i])
-        if aux_extension[1] == save_users_code_extension:
-            tests_to_use.append(save_route_to_test[i])
-    return tests_to_use
-
-def read_puntuations_regist(block_id, question_id): 
+def read_puntuations_regist(block_id, question_id): # Función para leer las puntuaciones de un bloque
     create_route_to_file = "data/puntuations/" + block_id + "/" + question_id + "_puntuations.json"
     search_enters = r"{(.|\n)*?}"
     search_enter_files = r"\"enter_file\":.*"
@@ -1196,130 +1047,7 @@ def read_puntuations_regist(block_id, question_id):
         return jsonify({'message': "No se encontró el fichero"}), 400
     return save_objects
 
-@app.route('/regist-final-time', methods = ["POST"])
-def regist_final_time():
-    data = request.get_json()  
-    username = data.get('text', '')
-    block_id = data.get('block_id', '')
-    create_route = route_to_student_register + "/" + block_id + "/" + "student_register.json"
-    search_current_user = r"\"username\":\s*\"" + username + r"\"(.|\n)*?}"
-    first_half = ""
-    second_half = ""
-    if os.path.exists(create_route):
-        with open(create_route, "r") as file:
-            lines = file.read()
-            content = ''.join(lines)
-            if lines:
-                find_user = re.search(search_current_user, content)
-                if find_user:
-                    first_half = content[:find_user.end() - 4]
-                    second_half = content[find_user.end() - 4:]
-                    time = str(datetime.now())
-                    final_time_line = ",\n    \"final_time\": \"" + time + "\""
-                    new_content = first_half + final_time_line + second_half
-                    with open(create_route, "w") as file:
-                        file.write(new_content)
-                    return jsonify({'message': "Tiempo final añadido"}), 400
-                else:
-                    print("Error inesperado")
-    else:
-        return jsonify({'message': "Error, no se encontró el documento"}), 400
-
-
-def calculate_total_time(block_id, username):
-    create_route = route_to_student_register + "/" + block_id + "/" + "student_register.json"
-    search_current_user = r"\"username\":\s*\"" + username + "\"(.|\n)*?}"
-    search_begin_time = r"\"begin_time\".*"
-    search_final_time = r"\"final_time\".*"
-    total_time = 0
-    save_begin_time = ""
-    save_final_time = ""
-    if os.path.exists(create_route):
-        with open(create_route, "r") as file:
-            lines = file.read()
-            content = ''.join(lines)
-            if lines:
-                find_user = re.search(search_current_user, content)
-                if find_user:
-                    new_content = find_user.group()
-                    find_begin_time = re.search(search_begin_time, new_content)
-                    save_begin_time = find_begin_time.group()
-                    save_begin_time = save_begin_time[:-1]
-                    save_begin_time = save_begin_time.split(": ")[1].strip('"')
-                    find_final_time = re.search(search_final_time, new_content)
-                    save_final_time = find_final_time.group()
-                    save_final_time = save_final_time.split(": ")[1].strip('"')
-                    begin_time = datetime.strptime(save_begin_time, "%Y-%m-%d %H:%M:%S.%f")
-                    final_time = datetime.strptime(save_final_time, "%Y-%m-%d %H:%M:%S.%f")
-                    microseconds = (final_time - begin_time).microseconds
-                    microseconds = microseconds * 0.000001
-                    total_time = (final_time - begin_time).seconds
-                    total_time += microseconds
-                    return total_time
-                else:
-                    return -1 # ERROR
-    else:
-        return -1 # ERROR
-
- 
-@app.route('/calculate-puntuation-for-user', methods = ["POST"])
-def calculate_puntuation_for_user():
-    data = request.get_json()  
-    username = data.get('text', '')
-    block_id = data.get('block_id', '') 
-    final_puntuation = 0
-    users_files = save_all_user_routes_files(username, block_id) # P4 # Guardamos todas las entradas del usuario
-    all_questions_created = localize_all_questions(block_id) # P5 # Guardamos cuantas preguntas se han creado
-    if len(all_questions_created) != len(users_files):
-        return jsonify({'message': "Error, hay más entradas por parte del usuario, que preguntas creadas"}), 400
-    for i in range(len(all_questions_created)): 
-        save_tests_current_questions = read_puntuations_regist(block_id, all_questions_created[i])
-        for j in range(len(save_tests_current_questions)):
-            temporal_save_enter_file = save_tests_current_questions[j]["enter_file"].split('"')[1]
-            temporal_save_result_file = save_tests_current_questions[j]["result_file"].split('"')[1]
-            if check_if_the_code_pass_the_test(users_files[i], temporal_save_enter_file, temporal_save_result_file):
-                final_puntuation += save_tests_current_questions[j]["puntuation"]
-    final_user_time = calculate_total_time(block_id, username)
-    if final_user_time == -1: 
-        return jsonify({'message': "Error inesperado al gestionar el tiempo del usuario"}), 400
-    regist_user_puntuation(block_id, username, final_puntuation, final_user_time)
-    sort_users_puntuations_file(block_id)
-    return jsonify({'message': "Puntuación total registrada"}), 200 
-
-# P7
-def regist_user_puntuation(block_id, username, puntuation, time):
-    create_route = route_to_rankings_info + "/" + block_id + ".json" 
-    begin_doc = "[\n"
-    username_line = "    {\n        " + "\"username\": \"" + username + "\",\n"
-    puntuation_line = "        \"puntuation\": " + str(puntuation) + ",\n" 
-    time_line = "        \"time\": " + str(time) + "\n    }"
-    new_enter = "},\n"
-    end_doc = "\n]" 
-    if os.path.exists(create_route):
-        with open(create_route, 'r') as file:
-            lines = file.readlines()
-            content = ''.join(lines)
-            if lines:
-                content = content[:-3]
-                with open(create_route, 'w') as file:
-                    file.write(content)
-                    file.write(new_enter)
-                    file.write(username_line)
-                    file.write(puntuation_line)
-                    file.write(time_line)
-                    file.write(end_doc)
-            else:
-                print(f"Hubo un error inesperado con el fichero de registro de {create_route}") 
-    else:
-        with open(create_route, 'w') as file:
-            file.write(begin_doc)
-            file.write(username_line)
-            file.write(puntuation_line)
-            file.write(time_line)
-            file.write(end_doc)
-
-# P8
-def procesate_object(string_to_procesate):
+def procesate_object(string_to_procesate): # Función para procesar la información de un objeto
     string_to_procesate = string_to_procesate[:-1]
     string_to_procesate = string_to_procesate.split(":")
     second_half = string_to_procesate[1]
@@ -1327,56 +1055,6 @@ def procesate_object(string_to_procesate):
     if second_half.isalpha():
         second_half = float(second_half)
     return second_half
-
-def sort_users_puntuations_file(block_id): 
-    create_route = route_to_rankings_info + "/" + block_id + ".json"
-    search_entrace = r"{(.|\n)*?}"
-    search_user = r"\"username\".*?,"
-    search_puntuation = r"\"puntuation\".*?,"
-    search_time = r"\"time\".*?\n"
-    save_objects_users = []
-    if os.path.exists(create_route): 
-        with open(create_route, 'r') as file:  
-            lines = file.readlines()
-            content = ''.join(lines)
-            if lines:
-                for entrance in re.finditer(search_entrace, content):
-                    save_entrance = entrance.group()
-                    find_user = re.search(search_user, save_entrance)
-                    save_user = find_user.group()
-                    save_user = procesate_object(save_user)
-                    find_puntuation = re.search(search_puntuation, save_entrance)
-                    save_puntuation = find_puntuation.group()
-                    save_puntuation = procesate_object(save_puntuation)
-                    find_time = re.search(search_time, save_entrance)
-                    save_time = find_time.group()
-                    save_time = procesate_object(save_time)
-                    new_object = {
-                        "username" : save_user,
-                        "puntuation": float(save_puntuation),
-                        "time": float(save_time)
-                    }
-                    save_objects_users.append(new_object)
-        save_objects_users.sort(key = lambda x: (-x["puntuation"], x["time"]))
-        begin_doc = "[\n"
-        end_doc = "]"
-        with open(create_route, 'w') as file:
-                file.write(begin_doc)
-                for i in range(len(save_objects_users)):
-                    aux_user_name = save_objects_users[i]["username"]
-                    aux_puntuation = save_objects_users[i]["puntuation"]
-                    aux_time = save_objects_users[i]["time"]
-                    file.write("    {\n")
-                    file.write(f"        \"username\": {aux_user_name},\n")
-                    file.write(f"        \"puntuation\": {aux_puntuation},\n")
-                    file.write(f"        \"time\": {aux_time}\n")
-                    if i == len(save_objects_users) - 1:
-                        file.write("    }\n")
-                    else:
-                        file.write("    },\n")
-                file.write(end_doc)
-    else:
-        return jsonify({'message': "Error, no se encontró el documento"}), 400
 
 @app.route('/correct-user-enter', methods=["POST"]) # Función para corregir la entrada de un usuario
 def correct_user_enter():
@@ -1639,39 +1317,6 @@ def get_info_users_json():
                 pass
     else:
         pass
-
-@app.route('/get-rankings-info', methods=["POST"]) # Recuperamos la información de los archivos de registro de los rankings
-def get_rankins_info():
-    data = request.get_json()
-    block_id = data.get('text', '')
-    create_route = route_to_rankings_info + "/" + block_id + ".json"
-    if os.path.exists(create_route):
-        with open(create_route, "r") as file:
-            lines = file.read()
-            content = ''.join(lines)
-            if lines:
-                return jsonify({'data': content}), 200
-            else:
-                return jsonify({'message': "Error, el archivo está vacío"}), 400
-    else:
-        return jsonify({'message': f"Error, no se encontró la información de los rankins del {block_id}"}), 500
-
-@app.route('/get-info-question-test', methods=["POST"]) # Recuperamos la información de los archivos con las pruebas
-def get_info_question_test(): 
-    data = request.get_json()
-    block_id = data.get('text', '')
-    question_name = data.get('question_name')
-    create_route = route_to_puntuations + "/" + block_id + "/" + question_name + "_puntuations.json"
-    if os.path.exists(create_route):
-        with open(create_route, "r") as file:
-            lines = file.read()
-            content = ''.join(lines)
-            if lines:
-                return jsonify({'data': content}), 200
-            else:
-                return jsonify({'message': "Error, el archivo está vacío"}), 400
-    else:
-        return jsonify({'message': f"Error, no se encontró la información de las pruebas"}), 500
  
 
 @app.route('/get-info-student-register', methods=["POST"]) # Recuperamos los JSONs de registro de los rankings
