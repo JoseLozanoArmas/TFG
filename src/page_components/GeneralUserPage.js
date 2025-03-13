@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './GeneralUserPage.css';
 import { route_to_server } from '../App';
 
@@ -8,7 +8,6 @@ export const GeneralUserPage = () => {
   const maxPageWidth = window.innerWidth - 100;
   const userHeight = 155;
   const [isAdmin, setIsAdmin] = useState(false);
-  const { id } = useParams();
 
   // localStorage.clear();
   
@@ -63,27 +62,13 @@ export const GeneralUserPage = () => {
       save_users.push({ id: 0, positionX: 0, positionY: 0, type: "button_plus"});
     }
     setUsers(save_users);
-  }, [saveJson]); 
+  }, [saveJson, maxPageWidth]); 
 
   const handleButtonPlusClick = async (id) => { // Crear nuevos usuarios
     const clickedUser = users.find((user) => user.id === id);
     if (!clickedUser) {
       console.error('Botón no encontrado.');
       return;
-    }
-    const newPositionX = clickedUser.positionX + 200;
-    let positionX = 0;
-    if (newPositionX >= maxPageWidth) {
-      positionX = 0;
-    } else {
-      positionX = newPositionX;
-    }
-
-    let positionY = 0;
-    if (newPositionX >= maxPageWidth) {
-      positionY = clickedUser.positionY + userHeight;
-    } else {
-      positionY = clickedUser.positionY;
     }
   
     const newUser = {
@@ -137,7 +122,7 @@ export const GeneralUserPage = () => {
             }
           }
         } className="image-button" style={{transform: `translate(${user.positionX}px, ${user.positionY}px)`}}>
-        <img src={require(user.type === 'button_plus' ? '../img/icon_plus.png' : '../img/user_img.png')} className="user-image"/>
+        <img src={require(user.type === 'button_plus' ? '../img/icon_plus.png' : '../img/user_img.png')} className="user-image" alt=""/>
         <span className="label-name"> {user.username} </span>
         </button>
         ) : null

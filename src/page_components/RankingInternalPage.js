@@ -7,7 +7,6 @@ export const RankingInternalPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-
   const [saveJson, setSaveJson] = useState(null);
   const [saveQuestions, setSaveQuestions] = useState(null);
   const block_id = id
@@ -39,7 +38,7 @@ export const RankingInternalPage = () => {
       }
     };
     getAllQuestions();
-  },[]);
+  },[block_id]);
 
   useEffect(() => {
     const getJsonData = async() => {
@@ -67,7 +66,7 @@ export const RankingInternalPage = () => {
       }
     }
     getJsonData();
-  }, []);
+  }, [block_id]);
 
   useEffect(() => {
     if (!saveJson || !saveQuestions) return;
@@ -117,7 +116,7 @@ export const RankingInternalPage = () => {
       setUserSlots(save_slots)
     }
     getUserInformation();
-  }, [saveJson])
+  }, [saveJson, saveQuestions])
 
   const MoveToFirstPage = () => {
     navigate('/');

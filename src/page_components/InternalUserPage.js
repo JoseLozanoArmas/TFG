@@ -52,15 +52,7 @@ export const InternalUserPage = () => {
       }
     };
     getJsonData();
-  }, []);
-
-  const [isAdmin, setIsAdmin] = useState(false);
-
-
-  useEffect(() => {
-    const userRole = localStorage.getItem('user_role');
-    setIsAdmin(userRole === 'admin');
-  }, []);
+  }, [id]);
 
   const handleLogoChange = (event) => {
     const file = event.target.files[0];

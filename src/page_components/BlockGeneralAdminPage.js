@@ -53,7 +53,7 @@ export const BlockGeneralAdminPage = () => {
       save_buttons.push({ id: 1, positionX: 0, positionY: 0, type: "boton_mas", block_name: "default"});
     }
     setButtons(save_buttons);
-  }, [saveJson]); 
+  }, [saveJson, maxPageWidth]); 
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [isMonitor, setIsMonitor] = useState(false);
@@ -72,19 +72,6 @@ export const BlockGeneralAdminPage = () => {
 
   const handlePlusButtonClick = async (id) => {
     const clickedButton = buttons.find((button) => button.id === id); // Confirmamos que es el botón que estamos pulsando
-    const newPositionX = clickedButton.positionX + 200; // Miramos si se puede avanzar más del límite de la pantalla
-    let positionX = 0;
-    if (newPositionX >= maxPageWidth) {
-      positionX = 0;
-    } else {
-      positionX = newPositionX;
-    }
-    let positionY = 0;
-    if (newPositionX >= maxPageWidth) {
-      positionY = clickedButton.positionY + buttonHeight;
-    } else {
-      positionY = clickedButton.positionY;
-    }
 
     // Guardamos el nombre del bloque actual
     let block_name = `block_${buttons.length}`;
@@ -460,7 +447,7 @@ export const BlockGeneralAdminPage = () => {
             }
           }
         } className="image-button" style={{transform: `translate(${button.positionX}px, ${button.positionY}px)`}}>
-        <img src={require(button.type === 'boton_mas' ? '../img/icon_plus.png' : '../img/logo_ull.png')} className="user-image"/>
+        <img src={require(button.type === 'boton_mas' ? '../img/icon_plus.png' : '../img/logo_ull.png')} className="user-image" alt=""/>
         {button.type !== "boton_mas" && (<span className="label-name"> Bloque {button.id} </span>)}
         </button>
         ) : null

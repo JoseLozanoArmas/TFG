@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as  useNavigate } from 'react-router-dom';
 import './UserPageAdmin.css';
 import { route_to_server } from '../App';
 
@@ -77,14 +77,14 @@ export const UserPageAdmin = () => {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={require("../img/user_img.png")} className="user-image" />
+          <img src={require("../img/user_img.png")} className="user-image" alt=""/>
             {"Login"}
             <div className="input-box">
               <textarea className="textarea_user_page_admin_username" value={user_name} onChange={(e) => setTexto(e.target.value)} placeholder="Inserte nombre de usuario..."></textarea>
               <div className="password-container">
                 <input type={showPassword ? "text" : "password"} className="textarea_user_page_admin_password" value={user_password} onChange={(e) => setPassword(e.target.value)} placeholder="Inserte contraseña..."/>
                 <button onClick={togglePasswordVisibility} className="visibility-button">
-                  <img src={showPassword ? require("../img/eye.png") : require("../img/closed_eye.png")} className ="visibility-image"/>
+                  <img src={showPassword ? require("../img/eye.png") : require("../img/closed_eye.png")} className ="visibility-image" alt=""/>
                 </button>
               </div>
               <button onClick={SaveUser}>Iniciar</button>

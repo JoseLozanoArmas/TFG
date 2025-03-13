@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ControlPanel.css';
-import { route_to_server } from '../App';
 
 export const ControlPanel = () => {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isMonitor, setIsMonitor] = useState(false);
 
   useEffect(() => {
     const userRole = localStorage.getItem("user_role");
     setIsAdmin(userRole === "admin");
-    setIsMonitor(userRole === "monitor");
   }, []);
 
   const MoveToBlockGeneralAdminPage = () => {

@@ -253,7 +253,7 @@ export const BlockInternalAdminPage = () => {
 
   useEffect(() => {
     localStorage.setItem(`logo_${id}`, JSON.stringify(currentLogo));
-  }, [currentLogo]);
+  }, [currentLogo, id]);
 
 
   const ChangePermission = () => {

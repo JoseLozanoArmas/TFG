@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './RankingPageAdmin.css';
 import { route_to_server } from '../App';
 
 export const RankingPageAdmin = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
   const [saveJson, setSaveJson] = useState();
 
   useEffect(() => {
@@ -53,7 +52,7 @@ export const RankingPageAdmin = () => {
       {blockButtons.map((button) => (
         <button key={button.id} className="image-button" style={{transform: `translate(${button.positionX}px, ${button.positionY}px)`}}
           onClick={() => MoveToRankingPage(button.block_name)}>
-          <img src={require("../img/logo_ull.png")} className="user-image"/>
+          <img src={require("../img/logo_ull.png")} className="user-image" alt=""/>
           <span className="label-name"> Bloque {button.id} </span>
         </button>
       ))}

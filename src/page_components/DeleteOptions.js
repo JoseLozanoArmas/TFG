@@ -1,11 +1,8 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import './DeleteOptions.css';
 import { route_to_server } from '../App';
 
 export const DeleteOptions = () => {
-  const navigate = useNavigate();
-
   const resetUsers = async () => {
     try {
       const response = await fetch(route_to_server + 'reset-users', { // Elimina toda la información de los usuarios

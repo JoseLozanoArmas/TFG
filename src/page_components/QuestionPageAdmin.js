@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Navigate, Route, useNavigate, useParams } from 'react-router-dom';
+import {useNavigate, useParams } from 'react-router-dom';
 import './QuestionPageAdmin.css';
 import icon from '../img/icon_plus.png';
 import { route_to_server } from '../App';
@@ -45,7 +45,7 @@ export const QuestionPageAdmin = () => {
     setBlockName(block);
     setQuestionName(id)
     setSaveRol(userRole);
-  }, []);
+  }, [block, id]);
 
   useEffect(() => {
     localStorage.setItem(`button_${id}`, JSON.stringify(buttons))
@@ -211,7 +211,7 @@ export const QuestionPageAdmin = () => {
 
     // Comprobamos que todos los botones tengan puntuación y pruebas añadidas
     let is_possible_to_send_files = true;
-    {buttons.forEach((button) => {
+    buttons.forEach((button) => {
       if (button.file === null) {
         alert(`En la prueba ${button.id} no se introdujo ningún fichero de entrada`);
         is_possible_to_send_files = false;
@@ -226,7 +226,7 @@ export const QuestionPageAdmin = () => {
         alert(`En la prueba ${button.id} no se introdujo una puntuación mayor a 0`);
         is_possible_to_send_files = false;
       }
-    })}
+    });
 
     if (is_possible_to_send_files === false) { return; }
 

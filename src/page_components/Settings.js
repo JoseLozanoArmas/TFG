@@ -1,15 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Settings.css';
 
 export const Settings = () => {
   const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    const userRole = localStorage.getItem('user_role');
-    setIsAdmin(userRole === 'admin');
-  }, []);
 
   const MoveToDeleteOptions = () => {
     navigate('/delete_options');

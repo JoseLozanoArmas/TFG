@@ -5,5 +5,8 @@
         "tittle": "si",
         "description": "si"
       }
+    },
+    "block_2": {
+      "img": "src/img/logo_ull.png"
     }
 }
