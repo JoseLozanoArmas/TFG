@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './UserPageAdmin.css';
 import { route_to_server } from '../App';
 

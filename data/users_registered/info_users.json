@@ -6,5 +6,13 @@
       "id": 0,
       "positionX": 0,
       "positionY": 0
+    },
+    {
+      "username": "Monitor",
+      "password": "1234",
+      "rol": "MONITOR",
+      "id": 1,
+      "positionX": 200,
+      "positionY": 0
     }
 ]
