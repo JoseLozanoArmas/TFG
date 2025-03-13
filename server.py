@@ -763,14 +763,33 @@ def reset_users():
     
 @app.route('/reset-blocks-data', methods=['POST']) # Eliminar todos los registros de los bloques de preguntas (administrador)
 def reset_blocks_data():
-    folder_path = 'data/blocks'
+    folder_path = "data/blocks"
+    folder_puntuation = "data/puntuations"
     try:
-        for filename in os.listdir(folder_path):
+        for filename in os.listdir(folder_path): # De la parte de bloques
             file_path = os.path.join(folder_path, filename)
             if os.path.isfile(file_path) or os.path.islink(file_path):
                 os.unlink(file_path)  # Eliminar archivo o enlace
             elif os.path.isdir(file_path):
                 shutil.rmtree(file_path)  # Eliminar carpeta
+
+        for filename in os.listdir(folder_puntuation): # De la parte de puntuaciones
+            file_path = os.path.join(folder_puntuation, filename)
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)  # Eliminar archivo o enlace
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)  # Eliminar carpeta
+        
+        # Reseteamos todos los archivos de registro de botones y demás 
+        if os.path.exists(route_to_data_json_block_and_question):
+            with open(route_to_data_json_block_and_question, "w") as file:
+                file.write("{\n}")
+        if os.path.exists(route_to_json_buttons_blocks):
+            with open(route_to_json_buttons_blocks, "w") as file:
+                file.write("[\n]")
+        if os.path.exists(route_to_json_buttons_questions):
+            with open(route_to_json_buttons_questions, "w") as file:
+                file.write("{\n}")
         return jsonify({'message': 'Información de bloques eliminada con éxito'}), 200
     except Exception as e:
         return jsonify({'message': f'Error al eliminar contenido: {str(e)}'}), 500

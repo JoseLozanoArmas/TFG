@@ -3,14 +3,7 @@
       "img": "src/img/logo_ull.png",
       "question_1": {
         "tittle": "si",
-        "description": "si"
-      }
-    },
-    "block_2": {
-      "img": "src/img/logo_ull.png",
-      "question_1": {
-        "tittle": "Prueba",
-        "description": "23456"
+        "description": "no"
       }
     }
 }
